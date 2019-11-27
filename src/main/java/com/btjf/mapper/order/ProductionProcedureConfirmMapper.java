@@ -141,4 +141,6 @@ public interface ProductionProcedureConfirmMapper {
     List<ProductionProcedureConfirm> getUnSettlement(@Param("yearMonth")String yearMonth, @Param("empId")Integer empId);
 
     void updateSettlement(@Param("ids")List<Integer> ids);
+
+    Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 }

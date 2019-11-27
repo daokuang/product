@@ -15,7 +15,9 @@ import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.model.sys.SysUser;
 import com.btjf.service.order.OrderProductService;
 import com.btjf.service.order.OrderService;
+import com.btjf.service.order.ProductionProcedureConfirmService;
 import com.btjf.service.productpm.ProductWorkshopService;
+import com.btjf.util.BigDecimalUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heige.aikajinrong.base.exception.BusinessException;
@@ -52,6 +54,9 @@ public class OrderController extends ProductBaseController {
 
     @Resource
     private ProductWorkshopService productWorkshopService;
+
+    @Resource
+    private ProductionProcedureConfirmService productionProcedureConfirmService;
 
 
     private static final Logger LOGGER = Logger
@@ -137,7 +142,26 @@ public class OrderController extends ProductBaseController {
         Page page = new Page(pageSize, currentPage);
 
         Page<OrderVo> listPage = orderProductService.listPage(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate, page);
-        XaResult<List<OrderVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
+        List<OrderVo> list = listPage.getRows();
+        if (!CollectionUtils.isEmpty(list)) {
+            list.stream().forEach(orderVo -> {
+                orderVo.setBlanking(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "裁外壳",
+                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
+                Integer fm = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面",
+                        orderVo.getProductNo());
+                Integer fma = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面A",
+                        orderVo.getProductNo());
+                orderVo.setFrontFm(BigDecimalUtil.div(fma > fm ? fma : fm, Double.valueOf(orderVo.getMaxNum())) * 100);
+                orderVo.setFrontCheck(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "一车间质检",
+                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
+
+                List<OrderVo.ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+                orderVo.setBackBigAssist((double) (processDetails == null ? 0 : processDetails.stream().max(Comparator.comparingInt(OrderVo.ProcessDetail::getNum)).get().getNum()));
+
+            });
+
+        }
+        XaResult<List<OrderVo>> result = AppXaResultHelper.success(listPage, list);
         Map<String, Integer> cuntMap = orderProductService.getCount(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate);
         Map map = Maps.newHashMap();
         map.put("orderNum", (int) listPage.getTotal());

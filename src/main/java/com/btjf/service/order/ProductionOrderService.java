@@ -5,20 +5,20 @@ import com.alibaba.dubbo.common.utils.StringUtils;
 import com.btjf.business.common.exception.BusinessException;
 import com.btjf.common.page.Page;
 import com.btjf.controller.order.vo.WorkShopVo;
+import com.btjf.controller.productionorder.vo.BatchAssignVo;
 import com.btjf.controller.productionorder.vo.ProductionOrderVo;
 import com.btjf.mapper.order.ProductionOrderMapper;
-import com.btjf.model.order.OrderProduct;
-import com.btjf.model.order.ProductionLuo;
-import com.btjf.model.order.ProductionOrder;
-import com.btjf.model.order.ProductionProcedure;
+import com.btjf.model.order.*;
 import com.btjf.service.sys.ShortUrlService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.BagUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.BatchUpdateException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,6 +52,9 @@ public class ProductionOrderService {
     @Resource
     private ShortUrlService shortUrlService;
 
+    @Resource
+    private MultipleProductionService multipleProductionService;
+
 
     public ProductionOrder getByOrderProductID(Integer orderProductID) {
         if (orderProductID == null) return null;
@@ -63,9 +66,10 @@ public class ProductionOrderService {
         if (null == productionOrder) return 0;
 
         String longUrl = "/wx/work/getConfirmList?orderId=" + productionOrder.getOrderProductId() + "&orderNo=" + productionOrder.getOrderNo()
-                + "&productNo=" + productionOrder.getProductNo() + "&productionNo=" + productionOrder.getProductionNo();
+                + "&productNo=" + productionOrder.getProductNo() + "&productionNo=" + productionOrder.getProductionNo()+"&type=1";
         productionOrder.setCodeUrl(shortUrlService.saveAndReturnShortUrl(longUrl));
-        if(null != productionOrderMapper.getByNo(productionOrder.getProductionNo())){
+        productionOrder.setType(1);
+        if (null != productionOrderMapper.getByNo(productionOrder.getProductionNo())) {
             throw new BusinessException("生产单编号重复，请稍后重试");
         }
         productionOrderMapper.insertSelective(productionOrder);
@@ -231,6 +235,82 @@ public class ProductionOrderService {
             num -= luoNum;
         } while (num > luoNum + 1);
         System.out.println(num);
+
+    }
+
+    /**
+     * 多型号分配生产单
+     *
+     * @param productionOrder
+     * @param batchAssignVo
+     * @return
+     * @throws BusinessException
+     */
+    public Integer batchAssign(ProductionOrder productionOrder, BatchAssignVo batchAssignVo) throws BusinessException {
+
+        String longUrl = "/wx/work/getConfirmList?productionNo=" + productionOrder.getProductionNo()+"&type=2"; //只需要生产单编号
+        productionOrder.setCodeUrl(shortUrlService.saveAndReturnShortUrl(longUrl));
+        productionOrder.setType(2);
+        if (null != productionOrderMapper.getByNo(productionOrder.getProductionNo())) {
+            throw new BusinessException("生产单编号重复，请稍后重试");
+        }
+        productionOrderMapper.insertSelective(productionOrder);
+
+        List<BatchAssignVo.BatchAssignOrder> batchAssignOrders = batchAssignVo.getBatchAssignOrders();
+
+        if (CollectionUtils.isEmpty(batchAssignOrders)) throw new BusinessException("请选择订单和型号");
+
+
+        batchAssignOrders
+                .stream()
+                .filter(t -> t != null)
+                .forEach(t -> {
+                    //
+                    List<WorkShopVo.Procedure> procedures = t.getProcedures();
+                    if (CollectionUtils.isEmpty(procedures)) throw new BusinessException("请选择工序");
+
+                    OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(t.getOrderNo(), t.getProductNo());
+                    if (orderProduct == null)
+                        throw new BusinessException("订单编号：" + t.getOrderNo() + "型号：" + t.getProductNo() + "不存在");
+                    MultipleProduction multipleProduction = new MultipleProduction();
+                    multipleProduction.setCreateTime(new Date());
+                    multipleProduction.setFristNum(procedures.get(0).getNum());
+                    multipleProduction.setLastModifyTime(new Date());
+                    multipleProduction.setOrderId(orderProduct.getOrderId());
+                    multipleProduction.setProductionId(productionOrder.getId());
+                    multipleProduction.setOrderNo(orderProduct.getOrderNo());
+                    multipleProduction.setWorkshop(productionOrder.getWorkshop());
+                    multipleProduction.setWorkshopDirector(productionOrder.getWorkshopDirector());
+                    multipleProduction.setProductionNo(productionOrder.getProductionNo());
+                    multipleProduction.setProductNo(t.getProductNo());
+                    multipleProduction.setIsDelete(0);
+
+                    Integer multId = multipleProductionService.add(multipleProduction);
+                    procedures.stream().
+                            filter(p -> p != null)
+                            .forEach(p -> {
+                                if (p.getNum() > productionProcedureService.procedureCanAssignNum(orderProduct.getOrderNo(), orderProduct.getProductNo(), p.getProcedureId())){
+                                    throw new BusinessException("订单编号：" + t.getOrderNo() + "型号：" + t.getProductNo()+"的"+p.getProcedureName()+"工序的可分配数量不足");
+                                }
+                                ProductionProcedure productionProcedure = new ProductionProcedure();
+                                productionProcedure.setAssignNum(p.getNum());
+                                productionProcedure.setCreateTime(new Date());
+                                productionProcedure.setIsDelete(0);
+                                productionProcedure.setMultipleProductionId(multId);
+                                productionProcedure.setOrderId(orderProduct.getId());
+                                productionProcedure.setOrderNo(orderProduct.getOrderNo());
+                                productionProcedure.setProcedureId(p.getProcedureId());
+                                productionProcedure.setProcedureName(p.getProcedureName());
+                                productionProcedure.setSort(p.getSort());
+                                productionProcedure.setType(2);
+                                productionProcedure.setProductNo(orderProduct.getProductNo());
+                                productionProcedure.setProductionNo(productionOrder.getProductionNo());
+                                productionProcedureService.insert(productionProcedure);
+                            });
+
+                });
+
+        return productionOrder.getId();
 
     }
 }

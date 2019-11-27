@@ -6,6 +6,7 @@ import com.btjf.model.order.ProductionProcedure;
 import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.model.sys.Sysdept;
 import com.google.common.collect.Lists;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.io.Serializable;
 import java.util.List;
@@ -76,9 +77,7 @@ public class WorkShopVo implements Serializable {
         this.procedures = procedures;
     }
 
-    public static class Leader
-
-    {
+    public static class Leader {
 
         private Integer id;
 
@@ -127,7 +126,10 @@ public class WorkShopVo implements Serializable {
 
         private Integer sort;
 
-        public Procedure(){}
+        private Integer num;
+
+        public Procedure() {
+        }
 
         public Procedure(ProductProcedureWorkshop productProcedureWorkshop) {
             this.procedureId = productProcedureWorkshop.getProcedureId();
@@ -139,6 +141,7 @@ public class WorkShopVo implements Serializable {
             this.procedureId = productionProcedure.getProcedureId();
             this.procedureName = productionProcedure.getProcedureName();
             this.sort = productionProcedure.getSort();
+            this.num = productionProcedure.getAssignNum();
         }
 
         public Integer getProcedureId() {
@@ -155,6 +158,14 @@ public class WorkShopVo implements Serializable {
 
         public void setProcedureName(String procedureName) {
             this.procedureName = procedureName;
+        }
+
+        public Integer getNum() {
+            return num;
+        }
+
+        public void setNum(Integer num) {
+            this.num = num;
         }
 
         public Integer getSort() {

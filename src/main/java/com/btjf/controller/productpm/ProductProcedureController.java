@@ -1,6 +1,7 @@
 package com.btjf.controller.productpm;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.btjf.application.components.xaresult.AppXaResultHelper;
 import com.btjf.application.util.XaResult;
 import com.btjf.common.page.Page;
@@ -10,6 +11,7 @@ import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.model.product.Product;
 import com.btjf.model.product.ProductProcedure;
 import com.btjf.model.sys.SysUser;
+import com.btjf.service.order.ProductionProcedureService;
 import com.btjf.service.productpm.ProductProcedureService;
 import com.btjf.service.productpm.ProductService;
 import com.google.common.collect.Lists;
@@ -46,6 +48,8 @@ public class ProductProcedureController extends ProductBaseController {
     private ProductProcedureService productProcedureService;
     @Resource
     private ProductService productProcedure;
+    @Resource
+    private ProductionProcedureService productionProcedureService;
 
 
     @RequestMapping(value = "/updateOrAdd", method = RequestMethod.POST)
@@ -79,10 +83,18 @@ public class ProductProcedureController extends ProductBaseController {
     }
 
     @RequestMapping(value = "getByWorkShopAndProductNo", method = RequestMethod.GET)
-    public XaResult<List<WorkShopVo.Procedure>> getByWorkShopAndProductNo(String workShop, String productNo) {
+    public XaResult<List<WorkShopVo.Procedure>> getByWorkShopAndProductNo(String workShop, String productNo, String orderNo) {
         if (workShop == null || productNo == null) return XaResult.error("参数输入有误");
 
-        return XaResult.success(productProcedureService.getByWorkShopAndProductNo(workShop, productNo));
+
+        List<WorkShopVo.Procedure> procedures = productProcedureService.getByWorkShopAndProductNo(workShop, productNo);
+        if (!StringUtils.isEmpty(orderNo) && !CollectionUtils.isEmpty(procedures)) {
+            procedures.stream().forEach(t -> {
+                t.setNum(productionProcedureService.procedureCanAssignNum(orderNo, productNo, t.getProcedureId()));
+            });
+        }
+
+        return XaResult.success(procedures);
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
@@ -100,7 +112,7 @@ public class ProductProcedureController extends ProductBaseController {
     }
 
     @RequestMapping(value = "confirm", method = RequestMethod.POST)
-    public XaResult<Integer> confirm(String[] ids){
+    public XaResult<Integer> confirm(String[] ids) {
         LOGGER.info(getRequestParamsAndUrl());
 
         if (null == ids || Arrays.asList(ids).size() <= 0) {

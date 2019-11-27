@@ -988,4 +988,15 @@
     </update>
 
 
+  <select id="getHandleNum" resultType="integer">
+    select sum(num)
+    from t_Production_Procedure_Confirm
+    where productNo = #{productNo,jdbcType=VARCHAR}
+        and orderNo = #{orderNo,jdbcType=VARCHAR}
+        and  procedureName =#{procedureName}
+        and type = 2
+        and isDelete = 0
+  </select>
+
+
 </mapper>

@@ -716,4 +716,30 @@ CREATE TABLE `t_ShortUrlMapping` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `t_Multiple_Production` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `productionNo` varchar(100) DEFAULT NULL COMMENT '生产单编号',
+  `productionId` int(11) DEFAULT NULL COMMENT '生产单id',
+  `workshopDirector` varchar(100) DEFAULT NULL COMMENT '车间主任',
+  `orderId` int(11) DEFAULT NULL COMMENT '订单id',
+  `orderNo` varchar(100) DEFAULT NULL COMMENT '订单编号',
+  `workshop` varchar(30) DEFAULT NULL COMMENT '车间',
+  `fristNum` int(11) DEFAULT NULL COMMENT '第一个工序的数量',
+  `createTime` datetime DEFAULT NULL,
+  `lastModifyTime` datetime DEFAULT NULL,
+  `isDelete` int(11) DEFAULT NULL,
+  `productNo` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE t_Production_Procedure add multipleProductionId int(11) DEFAULT NULL COMMENT '多型号生产单id';
+-- type = 2的生产单订单信息不存在
+ALTER TABLE t_Production_Order MODIFY orderId int(11) DEFAULT NULL comment '订单ID';
+ALTER TABLE t_Production_Order MODIFY orderNo varchar(100) DEFAULT NULL comment '订单编号' ;
+ALTER TABLE t_Production_Order MODIFY  productNo varchar(100) DEFAULT NULL comment '产品型号' ;
+ALTER TABLE t_Production_Order MODIFY   orderProductId  int(11) DEFAULT NULL comment '订单 型号表ID' ;
+ALTER TABLE t_Production_Order add  type int(11) DEFAULT 0 comment '订单 型号表ID' ;
+update t_Production_Order set type = 1
+
 

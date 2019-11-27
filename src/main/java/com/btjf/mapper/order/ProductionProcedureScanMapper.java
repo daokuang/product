@@ -1,9 +1,12 @@
 package com.btjf.mapper.order;
 
+import com.btjf.controller.order.vo.OrderVo;
 import com.btjf.model.order.ProductionProcedureScan;
 import com.btjf.model.order.ProductionProcedureScanExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 public interface ProductionProcedureScanMapper {
@@ -106,4 +109,8 @@ public interface ProductionProcedureScanMapper {
     Integer updateSatue(@Param("id") Integer id, @Param("status") Integer status);
 
     ProductionProcedureScan selectLastMonth(ProductionProcedureScan convert);
+
+    Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
+
+    List<OrderVo.ProcessDetail> getByProcduct(@Param("ids") List<Integer> ids, @Param("orderNo") String orderNo, @Param("product") String product);
 }
