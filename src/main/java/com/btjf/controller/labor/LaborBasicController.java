@@ -256,7 +256,7 @@ public class LaborBasicController extends ProductBaseController{
     @RequestMapping(value = "/yield/list", method = RequestMethod.GET)
     public XaResult<List<ProcedureYieldVo>> yieldList(String name, Integer deptId,Integer workId,
         String orderNo, String productNo, String procedureName, String yearMonth,
-        String startDate, String endDate, Integer pageSize, Integer currentPage) {
+        String startDate, String endDate, Integer pageSize, Integer currentPage, Integer confirmed) {
         if(currentPage == null || currentPage < 1){
             currentPage =1;
         }
@@ -265,7 +265,7 @@ public class LaborBasicController extends ProductBaseController{
         }
         Page page = new Page(pageSize, currentPage);
         Page<ProcedureYieldVo> listPage = productionProcedureConfirmService.yieldList(name, deptId, workId,
-                orderNo, productNo, procedureName, yearMonth, startDate, endDate, page);
+                orderNo, productNo, procedureName, yearMonth, startDate, endDate, page, confirmed);
         XaResult<List<ProcedureYieldVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
         return result;
     }

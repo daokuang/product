@@ -10,7 +10,7 @@ public class ProcessDetail {
 
     private Integer num;
 
-    private Integer pencent;
+    private Double pencent;
 
     public String getProcessName() {
         return processName;
@@ -28,11 +28,11 @@ public class ProcessDetail {
         this.num = num;
     }
 
-    public Integer getPencent() {
+    public Double getPencent() {
         return pencent;
     }
 
-    public void setPencent(Integer pencent) {
+    public void setPencent(Double pencent) {
         this.pencent = pencent;
     }
 }

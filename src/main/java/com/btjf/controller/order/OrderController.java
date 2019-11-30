@@ -67,7 +67,7 @@ public class OrderController extends ProductBaseController {
     @RequestMapping(value = "/updateOrAdd", method = RequestMethod.POST)
     public XaResult<Integer> updateOrAdd(Integer id, String orderNo, String productNo, Integer num,
                                          String type, String unit, Integer maxNum, String completeDate,
-                                         String customerName, Integer customerId, Integer isMore, Integer urgentLevel) {
+                                         String customerName, Integer customerId, Integer isMore, Integer urgentLevel, String remark) {
 
         SysUser sysUser = getLoginUser();
         if (StringUtils.isEmpty(orderNo)) {
@@ -110,6 +110,7 @@ public class OrderController extends ProductBaseController {
         OrderProduct orderProduct1 = new OrderProduct(null, orderNo, null,
                 productNo, type, num, maxNum, unit, DateUtil.string2Date(completeDate, DateUtil.ymdFormat), customerId, customerName, null, null,
                 null, null, null, new Date(), new Date(), 0);
+        orderProduct1.setRemark(remark);
         if (id != null) {
             return XaResult.error("暂时不支持更新");
         } else {
@@ -296,7 +297,7 @@ public class OrderController extends ProductBaseController {
     }
 
     /**
-     * 订单工序列表
+     * 订单工序详细列表
      *
      * @param workspace
      * @param orderNo
@@ -305,9 +306,13 @@ public class OrderController extends ProductBaseController {
      */
     @RequestMapping(value = "/getProcessDetail", method = RequestMethod.GET)
     public XaResult<List<ProcessDetail>> getProcessDetail(String workspace, String orderNo, String productNo) {
+        OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(orderNo, productNo);
         List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workspace, orderNo, productNo);
+        processDetails.forEach(t -> {
+            t.setPencent(BigDecimalUtil.div(t.getNum(), Double.valueOf(orderProduct.getMaxNum())) * 100);
+        });
 
-        return null;
+        return XaResult.success(processDetails);
     }
 
 }

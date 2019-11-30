@@ -743,3 +743,7 @@ ALTER TABLE t_Production_Order add  type int(11) DEFAULT 0 comment '订单 型�
 update t_Production_Order set type = 1
 
 
+
+ALTER TABLE t_Order_Product add remark varchar(255) DEFAULT NULL COMMENT '备注';
+
+

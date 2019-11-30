@@ -279,10 +279,10 @@ public class ProductionProcedureConfirmService {
     }
 
     public Page<ProcedureYieldVo> yieldList(String name, Integer deptId, Integer workId, String orderNo,
-                                            String productNo, String procedureName, String yearMonth, String startDate, String endDate, Page page) {
+                                            String productNo, String procedureName, String yearMonth, String startDate, String endDate, Page page, Integer confirmed) {
         PageHelper.startPage(page.getPage(), page.getRp());
         List<ProcedureYieldVo> pmList = productionProcedureConfirmMapper.yieldList(name, deptId, workId,
-                orderNo, productNo, procedureName, yearMonth, startDate, endDate);
+                orderNo, productNo, procedureName, yearMonth, startDate, endDate, confirmed);
         PageInfo pageInfo = new PageInfo(pmList);
         pageInfo.setList(pmList);
         return new Page<>(pageInfo);
