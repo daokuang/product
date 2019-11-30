@@ -15,7 +15,7 @@ public enum WorkShopProductionMapEnum implements ContentEnum {
     BACKCENTERASSIST(5, "后道车间-中辅工"),
     BACKBIGASSIST(6, "后道车间-大辅工"),
     INSPECTION(8, "质检部-成品质检"),
-    ASSIST(9, "外协质检"),
+    ASSIST(9, "一车间"),
     PACKING(10, "包装车间"),
     BACKSMALLASSIST(11,"后道车间-小辅工");
 
