@@ -1,6 +1,7 @@
 package com.btjf.mapper.order;
 
 import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.model.order.ProductionProcedureScan;
 import com.btjf.model.order.ProductionProcedureScanExample;
 import org.apache.ibatis.annotations.Param;
@@ -112,5 +113,5 @@ public interface ProductionProcedureScanMapper {
 
     Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 
-    List<OrderVo.ProcessDetail> getByProcduct(@Param("ids") List<Integer> ids, @Param("orderNo") String orderNo, @Param("product") String product);
+    List<ProcessDetail> getByProcduct(@Param("ids") List<Integer> ids, @Param("orderNo") String orderNo, @Param("product") String product);
 }

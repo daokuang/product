@@ -500,7 +500,7 @@
     </select>
 
     <select id="getHandleNum" resultType="integer">
-        select sum(num)
+        select ifnull(sum(num),0)
         from t_Production_Procedure_Scan
         where 1=1
            and orderNo = #{orderNo,jdbcType=VARCHAR}
@@ -509,7 +509,7 @@
         and  isDelete = 0
     </select>
 
-    <select id="getByProcduct" resultType="com.btjf.controller.order.vo.OrderVo.ProcessDetail">
+    <select id="getByProcduct" resultType="com.btjf.controller.order.vo.ProcessDetail">
         select procedureName as processName ,
         ifnull (sum(num), 0) as num
         from

@@ -989,7 +989,7 @@
 
 
   <select id="getHandleNum" resultType="integer">
-    select sum(num)
+    select ifnull(sum(num),0)
     from t_Production_Procedure_Confirm
     where productNo = #{productNo,jdbcType=VARCHAR}
         and orderNo = #{orderNo,jdbcType=VARCHAR}

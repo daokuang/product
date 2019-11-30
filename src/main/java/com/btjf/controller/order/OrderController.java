@@ -9,6 +9,7 @@ import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.controller.order.vo.OrderProductVo;
 import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.model.order.Order;
 import com.btjf.model.order.OrderProduct;
 import com.btjf.model.product.ProductProcedureWorkshop;
@@ -155,9 +156,15 @@ public class OrderController extends ProductBaseController {
                 orderVo.setFrontCheck(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "一车间质检",
                         orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
 
-                List<OrderVo.ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
-                orderVo.setBackBigAssist((double) (processDetails == null ? 0 : processDetails.stream().max(Comparator.comparingInt(OrderVo.ProcessDetail::getNum)).get().getNum()));
+                List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+                orderVo.setBackBigAssist((double) (processDetails == null ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
 
+
+                List<ProcessDetail> processDetails2 = productionProcedureConfirmService.getCompleteNum("后道-中辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+                orderVo.setBackCenterAssist((double) (processDetails2 == null ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
+
+                orderVo.setInspection(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "成品验收",
+                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
             });
 
         }
@@ -286,6 +293,21 @@ public class OrderController extends ProductBaseController {
             e.printStackTrace();
             LOGGER.error("订单导出excel异常");
         }
+    }
+
+    /**
+     * 订单工序列表
+     *
+     * @param workspace
+     * @param orderNo
+     * @param productNo
+     * @return
+     */
+    @RequestMapping(value = "/getProcessDetail", method = RequestMethod.GET)
+    public XaResult<List<ProcessDetail>> getProcessDetail(String workspace, String orderNo, String productNo) {
+        List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workspace, orderNo, productNo);
+
+        return null;
     }
 
 }

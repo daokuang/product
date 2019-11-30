@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.btjf.business.common.exception.BusinessException;
 import com.btjf.common.page.Page;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.controller.weixin.vo.WxEmpVo;
 import com.btjf.mapper.order.ProductionProcedureConfirmMapper;
@@ -20,6 +21,7 @@ import com.btjf.vo.weixin.OrderProductVo;
 import com.btjf.vo.weixin.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.stereotype.Service;
@@ -310,14 +312,14 @@ public class ProductionProcedureConfirmService {
         return changeNum > 0 ? changeNum : scanNum;
     }
 
-    public List<com.btjf.controller.order.vo.OrderVo.ProcessDetail> getCompleteNum(String workspace, String orderNo, String product) {
+    public List<ProcessDetail> getCompleteNum(String workspace, String orderNo, String product) {
         List<WorkShopVo.Procedure> procedures = productProcedureService.getByWorkShopAndProductNo(workspace, product);
 
-        if (CollectionUtils.isEmpty(procedures)) return null;
+        if (CollectionUtils.isEmpty(procedures)) return Lists.newArrayList();
         List<Integer> ids = procedures.stream().map(WorkShopVo.Procedure::getProcedureId).collect(Collectors.toList());
 
 
-        List<com.btjf.controller.order.vo.OrderVo.ProcessDetail> processDetails = productionProcedureScanService.getByProcduct(ids, orderNo, product);
+        List<ProcessDetail> processDetails = productionProcedureScanService.getByProcduct(ids, orderNo, product);
         return processDetails;
 
     }

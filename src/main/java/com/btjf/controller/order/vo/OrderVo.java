@@ -201,37 +201,4 @@ public class OrderVo implements Serializable {
     public void setCompleteDate(String completeDate) {
         this.completeDate = completeDate;
     }
-
-
-    public static class ProcessDetail{
-        private String processName;
-
-        private Integer num;
-
-        private Integer pencent;
-
-        public String getProcessName() {
-            return processName;
-        }
-
-        public void setProcessName(String processName) {
-            this.processName = processName;
-        }
-
-        public Integer getNum() {
-            return num;
-        }
-
-        public void setNum(Integer num) {
-            this.num = num;
-        }
-
-        public Integer getPencent() {
-            return pencent;
-        }
-
-        public void setPencent(Integer pencent) {
-            this.pencent = pencent;
-        }
-    }
 }

@@ -4,6 +4,7 @@ import com.alibaba.druid.util.StringUtils;
 import com.btjf.business.common.exception.BusinessException;
 import com.btjf.common.utils.BeanUtil;
 import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.controller.weixin.vo.WxEmpVo;
 import com.btjf.mapper.order.ProductionProcedureConfirmMapper;
@@ -167,7 +168,7 @@ public class ProductionProcedureScanService {
 
     }
 
-    public List<OrderVo.ProcessDetail> getByProcduct(List<Integer> ids, String orderNo, String product) {
+    public List<ProcessDetail> getByProcduct(List<Integer> ids, String orderNo, String product) {
         return productionProcedureScanMapper.getByProcduct(ids, orderNo, product);
     }
 }
