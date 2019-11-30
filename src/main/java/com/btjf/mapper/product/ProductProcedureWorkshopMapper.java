@@ -111,4 +111,6 @@ public interface ProductProcedureWorkshopMapper {
     List<ProductProcedureWorkshop> getBySort(@Param("productNo") String productNo, @Param("integers") List<Integer> integers);
 
     ProductProcedureWorkshop getInspactPriceByWorkShapAndProductNo(@Param("deptName") String deptName, @Param("productNo") String productNo);
+
+    List<ProductProcedureWorkshop> getNeetDelete();
 }

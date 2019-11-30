@@ -482,4 +482,28 @@
         and procedureName like '%质检%'
         and isDelete = 0 limit 1;
     </select>
+
+    <select id="getNeetDelete" resultMap="BaseResultMap">
+        SELECT
+	productNo as productNo,
+	workshop as workshop,
+	procedureName as procedureName,
+	num as num
+FROM
+	(
+	SELECT
+		productNo,
+		workshop,
+		procedureName,
+		count( 1 ) AS num
+	FROM
+		t_Product_Procedure_Workshop
+	WHERE
+		isDelete = 0
+	GROUP BY
+		productNo,
+	workshop,
+	procedureName
+	)a where a.num >1
+    </select>
 </mapper>

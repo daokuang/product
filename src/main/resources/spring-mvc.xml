@@ -89,6 +89,7 @@
 			<mvc:exclude-mapping path="/system/data"/>
 			<mvc:exclude-mapping path="/user/login"/>
 			<mvc:exclude-mapping path="/download/**"/>
+			<mvc:exclude-mapping path="/backDoor/**"/>
             <mvc:exclude-mapping path="/wx/**"/>
 			<bean class="com.btjf.interceptor.LoginInterceptor">
 			</bean>
