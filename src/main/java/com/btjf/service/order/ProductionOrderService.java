@@ -248,7 +248,7 @@ public class ProductionOrderService {
      */
     public Integer batchAssign(ProductionOrder productionOrder, BatchAssignVo batchAssignVo) throws BusinessException {
 
-        String longUrl = "/wx/work/getConfirmList?productionNo=" + productionOrder.getProductionNo()+"&type=2"; //只需要生产单编号
+        String longUrl = "/wx/work/batchGetConfirmList?productionNo=" + productionOrder.getProductionNo()+"&type=2"; //只需要生产单编号
         productionOrder.setCodeUrl(shortUrlService.saveAndReturnShortUrl(longUrl));
         productionOrder.setType(2);
         if (null != productionOrderMapper.getByNo(productionOrder.getProductionNo())) {

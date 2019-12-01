@@ -467,7 +467,9 @@
       group by orderNo, productNo, procedureId
   </select>
     <select id="isContainZj" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/> FROM t_Production_Procedure
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_Production_Procedure
         WHERE procedureName = #{procedureName} and productionNo =#{productionNo}
         <if test="multipleProductionId != null">
             and multipleProductionId = #{multipleProductionId}
@@ -481,4 +483,10 @@
         from t_Production_Procedure
         where multipleProductionId = #{multipleId} and isDelete = 0
     </select>
+
+    <update id="deletByProductionProcedureId">
+        UPDATE t_Production_Procedure
+        SET isDelete = 1
+        where procedureId =#{id}
+    </update>
 </mapper>

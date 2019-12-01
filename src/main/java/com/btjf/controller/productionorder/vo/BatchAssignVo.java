@@ -20,6 +20,8 @@ public class BatchAssignVo implements Serializable {
 
     private String printer;
 
+    private String productionNo;
+
     private List<BatchAssignOrder> batchAssignOrders;
 
 
@@ -109,5 +111,13 @@ public class BatchAssignVo implements Serializable {
 
     public void setBatchAssignOrders(List<BatchAssignOrder> batchAssignOrders) {
         this.batchAssignOrders = batchAssignOrders;
+    }
+
+    public String getProductionNo() {
+        return productionNo;
+    }
+
+    public void setProductionNo(String productionNo) {
+        this.productionNo = productionNo;
     }
 }

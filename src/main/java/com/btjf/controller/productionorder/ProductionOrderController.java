@@ -135,6 +135,12 @@ public class ProductionOrderController extends ProductBaseController {
         if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
+        if(!StringUtils.isEmpty(productionNo)){
+            productionNo = productionNo.trim();
+        }
+        if(!StringUtils.isEmpty(orderNo)){
+            orderNo = orderNo.trim();
+        }
         Page page = new Page(pageSize, currentPage);
         ProductionOrderVo productionOrderVo = new ProductionOrderVo();
         productionOrderVo.setOrderNo(orderNo);
@@ -156,6 +162,8 @@ public class ProductionOrderController extends ProductBaseController {
         SysUser sysUser = getLoginUser();
 
         if (null == productionNo) return XaResult.error("请输入要打印是生成单号");
+
+        productionNo = productionNo.trim();
 
 
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
@@ -361,6 +369,7 @@ public class ProductionOrderController extends ProductBaseController {
         batchAssignVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
         batchAssignVo.setWorkshop(productionOrder.getWorkshop());
         batchAssignVo.setWorkshopDirector(productionOrder.getWorkshopDirector());
+        batchAssignVo.setProductionNo(productionOrder.getProductionNo());
 
         List<MultipleProduction> multipleProductions = multipleProductionService.getByProductionNo(productionOrder.getProductionNo());
         if (CollectionUtils.isEmpty(multipleProductions)) return batchAssignVo;

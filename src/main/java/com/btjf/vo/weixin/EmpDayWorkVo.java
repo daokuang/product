@@ -6,6 +6,8 @@ public class EmpDayWorkVo {
 
     private String date;
     private Double sum;
+    private Double confirmedSum;
+    private Double unConfirmSum;
     private List<EmpDayWorkDetailVo> dayWorkDetailVoList;
 
     public String getDate() {
@@ -30,5 +32,21 @@ public class EmpDayWorkVo {
 
     public void setDayWorkDetailVoList(List<EmpDayWorkDetailVo> dayWorkDetailVoList) {
         this.dayWorkDetailVoList = dayWorkDetailVoList;
+    }
+
+    public Double getConfirmedSum() {
+        return confirmedSum;
+    }
+
+    public void setConfirmedSum(Double confirmedSum) {
+        this.confirmedSum = confirmedSum;
+    }
+
+    public Double getUnConfirmSum() {
+        return unConfirmSum;
+    }
+
+    public void setUnConfirmSum(Double unConfirmSum) {
+        this.unConfirmSum = unConfirmSum;
     }
 }

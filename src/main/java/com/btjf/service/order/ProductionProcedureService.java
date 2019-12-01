@@ -86,5 +86,12 @@ public class ProductionProcedureService {
         return productionProcedureMapper.getByMultipleId(id);
     }
 
+    /**
+     * 通过工序id删除
+     * @param id
+     */
+    public void deletByProductionProcedureId(Integer id){
+        productionProcedureMapper.deletByProductionProcedureId(id);
+    }
 
 }

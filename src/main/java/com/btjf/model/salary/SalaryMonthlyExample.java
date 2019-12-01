@@ -806,6 +806,126 @@ public class SalaryMonthlyExample {
             return (Criteria) this;
         }
 
+        public Criteria andTwoSideRateIsNull() {
+            addCriterion("twoSideRate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateIsNotNull() {
+            addCriterion("twoSideRate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateEqualTo(BigDecimal value) {
+            addCriterion("twoSideRate =", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateNotEqualTo(BigDecimal value) {
+            addCriterion("twoSideRate <>", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateGreaterThan(BigDecimal value) {
+            addCriterion("twoSideRate >", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("twoSideRate >=", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateLessThan(BigDecimal value) {
+            addCriterion("twoSideRate <", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("twoSideRate <=", value, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateIn(List<BigDecimal> values) {
+            addCriterion("twoSideRate in", values, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateNotIn(List<BigDecimal> values) {
+            addCriterion("twoSideRate not in", values, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("twoSideRate between", value1, value2, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSideRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("twoSideRate not between", value1, value2, "twoSideRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateIsNull() {
+            addCriterion("assistRate is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateIsNotNull() {
+            addCriterion("assistRate is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateEqualTo(BigDecimal value) {
+            addCriterion("assistRate =", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateNotEqualTo(BigDecimal value) {
+            addCriterion("assistRate <>", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateGreaterThan(BigDecimal value) {
+            addCriterion("assistRate >", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("assistRate >=", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateLessThan(BigDecimal value) {
+            addCriterion("assistRate <", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("assistRate <=", value, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateIn(List<BigDecimal> values) {
+            addCriterion("assistRate in", values, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateNotIn(List<BigDecimal> values) {
+            addCriterion("assistRate not in", values, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assistRate between", value1, value2, "assistRate");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistRateNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assistRate not between", value1, value2, "assistRate");
+            return (Criteria) this;
+        }
+
         public Criteria andYearMonthLikeInsensitive(String value) {
             addCriterion("upper(yearMonth) like", value.toUpperCase(), "yearMonth");
             return (Criteria) this;

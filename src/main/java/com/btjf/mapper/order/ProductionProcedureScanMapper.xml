@@ -521,7 +521,7 @@
         </foreach>
         )
         AND orderNo = #{orderNo,jdbcType=VARCHAR}
-        and productNo =#{productNo}
+        and productNo =#{product}
         and isDelete = 0
         group by procedureId, procedureName
     </select>

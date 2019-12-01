@@ -12,9 +12,11 @@ import com.btjf.model.product.Product;
 import com.btjf.model.product.ProductProcedure;
 import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.model.sys.SysUser;
+import com.btjf.service.order.ProductionProcedureService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -36,6 +38,8 @@ public class ProductProcedureService {
     @Resource
     private ProductService productService;
 
+    @Resource
+    private ProductionProcedureService productionProcedureService;
 
     public Integer addOrUpdate(ProductProcedure productProcedure, String optionName) {
 
@@ -151,5 +155,17 @@ public class ProductProcedureService {
             return 0;
         }
         return integers.size();
+    }
+
+    public void delete(Integer id, SysUser sysUser) {
+        ProductProcedure productProcedure = productProcedureMapper.selectByPrimaryKey(id);
+        if(productProcedure == null) return;
+        productProcedure.setIsDelete(1);
+        productProcedure.setLastModifyTime(new Date());
+        productProcedure.setOperator(sysUser.getUserName());
+        productProcedureMapper.updateByPrimaryKey(productProcedure);
+
+        //删除
+        productProcedureWorkshopMapper.deleteByProcedureId(id);
     }
 }

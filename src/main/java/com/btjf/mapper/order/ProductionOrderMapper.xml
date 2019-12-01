@@ -542,10 +542,10 @@
         where
         1=1
         <if test="orderNo != null">
-            AND tpo.orderNo LIKE '%${orderNo}%'
+            AND tpo.orderNo = #{orderNo}
         </if>
         <if test="productionNo != null">
-            AND tpo.productionNo LIKE '%${productionNo}%'
+            AND tpo.productionNo = #{productionNo}
         </if>
         <if test="customerName != null">
             AND top.customerName LIKE '%${customerName}%'
@@ -594,10 +594,10 @@
         WHERE
         1=1
         <if test="orderNo != null">
-            AND tmp.orderNo LIKE '%${orderNo}%'
+            AND tmp.orderNo = #{orderNo}
         </if>
         <if test="productionNo != null">
-            AND tpo.productionNo LIKE '%${productionNo}%'
+            AND tpo.productionNo = #{productionNo}
         </if>
         <if test="customerName != null">
             AND top.customerName LIKE '%${customerName}%'

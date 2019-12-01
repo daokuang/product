@@ -738,12 +738,15 @@ ALTER TABLE t_Production_Procedure add multipleProductionId int(11) DEFAULT NULL
 ALTER TABLE t_Production_Order MODIFY orderId int(11) DEFAULT NULL comment '订单ID';
 ALTER TABLE t_Production_Order MODIFY orderNo varchar(100) DEFAULT NULL comment '订单编号' ;
 ALTER TABLE t_Production_Order MODIFY  productNo varchar(100) DEFAULT NULL comment '产品型号' ;
-ALTER TABLE t_Production_Order MODIFY   orderProductId  int(11) DEFAULT NULL comment '订单 型号表ID' ;
+ALTER TABLE t_Production_Order MODIFY  orderProductId  int(11) DEFAULT NULL comment '订单 型号表ID' ;
 ALTER TABLE t_Production_Order add  type int(11) DEFAULT 0 comment '订单 型号表ID' ;
 update t_Production_Order set type = 1
 
 
 
 ALTER TABLE t_Order_Product add remark varchar(255) DEFAULT NULL COMMENT '备注';
+
+ALTER  table t_Salary_Monthly add twoSideRate decimal(4,2) DEFAULT NULL COMMENT '负面补贴系数';
+ALTER  table t_Salary_Monthly add assistRate decimal(4,2) DEFAULT NULL COMMENT '大复工补贴系数';
 
 

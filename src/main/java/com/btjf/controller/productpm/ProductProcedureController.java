@@ -16,6 +16,7 @@ import com.btjf.service.productpm.ProductProcedureService;
 import com.btjf.service.productpm.ProductService;
 import com.google.common.collect.Lists;
 import com.heige.aikajinrong.base.exception.BusinessException;
+import jdk.nashorn.internal.ir.IdentNode;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -102,6 +103,9 @@ public class ProductProcedureController extends ProductBaseController {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
         }
+        if (!StringUtils.isEmpty(productNo)) {
+            productNo = productNo.trim();
+        }
         if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
@@ -169,8 +173,8 @@ public class ProductProcedureController extends ProductBaseController {
                 row.createCell(j++).setCellValue(productProcedure.getProductNo());
                 row.createCell(j++).setCellValue(productProcedure.getWorkshop());
                 row.createCell(j++).setCellValue(productProcedure.getProcedureName());
-                row.createCell(j++).setCellValue(productProcedure.getPrice() + "元");
-                row.createCell(j++).setCellValue(productProcedure.getSumPrice() + "元");
+                row.createCell(j++).setCellValue(productProcedure.getPrice()+"");
+                row.createCell(j++).setCellValue(productProcedure.getSumPrice()+"");
                 row.createCell(j++).setCellValue(productProcedure.getIsConfirm() == 1 ? "已确认" : "未确认");
 
             }
@@ -207,5 +211,12 @@ public class ProductProcedureController extends ProductBaseController {
 
         Integer integer = productProcedureService.sameProductNoAdd(oldProductNo, newProductNo, sysUser);
         return XaResult.success(integer);
+    }
+
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public XaResult delete(Integer id){
+        SysUser sysUser = getLoginUser();
+        productProcedureService.delete(id, sysUser);
+        return XaResult.success();
     }
 }

@@ -35,6 +35,7 @@ public class EmpSalaryMonthlyService {
 
     private static final String WORK_CHEGONG = "车工";
     private static final String PROCDUCENAME_FUMIAN = "复面A";
+    private static final String PROCDUCENAME_CHENGPIN = "成品验收";
     private static final List<String> DEPT_LIST = Stream.of("一车间", "后道车间-车工", "后道车间-中辅工", "后道车间-大辅工").collect(Collectors.toList());
 
     @Resource
@@ -137,7 +138,19 @@ public class EmpSalaryMonthlyService {
     private SummarySalaryMonthly calculationTimed(EmpSalaryMonthly empSalaryMonthly, List<ProductionProcedureConfirm> list) {
         BigDecimal sum = BigDecimal.valueOf(0.0);
         BigDecimal twoSide = BigDecimal.valueOf(0.0);
+
+        Emp emp = empService.getByID(empSalaryMonthly.getEmpId());
+        //入职时间
+        Integer months = SalaryHandler.getMonths(emp.getEntryDate());
         if (CollectionUtils.isNotEmpty(list)) {
+            SalaryMonthly salaryMonthly = salaryMonthlyService.getByYearMonth(empSalaryMonthly.getYearMonth());
+            list.forEach(t -> {
+                if (t.getProcedureName().equals(PROCDUCENAME_CHENGPIN)) {
+                    t.setMoney(t.getMoney().add(BigDecimal.valueOf(BigDecimalUtil.mul(t.getMoney().doubleValue(),
+                            SalaryHandler.getTwoSideSubsidy(months, salaryMonthly.getAssistRate())))));
+                }
+            });
+
             sum = list.stream().map(ProductionProcedureConfirm::getMoney).reduce(BigDecimal.ZERO, BigDecimal::add);
 
             List<ProductionProcedureConfirm> twoSideList =
@@ -156,7 +169,7 @@ public class EmpSalaryMonthlyService {
         summarySalaryMonthly.setWorkName(empSalaryMonthly.getWorkName());
         summarySalaryMonthly.setEmpId(empSalaryMonthly.getEmpId());
         summarySalaryMonthly.setYearMonth(empSalaryMonthly.getYearMonth());
-        Emp emp = empService.getByID(empSalaryMonthly.getEmpId());
+
         if (emp != null) {
             //月工资
             summarySalaryMonthly.setDhbt(emp.getSalary());
@@ -206,15 +219,13 @@ public class EmpSalaryMonthlyService {
         summarySalaryMonthly.setMealSubsidy(BigDecimal.valueOf(BigDecimalUtil.mul(empSalaryMonthly.getDayWork().doubleValue(), 6.0)));
 
 
-        //入职时间
-        Integer months = SalaryHandler.getMonths(emp.getEntryDate());
         SalaryMonthly salaryMonthly = salaryMonthlyService.getByYearMonth(empSalaryMonthly.getYearMonth());
         //5个补贴
         summarySalaryMonthly.setWorkYearSubsidy(BigDecimal.valueOf(SalaryHandler.getWorkYearSubsidy(months, salaryMonthly.getIsMore())));
         summarySalaryMonthly.setNewLatheWorkerSubsidy(BigDecimal.ZERO);
         summarySalaryMonthly.setLatheWorkerSubsidy(BigDecimal.ZERO);
         summarySalaryMonthly.setPercentSubsidy(BigDecimal.ZERO);
-        summarySalaryMonthly.setTwoSideSubsidy(twoSide.multiply(BigDecimal.valueOf(SalaryHandler.getTwoSideSubsidy(months))));
+        summarySalaryMonthly.setTwoSideSubsidy(twoSide.add(twoSide.multiply(BigDecimal.valueOf(SalaryHandler.getTwoSideSubsidy(months, salaryMonthly.getTwoSideRate())))));
 
         if (empSalaryMonthly.getWorkName().equals(WORK_CHEGONG)) {
             BigDecimal dayWork = empSalaryMonthly.getDayWork().add(empSalaryMonthly.getDayWorkHoliday()).add(empSalaryMonthly.getDayWorkLegal());

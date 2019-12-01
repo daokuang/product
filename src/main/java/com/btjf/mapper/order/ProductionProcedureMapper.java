@@ -5,6 +5,7 @@ import com.btjf.model.order.ProductionProcedure;
 import com.btjf.model.order.ProductionProcedureExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 public interface ProductionProcedureMapper {
     /**
@@ -106,4 +107,6 @@ public interface ProductionProcedureMapper {
     List<ProductionProcedure> isContainZj(@Param("procedureName") String procedureName, @Param("productionNo") String productionNo, @Param("multipleProductionId") Integer multipleProductionId);
 
     List<ProductionProcedure> getByMultipleId(@Param("multipleId") Integer multipleId);
+
+    void deletByProductionProcedureId(@Param("id") Integer id);
 }

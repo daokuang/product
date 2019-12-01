@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -235,6 +236,8 @@ public class MineController  extends ProductBaseController {
         //TODO 质检员 工作量另算
         EmpWorkVo empWorkVo = new EmpWorkVo();
         double total = 0.0;
+        double confirmedSum = 0.0;
+        double unConfirmSum = 0.0;
 
         List<EmpDayWorkVo> dayWorkVos = productionProcedureConfirmService.analyseForDay(date, vo.getId());
         if(dayWorkVos == null || dayWorkVos.size() <1){
@@ -257,8 +260,13 @@ public class MineController  extends ProductBaseController {
             }
             dayWorkVo.setDayWorkDetailVoList(dayWorkDetailVoList);
             total = BigDecimalUtil.add(total, dayWorkVo.getSum());
+            confirmedSum = BigDecimalUtil.add(confirmedSum, dayWorkVo.getConfirmedSum());
+            unConfirmSum = BigDecimalUtil.add(unConfirmSum, dayWorkVo.getUnConfirmSum());
+
         }
         empWorkVo.setTotal(total);
+        empWorkVo.setConfirmed(confirmedSum);
+        empWorkVo.setUnConfirm(unConfirmSum);
         empWorkVo.setDayWorkVoList(dayWorkVos);
 
         return XaResult.success(empWorkVo);

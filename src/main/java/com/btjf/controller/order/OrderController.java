@@ -143,6 +143,13 @@ public class OrderController extends ProductBaseController {
         }
         Page page = new Page(pageSize, currentPage);
 
+        if(!StringUtils.isEmpty(orderNo)){
+            orderNo = orderNo.trim();
+        }
+        if(!StringUtils.isEmpty(pmNo)){
+            pmNo = pmNo.trim();
+        }
+
         Page<OrderVo> listPage = orderProductService.listPage(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate, page);
         List<OrderVo> list = listPage.getRows();
         if (!CollectionUtils.isEmpty(list)) {
@@ -306,6 +313,7 @@ public class OrderController extends ProductBaseController {
      */
     @RequestMapping(value = "/getProcessDetail", method = RequestMethod.GET)
     public XaResult<List<ProcessDetail>> getProcessDetail(String workspace, String orderNo, String productNo) {
+        if(StringUtils.isEmpty(workspace) || StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(productNo)) return XaResult.error("参数不全");
         OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(orderNo, productNo);
         List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workspace, orderNo, productNo);
         processDetails.forEach(t -> {
