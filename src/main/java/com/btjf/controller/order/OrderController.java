@@ -165,11 +165,11 @@ public class OrderController extends ProductBaseController {
                         orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
 
                 List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
-                orderVo.setBackBigAssist((double) (processDetails == null ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
+                orderVo.setBackBigAssist((double) (CollectionUtils.isEmpty(processDetails) ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
 
 
                 List<ProcessDetail> processDetails2 = productionProcedureConfirmService.getCompleteNum("后道-中辅工", orderVo.getOrderNo(), orderVo.getProductNo());
-                orderVo.setBackCenterAssist((double) (processDetails2 == null ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
+                orderVo.setBackCenterAssist((double) (CollectionUtils.isEmpty(processDetails2) ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
 
                 orderVo.setInspection(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "成品验收",
                         orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
