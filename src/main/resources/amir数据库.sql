@@ -749,7 +749,11 @@ ALTER TABLE t_Order_Product add remark varchar(255) DEFAULT NULL COMMENT '备注
 ALTER  table t_Salary_Monthly add twoSideRate decimal(4,2) DEFAULT NULL COMMENT '负面补贴系数';
 ALTER  table t_Salary_Monthly add assistRate decimal(4,2) DEFAULT NULL COMMENT '大复工补贴系数';
 
+-- 索引
 ALTER TABLE t_Production_Procedure_Scan ADD INDEX order_productNo_procedureName ( `orderNo`, `productNo`, `procedureName`)
 ALTER TABLE t_Production_Procedure_Confirm ADD INDEX order_productNo_procedureName ( `orderNo`, `productNo`, `procedureName`)
+
+ALTER TABLE t_Product_Procedure_Workshop ADD INDEX productNo_workshop (`productNo`, `workshop`)
+
 
 

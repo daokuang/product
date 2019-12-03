@@ -308,8 +308,8 @@ public class ProductionProcedureConfirmService {
 
         //员工扫描数量
         Integer scanNum = productionProcedureScanService.getHandleNum(orderNo, procedureName, productNo);
-        Integer changeNum = productionProcedureConfirmMapper.getHandleNum(orderNo, procedureName, productNo);
-        return changeNum > 0 ? changeNum : scanNum;
+        //Integer changeNum = productionProcedureConfirmMapper.getHandleNum(orderNo, procedureName, productNo);
+        return scanNum;
     }
 
     public List<ProcessDetail> getCompleteNum(String workspace, String orderNo, String product) {
