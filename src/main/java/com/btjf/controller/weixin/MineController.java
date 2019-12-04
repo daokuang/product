@@ -5,11 +5,9 @@ import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.controller.weixin.vo.WxEmpVo;
 import com.btjf.model.emp.Emp;
-import com.btjf.model.emp.EmpSalaryMonthly;
 import com.btjf.model.emp.SummarySalaryMonthly;
 import com.btjf.model.order.Order;
 import com.btjf.model.sys.Sysdept;
-import com.btjf.service.emp.EmpSalaryMonthlyService;
 import com.btjf.service.emp.EmpService;
 import com.btjf.service.emp.SummarySalaryMonthlyService;
 import com.btjf.service.order.ProductionProcedureConfirmService;
@@ -89,8 +87,7 @@ public class MineController  extends ProductBaseController {
                 OrderVo orderVo = new OrderVo();
                 orderVo.setDate(DateUtil.dateToString(o.getCreateTime(),new SimpleDateFormat("yyyy/MM/dd")));
                 orderVo.setOrderNo(o.getOrderNo());
-                List<OrderProductVo> ops = productionProcedureConfirmService.getOrderProductByMouth(
-                        o.getOrderNo(), date, vo.getDeptName());
+                List<OrderProductVo> ops = productionProcedureConfirmService.getOrderProductByMouth(o.getOrderNo(), date, vo.getDeptName());
                 orderVo.setList(ops);
                 voList.add(orderVo);
             }

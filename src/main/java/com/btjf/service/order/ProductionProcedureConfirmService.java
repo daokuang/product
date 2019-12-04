@@ -14,9 +14,6 @@ import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.service.productpm.ProductWorkshopService;
 import com.btjf.util.BigDecimalUtil;
 import com.btjf.vo.ProcedureYieldVo;
-import com.btjf.vo.weixin.EmpProcedureDetailVo;
-import com.btjf.vo.weixin.EmpProcedureListVo;
-import com.btjf.vo.weixin.OrderProductVo;
 import com.btjf.vo.weixin.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -52,6 +49,9 @@ public class ProductionProcedureConfirmService {
     @Resource
     private ProductionProcedureService productionProcedureService;
 
+    /**
+     * 注意！这里订单的创建时间被设为该订单下最新的生产单的创建时间
+     */
     public List<Order> getOrderByMouth(String date, String deptName) {
         return productionProcedureConfirmMapper.getOrderByMouth(date, deptName);
     }
@@ -60,7 +60,7 @@ public class ProductionProcedureConfirmService {
         return productionProcedureConfirmMapper.getOrderProductByMouth(orderNo, date, deptName);
     }
 
-    public List<EmpProcedureListVo> getEmpNum(String orderNo, String productNo,String date, String deptName) {
+    public List<EmpProcedureListVo> getEmpNum(String orderNo, String productNo, String date, String deptName) {
         List<ProductProcedure> list =
                 productionProcedureConfirmMapper.getByOrderAndProduct(orderNo, productNo, date, deptName);
         List<EmpProcedureListVo> volist = null;
@@ -73,6 +73,8 @@ public class ProductionProcedureConfirmService {
                 vo.setSort(list.get(i).getSort());
                 List<EmpProcedureDetailVo> dlist = productionProcedureConfirmMapper.getEmpNum(orderNo, productNo, vo.getId(), date, deptName);
                 vo.setList(dlist);
+                //Long changeCount = productionProcedureConfirmMapper.checkProcedureConfirmChanged(orderNo, productNo, vo.getId(), date, deptName);
+                vo.setChanged(productionProcedureConfirmMapper.checkProcedureConfirmChanged(orderNo, productNo, vo.getId(), date, deptName));
                 volist.add(vo);
             }
         }
@@ -88,7 +90,7 @@ public class ProductionProcedureConfirmService {
     public Integer add(Integer orderId, String orderNo, Integer louId, String billOutNo, String productNo, String productionNo, WxEmpVo wxEmpVo, Boolean isCreateInspectionorSalary) {
 
         //删除重复质检数据 未调整数据 (type = 1 || type = 3)ischange = 0
-        productionProcedureConfirmMapper.delete(orderNo, productNo, productionNo, louId, billOutNo,null);
+        productionProcedureConfirmMapper.delete(orderNo, productNo, productionNo, louId, billOutNo, null);
 
         List<ProductionProcedureScan> productionProcedureScans = productionProcedureScanService.select(orderNo, productNo, productionNo, louId, billOutNo, null);
         if (CollectionUtils.isEmpty(productionProcedureScans)) throw new BusinessException("该订单工序还没有员工处理");
@@ -114,7 +116,7 @@ public class ProductionProcedureConfirmService {
             productionProcedureConfirm.setWorkshop(wxEmpVo.getDeptName());
             productionProcedureConfirm.setProcedureId(t.getProcedureId());
             productionProcedureConfirm.setProcedureName(t.getProcedureName());
-            productionProcedureConfirm.setInspectionor(isCreateInspectionorSalary.equals(false)?"系统生成":wxEmpVo.getName()); //质检员
+            productionProcedureConfirm.setInspectionor(isCreateInspectionorSalary.equals(false) ? "系统生成" : wxEmpVo.getName()); //质检员
             productionProcedureConfirmMapper.insertSelective(productionProcedureConfirm);
             t.setStatus(1);
             //扫码记录改成已质检
@@ -122,7 +124,7 @@ public class ProductionProcedureConfirmService {
         });
 
         //生产单是否包含该质检员包含的质检工序  包含则增加质检员工资
-        Boolean isContain = productionProcedureService.isContainZj(wxEmpVo.getDeptName()+"质检", productionNo);
+        Boolean isContain = productionProcedureService.isContainZj(wxEmpVo.getDeptName() + "质检", productionNo);
         if (isCreateInspectionorSalary && isContain) {
             //新增质检工资记录
             ProductionProcedureScan productionProcedureScan = productionProcedureScans.get(0);
@@ -160,7 +162,7 @@ public class ProductionProcedureConfirmService {
 
     public void change(String orderNo, String productNo, Integer procedureId, List<EmpProcedureDetailVo> list, WxEmpVo vo, String date) {
         //把之前可能存在的 调整数据 删除
-        productionProcedureConfirmMapper.deleteType2(orderNo, productNo, procedureId,  date, vo.getDeptName());
+        productionProcedureConfirmMapper.deleteType2(orderNo, productNo, procedureId, date, vo.getDeptName());
         //把之前的质检数据  置为 已调整
         List<ProductionProcedureConfirm> clist = productionProcedureConfirmMapper.getCheckList(orderNo, productNo,
                 date, procedureId, vo.getDeptName());

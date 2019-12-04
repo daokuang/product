@@ -99,6 +99,9 @@ public interface ProductionProcedureConfirmMapper {
      */
     int updateByPrimaryKey(ProductionProcedureConfirm record);
 
+    /**
+     * 注意！这里订单的创建时间被设为该订单下最新的生产单的创建时间
+     */
     List<Order> getOrderByMouth(@Param("date") String date, @Param("deptName")String deptName);
 
     List<OrderProductVo> getOrderProductByMouth(@Param("orderNo")String orderNo,
@@ -109,6 +112,12 @@ public interface ProductionProcedureConfirmMapper {
 
     List<EmpProcedureDetailVo> getEmpNum(@Param("orderNo")String orderNo, @Param("productNo")String productNo, @Param("id")Integer id,
                                          @Param("date") String date, @Param("deptName")String deptName);
+
+    /**
+     * 检查该生产单的该工序是否已调整，大于0表示已调整
+     */
+    Boolean checkProcedureConfirmChanged(@Param("orderNo") String orderNo, @Param("productNo") String productNo, @Param("id") Integer id,
+                                         @Param("date") String date, @Param("deptName") String deptName);
 
     List<ProductionProcedureConfirm> select(ProductionProcedureConfirm productionProcedureConfirm);
 
