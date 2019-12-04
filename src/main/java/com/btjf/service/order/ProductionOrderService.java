@@ -276,7 +276,7 @@ public class ProductionOrderService {
                     multipleProduction.setCreateTime(new Date());
                     multipleProduction.setFristNum(procedures.get(0).getNum());
                     multipleProduction.setLastModifyTime(new Date());
-                    multipleProduction.setOrderId(orderProduct.getOrderId());
+                    multipleProduction.setOrderId(orderProduct.getId());
                     multipleProduction.setProductionId(productionOrder.getId());
                     multipleProduction.setOrderNo(orderProduct.getOrderNo());
                     multipleProduction.setWorkshop(productionOrder.getWorkshop());

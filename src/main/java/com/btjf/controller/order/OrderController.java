@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -143,39 +144,44 @@ public class OrderController extends ProductBaseController {
         }
         Page page = new Page(pageSize, currentPage);
 
-        if(!StringUtils.isEmpty(orderNo)){
+        if (!StringUtils.isEmpty(orderNo)) {
             orderNo = orderNo.trim();
         }
-        if(!StringUtils.isEmpty(pmNo)){
+        if (!StringUtils.isEmpty(pmNo)) {
             pmNo = pmNo.trim();
         }
 
         Page<OrderVo> listPage = orderProductService.listPage(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate, page);
         List<OrderVo> list = listPage.getRows();
-        if (!CollectionUtils.isEmpty(list)) {
-            list.stream().forEach(orderVo -> {
-                orderVo.setBlanking(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "裁外壳",
-                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
-                Integer fm = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面",
-                        orderVo.getProductNo());
-                Integer fma = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面A",
-                        orderVo.getProductNo());
-                orderVo.setFrontFm(BigDecimalUtil.div(fma > fm ? fma : fm, Double.valueOf(orderVo.getMaxNum())) * 100);
-                orderVo.setFrontCheck(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "一车间质检",
-                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
+        new Thread(() -> {
+            if (!CollectionUtils.isEmpty(list)) {
+                list.stream().forEach(orderVo -> {
+                    OrderProduct orderProduct = new OrderProduct();
+                    orderProduct.setId(orderVo.getId());
+                    orderProduct.setBlanking(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "裁外壳",
+                            orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
+                    Integer fm = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面",
+                            orderVo.getProductNo());
+                    Integer fma = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面A",
+                            orderVo.getProductNo());
+                    orderProduct.setFrontFm(BigDecimal.valueOf(BigDecimalUtil.div(fma > fm ? fma : fm, Double.valueOf(orderVo.getMaxNum())) * 100));
+                    orderProduct.setFrontCheck(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "一车间质检",
+                            orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
 
-                List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
-                orderVo.setBackBigAssist((double) (CollectionUtils.isEmpty(processDetails) ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
+                    List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+                    orderProduct.setBackBigAssist(BigDecimal.valueOf((double) (CollectionUtils.isEmpty(processDetails) ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum())));
 
 
-                List<ProcessDetail> processDetails2 = productionProcedureConfirmService.getCompleteNum("后道-中辅工", orderVo.getOrderNo(), orderVo.getProductNo());
-                orderVo.setBackCenterAssist((double) (CollectionUtils.isEmpty(processDetails2) ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum()));
+                    List<ProcessDetail> processDetails2 = productionProcedureConfirmService.getCompleteNum("后道-中辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+                    orderProduct.setBackCenterAssist(BigDecimal.valueOf((double) (CollectionUtils.isEmpty(processDetails2) ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum())));
 
-                orderVo.setInspection(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "成品验收",
-                        orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100);
-            });
-
-        }
+                    orderProduct.setInspection(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "成品验收",
+                            orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
+                    orderProduct.setLastModifyTime(new Date());
+                    orderProductService.update(orderProduct);
+                });
+            }
+        }).start();
         XaResult<List<OrderVo>> result = AppXaResultHelper.success(listPage, list);
         Map<String, Integer> cuntMap = orderProductService.getCount(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate);
         Map map = Maps.newHashMap();
@@ -306,16 +312,17 @@ public class OrderController extends ProductBaseController {
     /**
      * 订单工序详细列表
      *
-     * @param workspace
+     * @param workSpace
      * @param orderNo
      * @param productNo
      * @return
      */
     @RequestMapping(value = "/getProcessDetail", method = RequestMethod.GET)
-    public XaResult<List<ProcessDetail>> getProcessDetail(String workspace, String orderNo, String productNo) {
-        if(StringUtils.isEmpty(workspace) || StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(productNo)) return XaResult.error("参数不全");
+    public XaResult<List<ProcessDetail>> getProcessDetail(String workSpace, String orderNo, String productNo) {
+        if (StringUtils.isEmpty(workSpace) || StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(productNo))
+            return XaResult.error("参数不全");
         OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(orderNo, productNo);
-        List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workspace, orderNo, productNo);
+        List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workSpace, orderNo, productNo);
         processDetails.forEach(t -> {
             t.setPencent(BigDecimalUtil.div(t.getNum(), Double.valueOf(orderProduct.getMaxNum())) * 100);
         });

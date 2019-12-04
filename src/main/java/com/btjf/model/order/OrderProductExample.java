@@ -1,5 +1,6 @@
 package com.btjf.model.order;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -1689,6 +1690,426 @@ public class OrderProductExample {
 
         public Criteria andRemarkNotBetween(String value1, String value2) {
             addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingIsNull() {
+            addCriterion("blanking is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingIsNotNull() {
+            addCriterion("blanking is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingEqualTo(BigDecimal value) {
+            addCriterion("blanking =", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingNotEqualTo(BigDecimal value) {
+            addCriterion("blanking <>", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingGreaterThan(BigDecimal value) {
+            addCriterion("blanking >", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("blanking >=", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingLessThan(BigDecimal value) {
+            addCriterion("blanking <", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("blanking <=", value, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingIn(List<BigDecimal> values) {
+            addCriterion("blanking in", values, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingNotIn(List<BigDecimal> values) {
+            addCriterion("blanking not in", values, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("blanking between", value1, value2, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andBlankingNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("blanking not between", value1, value2, "blanking");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmIsNull() {
+            addCriterion("frontFm is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmIsNotNull() {
+            addCriterion("frontFm is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmEqualTo(BigDecimal value) {
+            addCriterion("frontFm =", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmNotEqualTo(BigDecimal value) {
+            addCriterion("frontFm <>", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmGreaterThan(BigDecimal value) {
+            addCriterion("frontFm >", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("frontFm >=", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmLessThan(BigDecimal value) {
+            addCriterion("frontFm <", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("frontFm <=", value, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmIn(List<BigDecimal> values) {
+            addCriterion("frontFm in", values, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmNotIn(List<BigDecimal> values) {
+            addCriterion("frontFm not in", values, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("frontFm between", value1, value2, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontFmNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("frontFm not between", value1, value2, "frontFm");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckIsNull() {
+            addCriterion("frontCheck is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckIsNotNull() {
+            addCriterion("frontCheck is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckEqualTo(BigDecimal value) {
+            addCriterion("frontCheck =", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckNotEqualTo(BigDecimal value) {
+            addCriterion("frontCheck <>", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckGreaterThan(BigDecimal value) {
+            addCriterion("frontCheck >", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("frontCheck >=", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckLessThan(BigDecimal value) {
+            addCriterion("frontCheck <", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("frontCheck <=", value, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckIn(List<BigDecimal> values) {
+            addCriterion("frontCheck in", values, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckNotIn(List<BigDecimal> values) {
+            addCriterion("frontCheck not in", values, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("frontCheck between", value1, value2, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andFrontCheckNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("frontCheck not between", value1, value2, "frontCheck");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistIsNull() {
+            addCriterion("backBigAssist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistIsNotNull() {
+            addCriterion("backBigAssist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistEqualTo(BigDecimal value) {
+            addCriterion("backBigAssist =", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistNotEqualTo(BigDecimal value) {
+            addCriterion("backBigAssist <>", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistGreaterThan(BigDecimal value) {
+            addCriterion("backBigAssist >", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("backBigAssist >=", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistLessThan(BigDecimal value) {
+            addCriterion("backBigAssist <", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("backBigAssist <=", value, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistIn(List<BigDecimal> values) {
+            addCriterion("backBigAssist in", values, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistNotIn(List<BigDecimal> values) {
+            addCriterion("backBigAssist not in", values, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("backBigAssist between", value1, value2, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackBigAssistNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("backBigAssist not between", value1, value2, "backBigAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistIsNull() {
+            addCriterion("backCenterAssist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistIsNotNull() {
+            addCriterion("backCenterAssist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistEqualTo(BigDecimal value) {
+            addCriterion("backCenterAssist =", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistNotEqualTo(BigDecimal value) {
+            addCriterion("backCenterAssist <>", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistGreaterThan(BigDecimal value) {
+            addCriterion("backCenterAssist >", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("backCenterAssist >=", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistLessThan(BigDecimal value) {
+            addCriterion("backCenterAssist <", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("backCenterAssist <=", value, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistIn(List<BigDecimal> values) {
+            addCriterion("backCenterAssist in", values, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistNotIn(List<BigDecimal> values) {
+            addCriterion("backCenterAssist not in", values, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("backCenterAssist between", value1, value2, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andBackCenterAssistNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("backCenterAssist not between", value1, value2, "backCenterAssist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistIsNull() {
+            addCriterion("assist is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistIsNotNull() {
+            addCriterion("assist is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistEqualTo(BigDecimal value) {
+            addCriterion("assist =", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistNotEqualTo(BigDecimal value) {
+            addCriterion("assist <>", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistGreaterThan(BigDecimal value) {
+            addCriterion("assist >", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("assist >=", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistLessThan(BigDecimal value) {
+            addCriterion("assist <", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("assist <=", value, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistIn(List<BigDecimal> values) {
+            addCriterion("assist in", values, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistNotIn(List<BigDecimal> values) {
+            addCriterion("assist not in", values, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assist between", value1, value2, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssistNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("assist not between", value1, value2, "assist");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionIsNull() {
+            addCriterion("inspection is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionIsNotNull() {
+            addCriterion("inspection is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionEqualTo(BigDecimal value) {
+            addCriterion("inspection =", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionNotEqualTo(BigDecimal value) {
+            addCriterion("inspection <>", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionGreaterThan(BigDecimal value) {
+            addCriterion("inspection >", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("inspection >=", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionLessThan(BigDecimal value) {
+            addCriterion("inspection <", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("inspection <=", value, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionIn(List<BigDecimal> values) {
+            addCriterion("inspection in", values, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionNotIn(List<BigDecimal> values) {
+            addCriterion("inspection not in", values, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("inspection between", value1, value2, "inspection");
+            return (Criteria) this;
+        }
+
+        public Criteria andInspectionNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("inspection not between", value1, value2, "inspection");
             return (Criteria) this;
         }
 

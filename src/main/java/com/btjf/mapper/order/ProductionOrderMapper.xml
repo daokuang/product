@@ -589,8 +589,8 @@
         tpo.type as type
         FROM
         t_Production_Order tpo
-        LEFT JOIN t_Order_Product top ON tpo.orderProductId = top.id
         LEFT JOIN t_Multiple_Production tmp ON tpo.id = tmp.productionId
+        LEFT JOIN t_Order_Product top ON tmp.orderId = top.id
         WHERE
         1=1
         <if test="orderNo != null">
