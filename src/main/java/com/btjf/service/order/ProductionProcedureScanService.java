@@ -83,6 +83,7 @@ public class ProductionProcedureScanService {
 
         Integer deleteRow = productionProcedureConfirmMapper.delete(orderNo, productNo, productionNo, louId, billOutNo, null);
         if (deleteRow > 0) LOGGER.info("员工确认工序 删除之前质检的工序条数：" + deleteRow);
+        Date current = new Date();
         for (WorkShopVo.Procedure procedure : procedures) {
             if (procedure == null) continue;
             row++;
@@ -98,7 +99,7 @@ public class ProductionProcedureScanService {
             productionProcedureScan.setNum(num);
             productionProcedureScan.setOrderNo(orderNo);
             productionProcedureScan.setProcedureId(productProcedure.getId());
-            productionProcedureScan.setCreateTime(new Date());
+            productionProcedureScan.setCreateTime(current);
             productionProcedureScan.setIsDelete(0);
             productionProcedureScan.setProcedureName(productProcedure.getProcedureName());
             productionProcedureScan.setPrice(productProcedure.getPrice());
