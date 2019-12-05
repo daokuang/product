@@ -46,8 +46,6 @@ public class PmExcelHandler extends BaseExcelHandler {
             workbook = WorkbookFactory.create(inputStream);
         } catch (IOException e) {
             throw new BusinessException("workbook工具解析excel文件报错!!");
-        } catch (InvalidFormatException e) {
-            throw new BusinessException("workbook工具解析excel文件报错!!");
         }
         //错误信息
         List<String> error = Lists.newArrayList();

@@ -102,7 +102,7 @@ public abstract class BaseExcelHandler {
     public String getCellValue(Cell cell) {
         String cellValue = "";
         // 以下是判断数据的类型
-        switch (cell.getCellType()) {
+        switch (cell.getCellType().ordinal()) {
             case 0: // 数字
                 if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
