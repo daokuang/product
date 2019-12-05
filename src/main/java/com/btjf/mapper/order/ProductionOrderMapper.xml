@@ -585,7 +585,7 @@
         tpo.createTime AS createTimes,
         tmp.fristNum AS sassignNum,
         top.unit AS unit,
-        tpo.maxNum AS maxNum,
+        top.maxNum AS maxNum,
         tpo.type as type
         FROM
         t_Production_Order tpo
