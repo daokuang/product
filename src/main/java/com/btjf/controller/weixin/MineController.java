@@ -250,11 +250,11 @@ public class MineController  extends ProductBaseController {
                 }
                 boolean flag = false;
                 for (EmpDayWorkDetailVo newVo:dayWorkDetailVoList_new){
-                    if(newVo.getBillNo().equals(dayWorkDetailVo.getBillNo()) &&
-                            ((newVo.getLuoId() != null && newVo.getLuoId().equals(dayWorkDetailVo.getLuoId())) || (newVo.getLuoId() == null && dayWorkDetailVo.getLuoId() == null))
+                    if((newVo.getBillNo() != null && newVo.getBillNo().equals(dayWorkDetailVo.getBillNo()) || (newVo.getBillNo() == null && dayWorkDetailVo.getBillNo() == null))
+                            &&((newVo.getLuoId() != null && newVo.getLuoId().equals(dayWorkDetailVo.getLuoId())) || (newVo.getLuoId() == null && dayWorkDetailVo.getLuoId() == null))
                             && newVo.getOrderNo().equals(dayWorkDetailVo.getOrderNo())
                             && newVo.getProductNo().equals(dayWorkDetailVo.getProductNo())
-                            && newVo.getType().equals(dayWorkDetailVo.getType())
+                            && ((newVo.getType() != null && newVo.getType().equals(dayWorkDetailVo.getType())) || (newVo.getType() == null && dayWorkDetailVo.getType() == null))
                             && newVo.getStatusDesc().equals(dayWorkDetailVo.getStatusDesc())){
                         flag = true;
                     }
