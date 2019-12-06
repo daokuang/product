@@ -330,4 +330,7 @@ public class ProductionProcedureConfirmService {
         return processDetails;
 
     }
+    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo){
+        return productionProcedureConfirmMapper.getType2(orderNo, procedureName, productNo);
+    }
 }

@@ -8,6 +8,7 @@ import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.excel.BaseExcelHandler;
 import com.btjf.model.emp.*;
+import com.btjf.model.order.ProductionProcedureConfirm;
 import com.btjf.model.salary.SalaryMonthly;
 import com.btjf.model.sys.Sysdept;
 import com.btjf.service.emp.*;
@@ -147,7 +148,7 @@ public class LaborBasicController extends ProductBaseController {
             return XaResult.error("产值不能为空");
         }
         if (assistRate == null) assistRate = BigDecimal.ZERO.doubleValue();
-        if (twoSideRate == null) twoSideRate =  BigDecimal.ZERO.doubleValue();
+        if (twoSideRate == null) twoSideRate = BigDecimal.ZERO.doubleValue();
         SalaryMonthly salaryMonthly = salaryMonthlyService.getByYearMonth(yearMonth);
         if (salaryMonthly == null) {
             return XaResult.error("请先设置该月工资");
@@ -276,6 +277,16 @@ public class LaborBasicController extends ProductBaseController {
         Page<ProcedureYieldVo> listPage = productionProcedureConfirmService.yieldList(name, deptId, workId,
                 orderNo, productNo, procedureName, yearMonth, startDate, endDate, page, confirmed);
         List<ProcedureYieldVo> procedureYieldVos = listPage.getRows();
+
+        procedureYieldVos.forEach(t -> {
+            if (t.getConfirmed() == 1) {
+                ProductionProcedureConfirm productionProcedureConfirm = productionProcedureConfirmService.getType2(t.getOrderNo(), t.getProcedureName(), t.getProductNo());
+                t.setConfirmedMoney(productionProcedureConfirm == null ? t.getMoney() : productionProcedureConfirm.getMoney().doubleValue());
+                t.setMoney(t.getConfirmedMoney());
+            } else {
+                t.setConfirmedMoney(Double.valueOf("0"));
+            }
+        });
 
         Double confirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 1).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
         Double notConfirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 0).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);

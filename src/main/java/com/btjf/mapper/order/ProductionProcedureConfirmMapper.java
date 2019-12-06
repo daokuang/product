@@ -152,4 +152,6 @@ public interface ProductionProcedureConfirmMapper {
     void updateSettlement(@Param("ids")List<Integer> ids);
 
     Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
+
+    ProductionProcedureConfirm getType2(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 }

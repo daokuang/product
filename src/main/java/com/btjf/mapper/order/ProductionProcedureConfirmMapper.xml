@@ -526,36 +526,36 @@
     </update>
 
     <select id="getOrderByMouth" resultType="com.btjf.model.order.Order">
-      select o.id, o.orderNo, temp.productionOrderTime createTime, o.lastModifyTime, o.isDelete
-      from t_Order o
-      left join (select po.orderId, max(po.createTime) productionOrderTime
-      from t_Production_Order po
-      where po.isDelete = 0
-      and po.workshop = #{deptName,jdbcType=VARCHAR}
-      group by po.orderId) temp on o.id = temp.orderId
-      where exists(select 1
-      from t_Production_Procedure_Confirm p
-      where p.orderNo = o.orderNo
-      and ((p.type = 2 and p.isChange = 0) or (p.type = 1 and p.isChange = 0))
-      and p.isDelete = 0
-      and p.completeTime >= concat(#{date}, '-01')
-      and p.workshop = #{deptName,jdbcType=VARCHAR})
-      and exists(select 1
-      from t_Production_Order po
-      where po.orderId = o.id
-      and po.isDelete = 0
-      and po.workshop = #{deptName,jdbcType=VARCHAR}
-      and DATE_FORMAT(po.createTime, '%Y-%m') = #{date})
-      order by temp.productionOrderTime desc
-      <!--    2019-12-04 替换为上述代码 By Leq
-              select DISTINCT o.*
-              from t_Production_Procedure_Confirm p LEFT JOIN t_Order o ON p.orderNo = o.orderNo
-               where ((p.type = 2 and p.isChange=0) or (p.type =1 and p.isChange=0))
-               and p.isDelete = 0
-              and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
-              and p.workshop = #{deptName,jdbcType=VARCHAR}
-              ORDER BY o.createTime DESC
-      -->
+        select o.id, o.orderNo, temp.productionOrderTime createTime, o.lastModifyTime, o.isDelete
+        from t_Order o
+        left join (select po.orderId, max(po.createTime) productionOrderTime
+        from t_Production_Order po
+        where po.isDelete = 0
+        and po.workshop = #{deptName,jdbcType=VARCHAR}
+        group by po.orderId) temp on o.id = temp.orderId
+        where exists(select 1
+        from t_Production_Procedure_Confirm p
+        where p.orderNo = o.orderNo
+        and ((p.type = 2 and p.isChange = 0) or (p.type = 1 and p.isChange = 0))
+        and p.isDelete = 0
+        and p.completeTime >= concat(#{date}, '-01')
+        and p.workshop = #{deptName,jdbcType=VARCHAR})
+        and exists(select 1
+        from t_Production_Order po
+        where po.orderId = o.id
+        and po.isDelete = 0
+        and po.workshop = #{deptName,jdbcType=VARCHAR}
+        and DATE_FORMAT(po.createTime, '%Y-%m') = #{date})
+        order by temp.productionOrderTime desc
+        <!--    2019-12-04 替换为上述代码 By Leq
+                select DISTINCT o.*
+                from t_Production_Procedure_Confirm p LEFT JOIN t_Order o ON p.orderNo = o.orderNo
+                 where ((p.type = 2 and p.isChange=0) or (p.type =1 and p.isChange=0))
+                 and p.isDelete = 0
+                and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
+                and p.workshop = #{deptName,jdbcType=VARCHAR}
+                ORDER BY o.createTime DESC
+        -->
     </select>
     <select id="getOrderProductByMouth" resultType="com.btjf.vo.weixin.OrderProductVo">
       select a.productNo,a.unit, max(a.num) num,
@@ -607,7 +607,7 @@
          group by p.empId,e.name
     </select>
 
-  <select id="checkProcedureConfirmChanged" resultType="Boolean">
+    <select id="checkProcedureConfirmChanged" resultType="Boolean">
       select count(0)>0
       from t_Production_Procedure_Confirm p
       where p.productNo = #{productNo,jdbcType=VARCHAR}
@@ -619,7 +619,7 @@
         and p.workshop = #{deptName,jdbcType=VARCHAR}
     </select>
 
-  <select id="select" resultMap="BaseResultMap">
+    <select id="select" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_Production_Procedure_Confirm
@@ -1063,5 +1063,16 @@
         and isDelete = 0
   </select>
 
+
+    <select id="getType2" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_Production_Procedure_Confirm
+        where productNo = #{productNo,jdbcType=VARCHAR}
+        and orderNo = #{orderNo,jdbcType=VARCHAR}
+        and procedureName =#{procedureName}
+        and type = 2
+        and isDelete = 0
+    </select>
 
 </mapper>

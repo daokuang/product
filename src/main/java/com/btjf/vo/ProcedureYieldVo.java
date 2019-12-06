@@ -21,6 +21,7 @@ public class ProcedureYieldVo {
     private String date;
     private String checker;
 
+    private Double confirmedMoney;
     private Date sortTime;
     private Integer confirmed;//是否质检
     private Double workOutput;//工作产出
@@ -147,6 +148,14 @@ public class ProcedureYieldVo {
 
     public void setWorkOutput(Double workOutput) {
         this.workOutput = workOutput;
+    }
+
+    public Double getConfirmedMoney() {
+        return confirmedMoney;
+    }
+
+    public void setConfirmedMoney(Double confirmedMoney) {
+        this.confirmedMoney = confirmedMoney;
     }
 
     public void setSortTime(Date sortTime) {
