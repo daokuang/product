@@ -246,19 +246,35 @@ public class MineController  extends ProductBaseController {
         for (EmpDayWorkVo dayWorkVo:dayWorkVos) {
             List<EmpDayWorkDetailVo> dayWorkDetailVoList =
                     productionProcedureConfirmService.getWorkForDay(dayWorkVo.getDate(), vo.getId());
+            //为了应对 一天内 多次扫码，每次扫一个工序的情况
+            List<EmpDayWorkDetailVo> dayWorkDetailVoList_new = new ArrayList<>();
             for (EmpDayWorkDetailVo dayWorkDetailVo:dayWorkDetailVoList) {
                 //TODO 根据 type 罗ID  精确搜索工序
                 String billNo = dayWorkDetailVo.getBillNo();
                 if(dayWorkDetailVo.getLuoId() != null){
                     billNo = StringUtils.substringBefore(billNo, "-");
                 }
-                List<ProcedureInfoVo> procedureInfoVos =
-                        productionProcedureConfirmService.getWorkProcedureInfo(dayWorkVo.getDate(), vo.getId(),
-                        dayWorkDetailVo.getOrderNo(), dayWorkDetailVo.getProductNo(),billNo, dayWorkDetailVo.getLuoId(),
-                                dayWorkDetailVo.getType());
-                dayWorkDetailVo.setProcedureInfoVoList(procedureInfoVos);
+                boolean flag = false;
+                for (EmpDayWorkDetailVo newVo:dayWorkDetailVoList_new){
+                    if(newVo.getBillNo().equals(dayWorkDetailVo.getBillNo()) &&
+                            ((newVo.getLuoId() != null && newVo.getLuoId().equals(dayWorkDetailVo.getLuoId())) || (newVo.getLuoId() == null && dayWorkDetailVo.getLuoId() == null))
+                            && newVo.getOrderNo().equals(dayWorkDetailVo.getOrderNo())
+                            && newVo.getProductNo().equals(dayWorkDetailVo.getProductNo())
+                            && newVo.getType().equals(dayWorkDetailVo.getType())
+                            && newVo.getStatusDesc().equals(dayWorkDetailVo.getStatusDesc())){
+                        flag = true;
+                    }
+                }
+                if (!flag){
+                    List<ProcedureInfoVo> procedureInfoVos =
+                            productionProcedureConfirmService.getWorkProcedureInfo(dayWorkVo.getDate(), vo.getId(),
+                                    dayWorkDetailVo.getOrderNo(), dayWorkDetailVo.getProductNo(),billNo, dayWorkDetailVo.getLuoId(),
+                                    dayWorkDetailVo.getType());
+                    dayWorkDetailVo.setProcedureInfoVoList(procedureInfoVos);
+                    dayWorkDetailVoList_new.add(dayWorkDetailVo);
+                }
             }
-            dayWorkVo.setDayWorkDetailVoList(dayWorkDetailVoList);
+            dayWorkVo.setDayWorkDetailVoList(dayWorkDetailVoList_new);
             total = BigDecimalUtil.add(total, dayWorkVo.getSum());
             confirmedSum = BigDecimalUtil.add(confirmedSum, dayWorkVo.getConfirmedSum());
             unConfirmSum = BigDecimalUtil.add(unConfirmSum, dayWorkVo.getUnConfirmSum());
