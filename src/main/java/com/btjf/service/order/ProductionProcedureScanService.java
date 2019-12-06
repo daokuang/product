@@ -57,6 +57,9 @@ public class ProductionProcedureScanService {
     private PmOutService pmOutService;
 
     @Resource
+    private OrderProductService orderProductService;
+
+    @Resource
     private ProductionProcedureConfirmService productionProcedureConfirmService;
 
 
@@ -131,6 +134,8 @@ public class ProductionProcedureScanService {
             //无需质检的生成质检信息
             productionProcedureConfirmService.add(null, orderNo, louId, billOutNo, productNo, productionNo, wxEmpVo, false);
         }
+
+        orderProductService.workShopNum(orderNo, productNo);
 
         LOGGER.info("订单号：" + orderNo + "，型号：" + productNo + "确认入库完成！！！新增" + row + "条记录");
         return row;
