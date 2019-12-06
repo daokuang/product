@@ -152,10 +152,6 @@ public class ProductionProcedureConfirmService {
             productionProcedureScanService.updateStatue(t);
         });
 
-        //生产单是否包含该质检员包含的质检工序  包含则增加质检员工资
-
-        Boolean isContain = productionProcedureService.isContainZj(wxEmpVo.getDeptName() + "质检", productionNo);
-        if (isCreateInspectionorSalary && isContain) {
         List<ProductionProcedure> isContainList = productionProcedureService.isContainZj(wxEmpVo.getDeptName() + "质检", productionNo, null);
         if (isCreateInspectionorSalary && !CollectionUtils.isEmpty(isContainList) && productionOrder.getType() == 1) {
             //新增质检工资记录
