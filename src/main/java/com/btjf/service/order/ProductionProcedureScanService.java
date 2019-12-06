@@ -3,6 +3,8 @@ package com.btjf.service.order;
 import com.alibaba.druid.util.StringUtils;
 import com.btjf.business.common.exception.BusinessException;
 import com.btjf.common.utils.BeanUtil;
+import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.controller.weixin.vo.WxEmpVo;
 import com.btjf.mapper.order.ProductionProcedureConfirmMapper;
@@ -19,6 +21,7 @@ import com.btjf.util.BigDecimalUtil;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -52,6 +55,9 @@ public class ProductionProcedureScanService {
 
     @Resource
     private PmOutService pmOutService;
+
+    @Resource
+    private OrderProductService orderProductService;
 
     @Resource
     private ProductionProcedureConfirmService productionProcedureConfirmService;
@@ -96,7 +102,7 @@ public class ProductionProcedureScanService {
             //插入扫码数据
             ProductionProcedureScan productionProcedureScan = new ProductionProcedureScan();
             productionProcedureScan.setEmpId(wxEmpVo.getId());
-            productionProcedureScan.setNum(num);
+            productionProcedureScan.setNum(num == null ? procedure.getNum() : num);
             productionProcedureScan.setOrderNo(orderNo);
             productionProcedureScan.setProcedureId(productProcedure.getId());
             productionProcedureScan.setCreateTime(current);
@@ -107,7 +113,7 @@ public class ProductionProcedureScanService {
             productionProcedureScan.setPmOutBillNo(billOutNo);
             productionProcedureScan.setProductNo(productNo);
             productionProcedureScan.setProductionNo(productionNo);
-            productionProcedureScan.setMoney(BigDecimal.valueOf(BigDecimalUtil.mul(Double.valueOf(num), productProcedure.getPrice().doubleValue())));
+            productionProcedureScan.setMoney(BigDecimal.valueOf(BigDecimalUtil.mul(Double.valueOf(num == null ? procedure.getNum() : num), productProcedure.getPrice().doubleValue())));
             productionProcedureScan.setStatus(0);
 
             productionProcedureScanMapper.insert(productionProcedureScan);
@@ -130,6 +136,8 @@ public class ProductionProcedureScanService {
             productionProcedureConfirmService.add(null, orderNo, louId, billOutNo, productNo, productionNo, wxEmpVo, false);
         }
 
+        orderProductService.workShopNum(orderNo, productNo);
+
         LOGGER.info("订单号：" + orderNo + "，型号：" + productNo + "确认入库完成！！！新增" + row + "条记录");
         return row;
     }
@@ -151,5 +159,22 @@ public class ProductionProcedureScanService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 扫描数
+     *
+     * @param orderNo
+     * @param procedureName
+     * @param productNo
+     * @return
+     */
+    public Integer getHandleNum(String orderNo, String procedureName, String productNo) {
+        return productionProcedureScanMapper.getHandleNum(orderNo, procedureName, productNo);
+
+    }
+
+    public List<ProcessDetail> getByProcduct(List<Integer> ids, String orderNo, String product) {
+        return productionProcedureScanMapper.getByProcduct(ids, orderNo, product);
     }
 }

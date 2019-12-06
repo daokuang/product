@@ -76,12 +76,22 @@ public class ProductionProcedureService {
         }).orElse(0);
     }
 
-    public Boolean isContainZj(String procedureName, String productionNo) {
+    public List<ProductionProcedure> isContainZj(String procedureName, String productionNo, Integer multipleProductionId) {
         Boolean flage = false;
-        Integer num = productionProcedureMapper.isContainZj(procedureName, productionNo);
-        if (num > 0) {
-            flage = true;
-        }
-        return flage;
+        return productionProcedureMapper.isContainZj(procedureName, productionNo, multipleProductionId);
+
     }
+
+    public List<ProductionProcedure> getByMultipleId(Integer id) {
+        return productionProcedureMapper.getByMultipleId(id);
+    }
+
+    /**
+     * 通过工序id删除
+     * @param id
+     */
+    public void deletByProductionProcedureId(Integer id){
+        productionProcedureMapper.deletByProductionProcedureId(id);
+    }
+
 }

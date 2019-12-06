@@ -9,20 +9,19 @@ import com.btjf.controller.base.ProductBaseController;
 import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.controller.weixin.vo.WorkListVo;
 import com.btjf.controller.weixin.vo.WxEmpVo;
-import com.btjf.model.order.OrderProduct;
-import com.btjf.model.order.ProductionLuo;
-import com.btjf.model.order.ProductionOrder;
-import com.btjf.model.order.ProductionProcedureConfirm;
+import com.btjf.model.order.*;
 import com.btjf.model.pm.PmOutBill;
 import com.btjf.service.order.*;
 import com.btjf.service.pm.PmOutService;
 import com.btjf.service.productpm.ProductWorkshopService;
 import com.btjf.service.sys.ShortUrlService;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.json4s.DefaultWriters;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,6 +72,10 @@ public class WorkController extends ProductBaseController {
     private ShortUrlService shortUrlService;
 
     private static final List<String> NOTCONFIRM_DEPT = Arrays.asList("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检","仓库");
+
+    @Resource
+    private MultipleProductionService multipleProductionService;
+
 
     @RequestMapping(value = "getConfirmList", method = RequestMethod.GET)
     public XaResult<WorkListVo> getConfigList(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
@@ -133,8 +136,8 @@ public class WorkController extends ProductBaseController {
         }
         XaResult result = XaResult.success(workListVo);
         if (wxEmpVo.getWorkName().equals("检验")) {
-            if (NOTCONFIRM_DEPT.contains(wxEmpVo.getDeptName())){
-                return XaResult.error(wxEmpVo.getDeptName()+"默认无需质检");
+            if (NOTCONFIRM_DEPT.contains(wxEmpVo.getDeptName())) {
+                return XaResult.error(wxEmpVo.getDeptName() + "默认无需质检");
             }
             Map map = Maps.newHashMap();
             map.put("assignNum", assignNum);
@@ -173,9 +176,9 @@ public class WorkController extends ProductBaseController {
 
     @Transactional(readOnly = false, rollbackFor = Exception.class)
     @RequestMapping(value = "confirm", method = RequestMethod.POST)
-    public XaResult confirm(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
-                            @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
-                            @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billOutNo, String proceduresJosn) throws BusinessException {
+    public synchronized XaResult confirm(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
+                                         @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
+                                         @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billOutNo, String proceduresJosn) throws BusinessException {
 
         if (orderId == null || orderNo == null || productNo == null || StringUtils.isEmpty(proceduresJosn))
             return XaResult.error("orderId，orderNo， productNo，proceduresJosn必填");
@@ -243,18 +246,15 @@ public class WorkController extends ProductBaseController {
     }
 
     @RequestMapping(value = "inspectionConfirm", method = RequestMethod.POST)
-    public XaResult inspectionConfig(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
-                                     @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
-                                     @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billOutNo) throws BusinessException {
+    public synchronized XaResult inspectionConfig(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
+                                                  @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
+                                                  @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billOutNo) throws BusinessException {
 
         WxEmpVo wxEmpVo = getWxLoginUser();
 
         if (!wxEmpVo.getWorkName().equals("检验")) {
             return XaResult.error("身份错误");
         }
-
-        if (orderId == null || orderNo == null || productNo == null)
-            return XaResult.error("orderId，orderNo， productNo，必填");
 
         if (productionNo == null && billOutNo == null) return XaResult.error("生产单号和领料单号不能同时为空");
         if (productionNo != null && billOutNo != null) return XaResult.error("生产单号和领料单号不能同时存在");
@@ -300,8 +300,146 @@ public class WorkController extends ProductBaseController {
     }
 
     @RequestMapping(value = "/getUrl", method = RequestMethod.GET)
-    public XaResult<String> getUrl(@ApiParam("短链url") String shortUrl){
-        if(StringUtils.isEmpty(shortUrl)) return XaResult.error("短链必传");
+    public XaResult<String> getUrl(@ApiParam("短链url") String shortUrl) {
+        if (StringUtils.isEmpty(shortUrl)) return XaResult.error("短链必传");
         return XaResult.success(shortUrlService.getByShort(shortUrl));
+    }
+
+    /**
+     * 多型号获取接口
+     */
+
+    @RequestMapping(value = "batchGetConfirmList", method = RequestMethod.GET)
+    public XaResult<List<WorkListVo>> batchGetConfirmList(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
+                                                          @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
+                                                          @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billNo) throws BusinessException {
+
+        WxEmpVo wxEmpVo = getWxLoginUser();
+        if (StringUtils.isEmpty(productionNo)) return XaResult.error("无效二维码");
+
+        List<WorkListVo> workListVos = Lists.newArrayList();
+
+        String deptName = wxEmpVo.getDeptName();
+
+        Integer assignNum = 0;
+        String unit = "个";
+        //生产单
+        ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
+        if (productionOrder == null) {
+            LOGGER.info(wxEmpVo.getName() + "扫码生产单:" + productionNo + "没有您所需处理的工序。(如有疑问，请咨询客服");
+            return XaResult.error("没有您所需处理的工序。(如有疑问，请咨询客服)");
+        }
+        if (!deptName.equals(productionOrder.getWorkshop())) {
+            LOGGER.info(wxEmpVo.getName() + "扫码生产单:" + productionNo + "没有您所需处理的工序。(如有疑问，请咨询客服)");
+            return XaResult.error("没有您所需处理的工序。(如有疑问，请咨询客服)");
+        }
+        List<MultipleProduction> multipleProductions =
+                multipleProductionService.getByProductionNo(productionOrder.getProductionNo());
+        if (!CollectionUtils.isEmpty(multipleProductions)) {
+            multipleProductions.stream()
+                    .filter(t -> t != null)
+                    .forEach(t -> {
+                        WorkListVo workListVo = new WorkListVo();
+                        workListVo.setProductionNo(productionOrder.getProductionNo());
+                        workListVo.setOrderId(t.getOrderId());
+                        workListVo.setOrderNo(t.getOrderNo());
+                        workListVo.setProductNo(t.getProductNo());
+                        workListVo.setProcedures(WorkShopVo.Procedure.
+                                productionProcedureTransfor(productionProcedureService.getByMultipleId(t.getId())));
+                        workListVos.add(workListVo);
+
+                    });
+
+            assignNum = multipleProductions.stream()
+                    .mapToInt(m -> m.getFristNum())
+                    .sum();
+        }
+
+        XaResult result = XaResult.success(workListVos);
+        if (wxEmpVo.getWorkName().equals("检验")) {
+            if (NOTCONFIRM_DEPT.contains(wxEmpVo.getDeptName())) {
+                return XaResult.error(wxEmpVo.getDeptName() + "默认无需质检");
+            }
+            Map map = Maps.newHashMap();
+            map.put("assignNum", assignNum);
+            map.put("unit", unit);
+            result.setMap(map);
+        }
+        return result;
+    }
+
+
+    /**
+     * 确认交验接口
+     *
+     * @param WorkListVoJson
+     * @return
+     */
+    @RequestMapping(value = "/batchCheckConfirm", method = RequestMethod.POST)
+    public XaResult<String> batchCheckConfirm(String WorkListVoJson) {
+        if (StringUtils.isEmpty(WorkListVoJson))
+            return XaResult.error("WorkListVoJson必填");
+
+        List<WorkListVo> workListVos = JSONObject.parseArray(WorkListVoJson, WorkListVo.class);
+        StringBuffer stringBuffer = new StringBuffer();
+        if (!CollectionUtils.isEmpty(workListVos)) {
+            workListVos.stream().forEach(t -> {
+                List<WorkShopVo.Procedure> procedures = t.getProcedures();
+                for (WorkShopVo.Procedure procedure : procedures) {
+                    if (procedure == null) continue;
+                    if (!CollectionUtils.isEmpty(productionProcedureScanService.select(t.getOrderNo(), t.getProductNo(), t.getProductionNo(),
+                            null, null, procedure.getProcedureId()))) {
+                        stringBuffer.append("订单编号：" + t.getOrderNo() + "型号：" + t.getProductNo());
+                        stringBuffer.append("工序：" + procedure.getProcedureName() + "、");
+                    }
+                }
+            });
+
+        }
+        if (StringUtils.isEmpty(stringBuffer)) return XaResult.success();
+        String result = stringBuffer.toString();
+        if (result.length() - 1 == result.lastIndexOf("、")) {
+            result = result.substring(0, result.length() - 1);
+        }
+        return XaResult.success(result);
+    }
+
+    /**
+     * 确认接口
+     *
+     * @return
+     * @throws BusinessException
+     */
+    @Transactional(readOnly = false, rollbackFor = Exception.class)
+    @RequestMapping(value = "batchConfirm", method = RequestMethod.POST)
+    public synchronized XaResult batchConfirm(String WorkListVoJson) throws BusinessException {
+
+        if (StringUtils.isEmpty(WorkListVoJson))
+            return XaResult.error("WorkListVoJson必填");
+
+        List<WorkListVo> workListVos = JSONObject.parseArray(WorkListVoJson, WorkListVo.class);
+
+        WxEmpVo wxEmpVo = getWxLoginUser();
+        Integer num = 0;
+        if (wxEmpVo.getWorkName().equals("检验")) {
+            return XaResult.error("您无权限确认工序");
+        }
+        if (!CollectionUtils.isEmpty(workListVos)) {
+            for (WorkListVo workListVo : workListVos) {
+                //生产单
+                if (!StringUtils.isEmpty(workListVo.getProductionNo())) {
+                    try {
+                        checkComfig(workListVo.getOrderNo(), workListVo.getProductNo(), workListVo.getProductionNo(), null, null, workListVo.getProcedures());
+                    } catch (BusinessException e) {
+                        LOGGER.info(wxEmpVo.getName() + "扫码生成单:" + workListVo.getProductionNo() + "无效的二维码");
+                        throw new BusinessException("生成单：" + workListVo.getProductionNo() + "中的" + e.getMessage());
+                    }
+                }
+                num += productionProcedureScanService.deleteAndInsert(workListVo.getOrderNo(), workListVo.getProductNo(),
+                        workListVo.getProductionNo(), null, null, workListVo.getProcedures(), wxEmpVo, NOTCONFIRM_DEPT);
+            }
+        }
+
+        return XaResult.success(num);
     }
 }

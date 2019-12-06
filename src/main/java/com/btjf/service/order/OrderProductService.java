@@ -5,6 +5,7 @@ import com.btjf.common.page.Page;
 import com.btjf.constant.WorkShopProductionMapEnum;
 import com.btjf.controller.emp.vo.MapVo;
 import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.mapper.order.OrderProductMapper;
 import com.btjf.model.order.Order;
 import com.btjf.model.order.OrderProduct;
@@ -14,6 +15,7 @@ import com.btjf.model.sys.Sysdept;
 import com.btjf.service.productpm.ProductService;
 import com.btjf.service.productpm.ProductWorkshopService;
 import com.btjf.service.sys.SysDeptService;
+import com.btjf.util.BigDecimalUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by liuyq on 2019/8/4.
@@ -45,6 +44,9 @@ public class OrderProductService {
 
     @Resource
     private ProductWorkshopService productWorkshopService;
+
+    @Resource
+    private ProductionProcedureConfirmService productionProcedureConfirmService;
 
     @Resource
     private OrderService orderService;
@@ -148,11 +150,39 @@ public class OrderProductService {
                     map.put(t.getType(), t.getNum());
                 }
         );
-        if(CollectionUtils.isEmpty(vos)){
+        if (CollectionUtils.isEmpty(vos)) {
             map.put("生产数", 0);
-        }else {
+        } else {
             map.put("生产数", vos.stream().map(MapVo::getNum).reduce((i, j) -> i + j).get());
         }
         return map;
+    }
+
+    public void workShopNum(String orderNo, String productNo) {
+        OrderProduct orderVo = this.getByOrderNoAndProductNo(orderNo, productNo);
+        if (orderVo == null) return;
+        OrderProduct orderProduct = new OrderProduct();
+        orderProduct.setId(orderVo.getId());
+        orderProduct.setBlanking(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "裁外壳",
+                orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
+        Integer fm = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面",
+                orderVo.getProductNo());
+        Integer fma = productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "复面A",
+                orderVo.getProductNo());
+        orderProduct.setFrontFm(BigDecimal.valueOf(BigDecimalUtil.div(fma > fm ? fma : fm, Double.valueOf(orderVo.getMaxNum())) * 100));
+        orderProduct.setFrontCheck(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "一车间质检",
+                orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
+
+        List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum("后道-大辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+        orderProduct.setBackBigAssist(BigDecimal.valueOf((double) (CollectionUtils.isEmpty(processDetails) ? 0 : processDetails.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum())));
+
+
+        List<ProcessDetail> processDetails2 = productionProcedureConfirmService.getCompleteNum("后道-中辅工", orderVo.getOrderNo(), orderVo.getProductNo());
+        orderProduct.setBackCenterAssist(BigDecimal.valueOf((double) (CollectionUtils.isEmpty(processDetails2) ? 0 : processDetails2.stream().max(Comparator.comparingInt(ProcessDetail::getNum)).get().getNum())));
+
+        orderProduct.setInspection(BigDecimal.valueOf(BigDecimalUtil.div(productionProcedureConfirmService.getHandleNum(orderVo.getOrderNo(), "成品验收",
+                orderVo.getProductNo()), Double.valueOf(orderVo.getMaxNum())) * 100));
+        orderProduct.setLastModifyTime(new Date());
+        this.update(orderProduct);
     }
 }

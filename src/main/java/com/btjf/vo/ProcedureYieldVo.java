@@ -22,6 +22,8 @@ public class ProcedureYieldVo {
     private String checker;
 
     private Date sortTime;
+    private Integer confirmed;//是否质检
+    private Double workOutput;//工作产出
 
     public String getYearMonth() {
         return yearMonth;
@@ -129,6 +131,22 @@ public class ProcedureYieldVo {
 
     public Date getSortTime() {
         return sortTime;
+    }
+
+    public Integer getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Integer confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public Double getWorkOutput() {
+        return workOutput;
+    }
+
+    public void setWorkOutput(Double workOutput) {
+        this.workOutput = workOutput;
     }
 
     public void setSortTime(Date sortTime) {

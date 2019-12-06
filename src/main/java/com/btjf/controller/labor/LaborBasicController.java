@@ -14,10 +14,12 @@ import com.btjf.service.emp.*;
 import com.btjf.service.order.ProductionProcedureConfirmService;
 import com.btjf.service.salary.SalaryMonthlyService;
 import com.btjf.service.sys.SysDeptService;
+import com.btjf.util.BigDecimalUtil;
 import com.btjf.vo.EmpSubsidyVo;
 import com.btjf.vo.EmpTimesalaryMonthlyVo;
 import com.btjf.vo.ProcedureYieldVo;
 import com.btjf.vo.SubsidyVo;
+import com.google.common.collect.Maps;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -45,7 +48,7 @@ import java.util.stream.Stream;
 @Api(value = "LaborBasicController", description = "劳资管理基础接口", position = 1)
 @RequestMapping(value = "/labor/")
 @RestController("laborBasicController")
-public class LaborBasicController extends ProductBaseController{
+public class LaborBasicController extends ProductBaseController {
 
     private static final Logger LOGGER = Logger
             .getLogger(LaborBasicController.class);
@@ -68,6 +71,7 @@ public class LaborBasicController extends ProductBaseController{
     private ScoreService scoreService;
     @Resource
     private SummarySalaryMonthlyService summarySalaryMonthlyService;
+
     /**
      * 工资月度 新增 修改
      *
@@ -75,30 +79,30 @@ public class LaborBasicController extends ProductBaseController{
      */
     @RequestMapping(value = "/salary/addOrUpdate", method = RequestMethod.POST)
     public XaResult<String> addOrUpdate(Integer id, String yearMonth, Integer expectWorkDay,
-                                      Integer realityWorkDay, Double basicSalary, Double hourlyWage) {
-        if(StringUtils.isEmpty(yearMonth)){
+                                        Integer realityWorkDay, Double basicSalary, Double hourlyWage) {
+        if (StringUtils.isEmpty(yearMonth)) {
             return XaResult.error("年月不能为空");
         }
-        if(!BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+        if (!BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(expectWorkDay == null || expectWorkDay <= 0){
+        if (expectWorkDay == null || expectWorkDay <= 0) {
             return XaResult.error("工作日必须大于0");
         }
-        if(realityWorkDay == null || realityWorkDay <= 0){
+        if (realityWorkDay == null || realityWorkDay <= 0) {
             return XaResult.error("正常工作天数必须大于0");
         }
-        if(basicSalary == null || basicSalary <= 0){
+        if (basicSalary == null || basicSalary <= 0) {
             return XaResult.error("基本工资必须大于0");
         }
-        if(hourlyWage == null || hourlyWage <= 0){
+        if (hourlyWage == null || hourlyWage <= 0) {
             return XaResult.error("时薪必须大于0");
         }
-        if(id == null){
+        if (id == null) {
             SalaryMonthly salaryMonthly = salaryMonthlyService.getByYearMonth(yearMonth);
-            if (salaryMonthly == null){
+            if (salaryMonthly == null) {
                 salaryMonthly = new SalaryMonthly();
-            }else{
+            } else {
                 return XaResult.error("该月份已经设置工资，请勿重复提交");
             }
 
@@ -111,7 +115,7 @@ public class LaborBasicController extends ProductBaseController{
             salaryMonthly.setLastModifyTime(new Date());
             salaryMonthly.setIsDelete(0);
             salaryMonthlyService.create(salaryMonthly);
-        }else{
+        } else {
             SalaryMonthly salaryMonthly = salaryMonthlyService.get(id);
             salaryMonthly.setBasicSalary(BigDecimal.valueOf(basicSalary));
             salaryMonthly.setExpectWorkDay(expectWorkDay);
@@ -132,23 +136,28 @@ public class LaborBasicController extends ProductBaseController{
      * @return
      */
     @RequestMapping(value = "/salary/setValue", method = RequestMethod.POST)
-    public XaResult<String> setValue(String yearMonth, Integer isMore) {
-        if(StringUtils.isEmpty(yearMonth)){
+    public XaResult<String> setValue(String yearMonth, Integer isMore, Double twoSideRate, Double assistRate) {
+        if (StringUtils.isEmpty(yearMonth)) {
             return XaResult.error("年月不能为空");
         }
-        if(!BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+        if (!BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(isMore == null){
+        if (isMore == null) {
             return XaResult.error("产值不能为空");
         }
+        if (assistRate == null) assistRate = BigDecimal.ZERO.doubleValue();
+        if (twoSideRate == null) twoSideRate =  BigDecimal.ZERO.doubleValue();
         SalaryMonthly salaryMonthly = salaryMonthlyService.getByYearMonth(yearMonth);
-        if (salaryMonthly == null){
+        if (salaryMonthly == null) {
             return XaResult.error("请先设置该月工资");
-        }else{
+        } else {
             salaryMonthly.setIsMore(isMore);
             salaryMonthly.setLastModifyTime(new Date());
+            salaryMonthly.setAssistRate(BigDecimal.valueOf(assistRate));
+            salaryMonthly.setTwoSideRate(BigDecimal.valueOf(twoSideRate));
             salaryMonthlyService.update(salaryMonthly);
+
         }
         return XaResult.success();
     }
@@ -161,10 +170,10 @@ public class LaborBasicController extends ProductBaseController{
      */
     @RequestMapping(value = "/salary/list", method = RequestMethod.GET)
     public XaResult<List<SalaryMonthly>> salaryList(Integer pageSize, Integer currentPage) {
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
@@ -181,26 +190,26 @@ public class LaborBasicController extends ProductBaseController{
      */
     @RequestMapping(value = "/salary/settlement", method = RequestMethod.POST)
     public XaResult<String> settlement(Integer id) {
-        if(id == null || id <= 0){
+        if (id == null || id <= 0) {
             return XaResult.error("id 不能为空");
         }
         SalaryMonthly salaryMonthly = salaryMonthlyService.get(id);
-        if(salaryMonthly == null){
+        if (salaryMonthly == null) {
             return XaResult.error("记录不存在");
         }
-        if(salaryMonthly.getIsMore() == null){
+        if (salaryMonthly.getIsMore() == null) {
             return XaResult.error("该月份产值未设置");
         }
-        if(!DateUtil.isAfter(DateUtil.string2Date(salaryMonthly.getYearMonth(),DateUtil.ymFormat),
-                DateUtil.dateBefore(new Date(), 5,3))){
+        if (!DateUtil.isAfter(DateUtil.string2Date(salaryMonthly.getYearMonth(), DateUtil.ymFormat),
+                DateUtil.dateBefore(new Date(), 5, 3))) {
             return XaResult.error("三个月前的信息不允许再度结算");
         }
         List<Score> scoreList = scoreService.getList(salaryMonthly.getYearMonth(), null, null);
-        if(scoreList == null || scoreList.size() <1){
+        if (scoreList == null || scoreList.size() < 1) {
             return XaResult.error("该月份考勤分或3个分未导入");
         }
         List<EmpSalaryMonthly> empSalaryMonthlyList = empSalaryMothlyService.getList(salaryMonthly.getYearMonth(), null, null, null);
-        if(empSalaryMonthlyList == null || empSalaryMonthlyList.size() <1){
+        if (empSalaryMonthlyList == null || empSalaryMonthlyList.size() < 1) {
             return XaResult.error("该月份考勤信息未导入");
         }
         empSalaryMothlyService.calculation(salaryMonthly.getYearMonth(), null, null, null);
@@ -215,10 +224,10 @@ public class LaborBasicController extends ProductBaseController{
     @RequestMapping(value = "/phoneSubsidy/list", method = RequestMethod.GET)
     public XaResult<List<EmpSubsidyVo>> phoneSubsidyList(String name, Integer deptId,
                                                          Integer pageSize, Integer currentPage) {
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
@@ -234,11 +243,11 @@ public class LaborBasicController extends ProductBaseController{
      */
     @RequestMapping(value = "/socialSubsidy/list", method = RequestMethod.GET)
     public XaResult<List<EmpSubsidyVo>> socialSubsidyList(String name, Integer deptId,
-                                                         Integer pageSize, Integer currentPage) {
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+                                                          Integer pageSize, Integer currentPage) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
@@ -254,19 +263,29 @@ public class LaborBasicController extends ProductBaseController{
      * @return
      */
     @RequestMapping(value = "/yield/list", method = RequestMethod.GET)
-    public XaResult<List<ProcedureYieldVo>> yieldList(String name, Integer deptId,Integer workId,
-        String orderNo, String productNo, String procedureName, String yearMonth,
-        String startDate, String endDate, Integer pageSize, Integer currentPage) {
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+    public XaResult<List<ProcedureYieldVo>> yieldList(String name, Integer deptId, Integer workId,
+                                                      String orderNo, String productNo, String procedureName, String yearMonth,
+                                                      String startDate, String endDate, Integer pageSize, Integer currentPage, Integer confirmed) {
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
         Page<ProcedureYieldVo> listPage = productionProcedureConfirmService.yieldList(name, deptId, workId,
-                orderNo, productNo, procedureName, yearMonth, startDate, endDate, page);
+                orderNo, productNo, procedureName, yearMonth, startDate, endDate, page, confirmed);
+        List<ProcedureYieldVo> procedureYieldVos = listPage.getRows();
+
+        Double confirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 1).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
+        Double notConfirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 0).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
+
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("confirmedMoney", confirmedMoney);
+        map.put("notConfirmedMoney", notConfirmedMoney);
+        map.put("totalMoney", BigDecimalUtil.add(notConfirmedMoney, confirmedMoney));
         XaResult<List<ProcedureYieldVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
+        result.setMap(map);
         return result;
     }
 
@@ -279,40 +298,40 @@ public class LaborBasicController extends ProductBaseController{
     public XaResult<String> hourlywageAdd(Integer id, String yearMonth, Integer empId,
                                           String billNo, String content, Double price,
                                           Double num, String remark, String unit) {
-        if(StringUtils.isEmpty(yearMonth)){
+        if (StringUtils.isEmpty(yearMonth)) {
             return XaResult.error("工资年月不能为空");
         }
-        if(!BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+        if (!BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(empId == null){
+        if (empId == null) {
             return XaResult.error("员工ID不能为空");
         }
-        if(StringUtils.isEmpty(billNo)){
+        if (StringUtils.isEmpty(billNo)) {
             return XaResult.error("单据编号不能为空");
         }
-        if(StringUtils.isEmpty(content)){
+        if (StringUtils.isEmpty(content)) {
             return XaResult.error("工作内容不能为空");
         }
-        if(StringUtils.isEmpty(unit)){
+        if (StringUtils.isEmpty(unit)) {
             return XaResult.error("单位不能为空");
         }
-        if(price == null || price <= 0){
+        if (price == null || price <= 0) {
             return XaResult.error("单价必须大于0");
         }
-        if(num == null || num <= 0){
+        if (num == null || num <= 0) {
             return XaResult.error("数量必须大于0");
         }
-        if(id != null){
+        if (id != null) {
             EmpTimesalaryMonthly empTimesalaryMonthly = empTimeSalaryService.get(id);
-            if(empTimesalaryMonthly == null){
+            if (empTimesalaryMonthly == null) {
                 return XaResult.error("修改记录不存在");
             }
-            if(empTimesalaryMonthly.getIsConfirm() == 1){
+            if (empTimesalaryMonthly.getIsConfirm() == 1) {
                 return XaResult.error("该记录已确认，不能修改");
             }
             Emp emp = empService.getByID(empId);
-            if (emp == null){
+            if (emp == null) {
                 return XaResult.error("该员工不存在");
             }
             Sysdept sysdept = sysDeptService.get(emp.getDeptId());
@@ -334,7 +353,7 @@ public class LaborBasicController extends ProductBaseController{
             empTimesalaryMonthly.setUnit(unit);
             empTimesalaryMonthly.setWorkName(empWork == null ? "" : empWork.getName());
             empTimeSalaryService.update(empTimesalaryMonthly);
-        }else {
+        } else {
             EmpTimesalaryMonthly empTimesalaryMonthly = empTimeSalaryService.findByBillNo(billNo);
             if (empTimesalaryMonthly != null) {
                 return XaResult.error("单据编号重复，请修改");
@@ -378,7 +397,7 @@ public class LaborBasicController extends ProductBaseController{
      */
     @RequestMapping(value = "/hourlywage/confirm", method = RequestMethod.POST)
     public XaResult<String> hourlywageAdd(Integer[] ids) {
-        if(ids == null || ids.length < 1){
+        if (ids == null || ids.length < 1) {
             return XaResult.error("ID不能为空");
         }
         empTimeSalaryService.confirm(ids);
@@ -388,40 +407,42 @@ public class LaborBasicController extends ProductBaseController{
 
     /**
      * 计时工资 列表
+     *
      * @return
      */
     @RequestMapping(value = "/hourlywage/list", method = RequestMethod.GET)
-    public XaResult<List<EmpTimesalaryMonthlyVo>> hourlywageList(String yearMonth,String empName, String deptName,String billNo,
-                                                      Integer isConfirm, Integer pageSize, Integer currentPage) {
-        if(yearMonth!= null && !BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+    public XaResult<List<EmpTimesalaryMonthlyVo>> hourlywageList(String yearMonth, String empName, String deptName, String billNo,
+                                                                 Integer isConfirm, Integer pageSize, Integer currentPage) {
+        if (yearMonth != null && !BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
-        Page<EmpTimesalaryMonthlyVo> listPage = empTimeSalaryService.findList(yearMonth,empName,deptName,billNo,isConfirm,page);
+        Page<EmpTimesalaryMonthlyVo> listPage = empTimeSalaryService.findList(yearMonth, empName, deptName, billNo, isConfirm, page);
         XaResult<List<EmpTimesalaryMonthlyVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
         return result;
     }
 
     /**
      * 计时工资 列表
+     *
      * @return
      */
     @RequestMapping(value = "/hourlywage/except", method = RequestMethod.GET)
-    public void except(String yearMonth,String empName, String deptName,String billNo,
-                                                                 Integer isConfirm,HttpServletResponse response) {
-        List<EmpTimesalaryMonthlyVo> list = empTimeSalaryService.findExceptList(yearMonth,empName,deptName,billNo,isConfirm);
+    public void except(String yearMonth, String empName, String deptName, String billNo,
+                       Integer isConfirm, HttpServletResponse response) {
+        List<EmpTimesalaryMonthlyVo> list = empTimeSalaryService.findExceptList(yearMonth, empName, deptName, billNo, isConfirm);
         Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet();
         Row header = sheet.createRow(0);
-        List<String> fields = Stream.of("工资月份","人员姓名", "所在部门","工种","票据编号", "工作内容","单价",
-                "计算数量", "所得金额","开票人","开票时间", "备注", "是否确认").collect(Collectors.toList());
-        for(int i=0; i< fields.size(); i++) {
+        List<String> fields = Stream.of("工资月份", "人员姓名", "所在部门", "工种", "票据编号", "工作内容", "单价",
+                "计算数量", "所得金额", "开票人", "开票时间", "备注", "是否确认").collect(Collectors.toList());
+        for (int i = 0; i < fields.size(); i++) {
             header.createCell(i).setCellValue(fields.get(i));
         }
 
@@ -443,7 +464,7 @@ public class LaborBasicController extends ProductBaseController{
                 row.createCell(j++).setCellValue(pm.getDrawer());
                 row.createCell(j++).setCellValue(pm.getDrawTime());
                 row.createCell(j++).setCellValue(pm.getRemark());
-                row.createCell(j++).setCellValue(pm.getIsConfirm().equals(1)?"已确认":"未确认");
+                row.createCell(j++).setCellValue(pm.getIsConfirm().equals(1) ? "已确认" : "未确认");
             }
         }
         try {
@@ -466,66 +487,69 @@ public class LaborBasicController extends ProductBaseController{
 
     /**
      * 车工出勤补贴 列表
+     *
      * @return
      */
     @RequestMapping(value = "/latheWorkerSubsidy/list", method = RequestMethod.GET)
-    public XaResult<List<SubsidyVo>> latheWorkerSubsidyList(String yearMonth,String empName, String deptName,
-                                                                 Integer pageSize, Integer currentPage) {
-        if(yearMonth!= null && !BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+    public XaResult<List<SubsidyVo>> latheWorkerSubsidyList(String yearMonth, String empName, String deptName,
+                                                            Integer pageSize, Integer currentPage) {
+        if (yearMonth != null && !BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
-        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findLatheWorkerSubsidyList(yearMonth,empName,deptName,page);
+        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findLatheWorkerSubsidyList(yearMonth, empName, deptName, page);
         XaResult<List<SubsidyVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
         return result;
     }
 
     /**
      * 新车工出勤补贴 列表
+     *
      * @return
      */
     @RequestMapping(value = "/newLatheWorkerSubsidy/list", method = RequestMethod.GET)
-    public XaResult<List<SubsidyVo>> newLatheWorkerSubsidyList(String yearMonth,String empName, String deptName,
-                                                    Integer pageSize, Integer currentPage) {
-        if(yearMonth!= null && !BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+    public XaResult<List<SubsidyVo>> newLatheWorkerSubsidyList(String yearMonth, String empName, String deptName,
+                                                               Integer pageSize, Integer currentPage) {
+        if (yearMonth != null && !BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
-        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findNewLatheWorkerSubsidyList(yearMonth,empName,deptName,page);
+        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findNewLatheWorkerSubsidyList(yearMonth, empName, deptName, page);
         XaResult<List<SubsidyVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
         return result;
     }
 
     /**
      * 计件补贴 列表
+     *
      * @return
      */
     @RequestMapping(value = "/percentSubsidy/list", method = RequestMethod.GET)
-    public XaResult<List<SubsidyVo>> percentSubsidyList(String yearMonth,String empName, String deptName,
-                                                               Integer pageSize, Integer currentPage) {
-        if(yearMonth!= null && !BaseExcelHandler.isRightDateStr(yearMonth,"yyyy-MM")){
+    public XaResult<List<SubsidyVo>> percentSubsidyList(String yearMonth, String empName, String deptName,
+                                                        Integer pageSize, Integer currentPage) {
+        if (yearMonth != null && !BaseExcelHandler.isRightDateStr(yearMonth, "yyyy-MM")) {
             return XaResult.error("年月格式不符，请更正为yyyy-MM");
         }
-        if(currentPage == null || currentPage < 1){
-            currentPage =1;
+        if (currentPage == null || currentPage < 1) {
+            currentPage = 1;
         }
-        if(pageSize == null || pageSize < 1){
+        if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
         Page page = new Page(pageSize, currentPage);
-        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findPercentSubsidyList(yearMonth,empName,deptName,page);
+        Page<SubsidyVo> listPage = summarySalaryMonthlyService.findPercentSubsidyList(yearMonth, empName, deptName, page);
         XaResult<List<SubsidyVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
         return result;
     }

@@ -34,6 +34,8 @@ public class ProductionOrderVo implements Serializable {
 
     private String createEndTime;
 
+    private Integer type;
+
 
     public String getOrderNo() {
         return orderNo;
@@ -125,6 +127,14 @@ public class ProductionOrderVo implements Serializable {
 
     public String getCreateStartTime() {
         return createStartTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public void setCreateStartTime(String createStartTime) {

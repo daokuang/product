@@ -408,7 +408,7 @@
             AND t1.price LIKE '%${price}%'
         </if>
         <if test="productNo != null">
-            AND t1.productNo LIKE '%${productNo}%'
+            AND t1.productNo = #{productNo}
         </if>
         <if test="isConfirm != null">
             AND t1.isConfirm = #{isConfirm}

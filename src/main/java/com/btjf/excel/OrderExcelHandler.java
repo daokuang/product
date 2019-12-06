@@ -26,7 +26,7 @@ import java.util.stream.Stream;
 public class OrderExcelHandler extends BaseExcelHandler {
 
     public final static List<String> fields = Stream.of("订单号", "型号", "数量",
-            "上限数量", "类别", "单位", "出货日期", "客户", "是否追加", "紧急程度").collect(Collectors.toList());
+            "上限数量", "类别", "单位", "出货日期", "客户", "是否追加", "紧急程度", "备注信息").collect(Collectors.toList());
 
     @Resource
     private CustomerService customerService;
@@ -146,6 +146,10 @@ public class OrderExcelHandler extends BaseExcelHandler {
                     orderProduct.setCreateTime(new Date());
                     orderProduct.setIsDelete(0);
                     orderProduct.setLastModifyTime(new Date());
+                    break;
+                case 10:
+                    String remark = getCellValue(row.getCell(i), i);
+                    orderProduct.setRemark(remark);
                     break;
             }
         }

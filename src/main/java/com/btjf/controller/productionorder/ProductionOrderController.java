@@ -2,6 +2,7 @@ package com.btjf.controller.productionorder;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.btjf.application.components.xaresult.AppXaResultHelper;
 import com.btjf.application.util.XaResult;
@@ -9,12 +10,14 @@ import com.btjf.common.page.Page;
 import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.controller.order.vo.WorkShopVo;
+import com.btjf.controller.productionorder.vo.BatchAssignVo;
 import com.btjf.controller.productionorder.vo.ProductionOrderDetailVo;
 import com.btjf.controller.productionorder.vo.ProductionOrderVo;
 import com.btjf.model.order.*;
 import com.btjf.model.sys.SysUser;
 import com.btjf.service.order.*;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.heige.aikajinrong.base.exception.BusinessException;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.beanutils.BeanUtils;
@@ -32,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuyq on 2019/8/8.
@@ -61,13 +65,16 @@ public class ProductionOrderController extends ProductBaseController {
     @Resource
     private BillNoService billNoService;
 
+    @Resource
+    private MultipleProductionService multipleProductionService;
+
     private static final Logger LOGGER = Logger
             .getLogger(ProductionOrderController.class);
 
 
     @RequestMapping(value = "/assign", method = RequestMethod.POST)
-    public XaResult<String> assign(Integer orderProductId, Integer assignNum, String workshop, String workshopDirector,
-                                   Integer isLuo, Integer luoNum, String procedure) throws BusinessException {
+    public synchronized XaResult<String> assign(Integer orderProductId, Integer assignNum, String workshop, String workshopDirector,
+                                                Integer isLuo, Integer luoNum, String procedure) throws BusinessException {
 
         if (orderProductId == null) return XaResult.error("订单型号id不能为null");
         OrderProduct orderProduct = orderProductService.getByID(orderProductId);
@@ -95,7 +102,7 @@ public class ProductionOrderController extends ProductBaseController {
         productionOrder.setMaxNum(orderProduct.getMaxNum());
         productionOrder.setWorkshop(workshop);
         productionOrder.setWorkshopDirector(workshopDirector);
-        productionOrder.setProductionNo("P" +billNoService.getNo(4));
+        productionOrder.setProductionNo("P" + billNoService.getNo(4));
 
         Integer id = productionOrderService.assign(productionOrder, procedures);
         return XaResult.success(productionOrder.getProductionNo());
@@ -128,6 +135,12 @@ public class ProductionOrderController extends ProductBaseController {
         if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
+        if(!StringUtils.isEmpty(productionNo)){
+            productionNo = productionNo.trim();
+        }
+        if(!StringUtils.isEmpty(orderNo)){
+            orderNo = orderNo.trim();
+        }
         Page page = new Page(pageSize, currentPage);
         ProductionOrderVo productionOrderVo = new ProductionOrderVo();
         productionOrderVo.setOrderNo(orderNo);
@@ -145,43 +158,57 @@ public class ProductionOrderController extends ProductBaseController {
     }
 
     @RequestMapping(value = "/print", method = RequestMethod.GET)
-    public XaResult<List<ProductionOrderDetailVo>> getDetailByProductionNo(String productionNo) throws BusinessException {
+    public XaResult getDetailByProductionNo(String productionNo) throws BusinessException {
         SysUser sysUser = getLoginUser();
 
         if (null == productionNo) return XaResult.error("请输入要打印是生成单号");
 
-        List<ProductionOrderDetailVo> productionOrderDetailVos = Lists.newArrayList();
+        productionNo = productionNo.trim();
+
+
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
         if (productionOrder == null) return XaResult.error("该生产单不存在");
-        //订单
-        OrderProduct orderProduct = orderProductService.getByID(productionOrder.getOrderProductId());
-        //工序
-        List<ProductionProcedure> productionProcedures = productionProcedureService.findByProductionNo(productionOrder.getProductionNo());
-
-        ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, orderProduct);
-        productionOrderDetailVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
-        productionOrderDetailVo.setPrinter(sysUser.getUserName());
-        //未分
-        if (productionOrder.getIsLuo() == 1) {
-            List<ProductionLuo> productionLuos = productionLuoService.getByProductionNo(productionOrder.getProductionNo());
-            if (!CollectionUtils.isEmpty(productionLuos)) {
-                productionLuos.stream().forEach(t -> {
-                    try {
-                        ProductionOrderDetailVo productionOrderDetailVo1 = (ProductionOrderDetailVo) BeanUtils.cloneBean(productionOrderDetailVo);
-                        productionOrderDetailVo1.setAssignNum(t.getNum());
-                        productionOrderDetailVo1.setCodeUrl(t.getCodeUrl());
-                        productionOrderDetailVo1.setNum(orderProduct.getNum());
-                        productionOrderDetailVo1.setUnit(orderProduct.getUnit());
-                        productionOrderDetailVos.add(productionOrderDetailVo1);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+        Map<String, Object> map = Maps.newHashMap();
+        if (productionOrder.getType() == 2) {
+            BatchAssignVo batchAssignVo = this.getBatchDetail(productionOrder, sysUser);
+            map.put("batchAssignVo", batchAssignVo);
+            map.put("type", 2);
         } else {
-            productionOrderDetailVos.add(productionOrderDetailVo);
+            List<ProductionOrderDetailVo> productionOrderDetailVos = Lists.newArrayList();
+            //订单
+            OrderProduct orderProduct = orderProductService.getByID(productionOrder.getOrderProductId());
+            //工序
+            List<ProductionProcedure> productionProcedures = productionProcedureService.findByProductionNo(productionOrder.getProductionNo());
+
+            ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, orderProduct);
+            productionOrderDetailVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
+            productionOrderDetailVo.setPrinter(sysUser.getUserName());
+            //未分
+            if (productionOrder.getIsLuo() == 1) {
+                List<ProductionLuo> productionLuos = productionLuoService.getByProductionNo(productionOrder.getProductionNo());
+                if (!CollectionUtils.isEmpty(productionLuos)) {
+                    productionLuos.stream().forEach(t -> {
+                        try {
+                            ProductionOrderDetailVo productionOrderDetailVo1 = (ProductionOrderDetailVo) BeanUtils.cloneBean(productionOrderDetailVo);
+                            productionOrderDetailVo1.setAssignNum(t.getNum());
+                            productionOrderDetailVo1.setCodeUrl(t.getCodeUrl());
+                            productionOrderDetailVo1.setNum(orderProduct.getNum());
+                            productionOrderDetailVo1.setUnit(orderProduct.getUnit());
+                            productionOrderDetailVos.add(productionOrderDetailVo1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            } else {
+                productionOrderDetailVos.add(productionOrderDetailVo);
+            }
+            map.put("productionOrderDetailVos", productionOrderDetailVos);
+            map.put("type", 1);
         }
-        return XaResult.success(productionOrderDetailVos);
+        XaResult xaResult = XaResult.success();
+        xaResult.setMap(map);
+        return xaResult;
     }
 
 
@@ -277,15 +304,94 @@ public class ProductionOrderController extends ProductBaseController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public XaResult<Integer> delete(String productionNo, String orderNo) throws BusinessException {
-        if(StringUtils.isEmpty(productionNo) || StringUtils.isEmpty(orderNo)){
+        if (StringUtils.isEmpty(productionNo) || StringUtils.isEmpty(orderNo)) {
             return XaResult.error("请选择要删除的生产单");
         }
-        if(!CollectionUtils.isEmpty(productionProcedureScanService.select(orderNo, null,productionNo,null,null,null))){
+        if (!CollectionUtils.isEmpty(productionProcedureScanService.select(orderNo, null, productionNo, null, null, null))) {
             return XaResult.error("该生成单已经有员工扫描操作，无法删除！！！");
         }
 
-       Integer row = productionOrderService.delete(productionNo, orderNo);
+        Integer row = productionOrderService.delete(productionNo, orderNo);
         return XaResult.success(row);
+    }
+
+    @RequestMapping(value = "/batchAssign", method = RequestMethod.POST)
+    public synchronized XaResult<String> batchAssign(String batchAssign) {
+        if (StringUtils.isEmpty(batchAssign)) {
+            return XaResult.error("分配为空");
+        }
+
+        BatchAssignVo batchAssignVo = JSONObject.parseObject(batchAssign, BatchAssignVo.class);
+
+        //生产单
+        ProductionOrder productionOrder = new ProductionOrder();
+        productionOrder.setIsDelete(0);
+        // productionOrder.setOrderProductId(orderProductId);
+        productionOrder.setCreateTime(new Date());
+        // productionOrder.setOrderNo(orderProduct.getOrderNo());
+        //productionOrder.setAssignNum(assignNum);
+        productionOrder.setLastModifyTime(new Date());
+
+        productionOrder.setWorkshop(batchAssignVo.getWorkshop());
+        productionOrder.setIsLuo(0);
+        productionOrder.setWorkshopDirector(batchAssignVo.getWorkshopDirector());
+        productionOrder.setProductionNo("P" + billNoService.getNo(4));
+
+
+        productionOrderService.batchAssign(productionOrder, batchAssignVo);
+        return XaResult.success(productionOrder.getProductionNo());
+    }
+
+
+    @RequestMapping(value = "batchAssign/detail", method = RequestMethod.GET)
+    public XaResult<BatchAssignVo> batchAssignDetail(String productionNo) {
+
+        SysUser sysUser = getLoginUser();
+
+        if (StringUtils.isEmpty(productionNo)) {
+            return XaResult.error("请输入生产单号");
+        }
+
+        ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
+        if (productionOrder == null || productionOrder.getType() != 2) return XaResult.error("生产单编号错误");
+
+        BatchAssignVo batchAssignVo = getBatchDetail(productionOrder, sysUser);
+
+        return XaResult.success(batchAssignVo);
+    }
+
+    public BatchAssignVo getBatchDetail(ProductionOrder productionOrder, SysUser sysUser) {
+
+        BatchAssignVo batchAssignVo = new BatchAssignVo();
+        batchAssignVo.setCodeUrl(productionOrder.getCodeUrl());
+        batchAssignVo.setPrintCount(productionOrder.getPrintCount());
+        batchAssignVo.setPrinter(sysUser.getLoginName());
+        batchAssignVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
+        batchAssignVo.setWorkshop(productionOrder.getWorkshop());
+        batchAssignVo.setWorkshopDirector(productionOrder.getWorkshopDirector());
+        batchAssignVo.setProductionNo(productionOrder.getProductionNo());
+
+        List<MultipleProduction> multipleProductions = multipleProductionService.getByProductionNo(productionOrder.getProductionNo());
+        if (CollectionUtils.isEmpty(multipleProductions)) return batchAssignVo;
+
+        List<BatchAssignVo.BatchAssignOrder> batchAssignOrders = Lists.newArrayList();
+        multipleProductions.stream()
+                .filter(t -> t != null)
+                .forEach(t -> {
+
+                    BatchAssignVo.BatchAssignOrder batchAssignOrder = new BatchAssignVo.BatchAssignOrder();
+                    batchAssignOrder.setOrderNo(t.getOrderNo());
+                    batchAssignOrder.setProductNo(t.getProductNo());
+
+                    List<WorkShopVo.Procedure> procedures = WorkShopVo.Procedure.productionProcedureTransfor(
+                            productionProcedureService.getByMultipleId(t.getId()));
+                    batchAssignOrder.setProcedures(procedures);
+
+                    batchAssignOrders.add(batchAssignOrder);
+
+                });
+        batchAssignVo.setBatchAssignOrders(batchAssignOrders);
+        return batchAssignVo;
     }
 }
 

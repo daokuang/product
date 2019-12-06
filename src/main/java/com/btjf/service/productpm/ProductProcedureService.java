@@ -12,11 +12,15 @@ import com.btjf.model.product.Product;
 import com.btjf.model.product.ProductProcedure;
 import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.model.sys.SysUser;
+import com.btjf.service.order.ProductionProcedureService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -36,13 +40,15 @@ public class ProductProcedureService {
     @Resource
     private ProductService productService;
 
+    @Resource
+    private ProductionProcedureService productionProcedureService;
 
     public Integer addOrUpdate(ProductProcedure productProcedure, String optionName) {
 
         if (productProcedure.getId() == null) {
             ProductProcedureWorkshop productProcedureWorkshop = productProcedureWorkshopMapper.getByWorkShopAndProductNoAndName(WorkShopProductionMapEnum.get(productProcedure.getSort()).getContent(), productProcedure.getProductNo(), productProcedure.getProcedureName());
-            if(productProcedureWorkshop != null){
-                throw new BusinessException(productProcedureWorkshop.getWorkshop()+"已经存在该工序");
+            if (productProcedureWorkshop != null) {
+                throw new BusinessException(productProcedureWorkshop.getWorkshop() + "已经存在该工序");
             }
             productProcedureMapper.insertSelective(productProcedure);
         } else {
@@ -96,6 +102,11 @@ public class ProductProcedureService {
     public Page<ProductProcedure> listPage(String productNo, String procedureName, String price, Integer isConfirm, Page page) {
         PageHelper.startPage(page.getPage(), page.getRp());
         List<ProductProcedure> productProcedures = productProcedureMapper.findList(procedureName, price, productNo, isConfirm);
+        Comparator<ProductProcedure> groupComparator = (o1, o2) -> {
+            int diff = o1.getProductNo().compareTo(o2.getProductNo());
+            return diff == 0 ? o1.getSort().compareTo(o2.getSort()) : diff;
+        };
+        Collections.sort(productProcedures, groupComparator);
         PageInfo pageInfo = new PageInfo(productProcedures);
         return new Page<>(pageInfo);
     }
@@ -109,10 +120,10 @@ public class ProductProcedureService {
         Product product = productService.getByNO(newProduct);
         List<ProductProcedure> productProcedures = productProcedureMapper.getByProductNo(oldProductNo);
         if (!CollectionUtils.isEmpty(productProcedures)) {
-            for (ProductProcedure productProcedure : productProcedures){
-                if(productProcedure == null) continue;
-                List<ProductProcedureWorkshop>  productProcedureWorkshops = productProcedureWorkshopMapper.getWorkShop(productProcedure.getProductNo(), productProcedure.getId(),null);
-                if(CollectionUtils.isEmpty(productProcedureWorkshops)) continue;
+            for (ProductProcedure productProcedure : productProcedures) {
+                if (productProcedure == null) continue;
+                List<ProductProcedureWorkshop> productProcedureWorkshops = productProcedureWorkshopMapper.getWorkShop(productProcedure.getProductNo(), productProcedure.getId(), null);
+                if (CollectionUtils.isEmpty(productProcedureWorkshops)) continue;
                 ProductProcedureWorkshop productProcedureWorkshop = productProcedureWorkshops.get(0);
 
                 //新增工序
@@ -151,5 +162,17 @@ public class ProductProcedureService {
             return 0;
         }
         return integers.size();
+    }
+
+    public void delete(Integer id, SysUser sysUser) {
+        ProductProcedure productProcedure = productProcedureMapper.selectByPrimaryKey(id);
+        if (productProcedure == null) return;
+        productProcedure.setIsDelete(1);
+        productProcedure.setLastModifyTime(new Date());
+        productProcedure.setOperator(sysUser.getUserName());
+        productProcedureMapper.updateByPrimaryKey(productProcedure);
+
+        //删除
+        productProcedureWorkshopMapper.deleteByProcedureId(id);
     }
 }

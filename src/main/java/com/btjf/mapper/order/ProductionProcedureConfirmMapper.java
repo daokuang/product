@@ -145,9 +145,11 @@ public interface ProductionProcedureConfirmMapper {
 
     List<ProcedureYieldVo> yieldList(@Param("name")String name, @Param("deptId")Integer deptId, @Param("workId")Integer workId,
                                      @Param("orderNo")String orderNo,@Param("productNo")String productNo, @Param("procedureName")String procedureName,
-                                     @Param("yearMonth")String yearMonth,@Param("startDate")String startDate, @Param("endDate")String endDate);
+                                     @Param("yearMonth")String yearMonth,@Param("startDate")String startDate, @Param("endDate")String endDate, @Param("confirmed") Integer confirmed);
 
     List<ProductionProcedureConfirm> getUnSettlement(@Param("yearMonth")String yearMonth, @Param("empId")Integer empId);
 
     void updateSettlement(@Param("ids")List<Integer> ids);
+
+    Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 }

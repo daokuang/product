@@ -1,5 +1,7 @@
 package com.btjf.controller.order.vo;
 
+import org.omg.PortableInterceptor.INACTIVE;
+
 import java.io.Serializable;
 
 /**
@@ -33,6 +35,20 @@ public class OrderVo implements Serializable {
     private String completeDate;
 
     private String remark;
+
+    private Double blanking;//下料车间 工序数
+
+    private Double frontFm; //前道车间 --负面
+
+    private Double frontCheck;//前道车间 质检
+
+    private Double backBigAssist;//后到大复工
+
+    private Double backCenterAssist;//后道中中复工
+
+    private Double assist;//外协质检
+
+    private Double inspection;//成品质检
 
     public Integer getId() {
         return id;
@@ -124,6 +140,62 @@ public class OrderVo implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Double getBlanking() {
+        return blanking;
+    }
+
+    public void setBlanking(Double blanking) {
+        this.blanking = blanking;
+    }
+
+    public Double getFrontFm() {
+        return frontFm;
+    }
+
+    public void setFrontFm(Double frontFm) {
+        this.frontFm = frontFm;
+    }
+
+    public Double getFrontCheck() {
+        return frontCheck;
+    }
+
+    public void setFrontCheck(Double frontCheck) {
+        this.frontCheck = frontCheck;
+    }
+
+    public Double getBackBigAssist() {
+        return backBigAssist;
+    }
+
+    public void setBackBigAssist(Double backBigAssist) {
+        this.backBigAssist = backBigAssist;
+    }
+
+    public Double getBackCenterAssist() {
+        return backCenterAssist;
+    }
+
+    public void setBackCenterAssist(Double backCenterAssist) {
+        this.backCenterAssist = backCenterAssist;
+    }
+
+    public Double getAssist() {
+        return assist;
+    }
+
+    public void setAssist(Double assist) {
+        this.assist = assist;
+    }
+
+    public Double getInspection() {
+        return inspection;
+    }
+
+    public void setInspection(Double inspection) {
+        this.inspection = inspection;
     }
 
     public void setCompleteDate(String completeDate) {

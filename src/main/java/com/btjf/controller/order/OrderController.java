@@ -9,13 +9,16 @@ import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.controller.order.vo.OrderProductVo;
 import com.btjf.controller.order.vo.OrderVo;
+import com.btjf.controller.order.vo.ProcessDetail;
 import com.btjf.model.order.Order;
 import com.btjf.model.order.OrderProduct;
 import com.btjf.model.product.ProductProcedureWorkshop;
 import com.btjf.model.sys.SysUser;
 import com.btjf.service.order.OrderProductService;
 import com.btjf.service.order.OrderService;
+import com.btjf.service.order.ProductionProcedureConfirmService;
 import com.btjf.service.productpm.ProductWorkshopService;
+import com.btjf.util.BigDecimalUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.heige.aikajinrong.base.exception.BusinessException;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -53,6 +57,9 @@ public class OrderController extends ProductBaseController {
     @Resource
     private ProductWorkshopService productWorkshopService;
 
+    @Resource
+    private ProductionProcedureConfirmService productionProcedureConfirmService;
+
 
     private static final Logger LOGGER = Logger
             .getLogger(OrderController.class);
@@ -61,7 +68,7 @@ public class OrderController extends ProductBaseController {
     @RequestMapping(value = "/updateOrAdd", method = RequestMethod.POST)
     public XaResult<Integer> updateOrAdd(Integer id, String orderNo, String productNo, Integer num,
                                          String type, String unit, Integer maxNum, String completeDate,
-                                         String customerName, Integer customerId, Integer isMore, Integer urgentLevel) {
+                                         String customerName, Integer customerId, Integer isMore, Integer urgentLevel, String remark) {
 
         SysUser sysUser = getLoginUser();
         if (StringUtils.isEmpty(orderNo)) {
@@ -104,6 +111,7 @@ public class OrderController extends ProductBaseController {
         OrderProduct orderProduct1 = new OrderProduct(null, orderNo, null,
                 productNo, type, num, maxNum, unit, DateUtil.string2Date(completeDate, DateUtil.ymdFormat), customerId, customerName, null, null,
                 null, null, null, new Date(), new Date(), 0);
+        orderProduct1.setRemark(remark);
         if (id != null) {
             return XaResult.error("暂时不支持更新");
         } else {
@@ -136,8 +144,16 @@ public class OrderController extends ProductBaseController {
         }
         Page page = new Page(pageSize, currentPage);
 
+        if (!StringUtils.isEmpty(orderNo)) {
+            orderNo = orderNo.trim();
+        }
+        if (!StringUtils.isEmpty(pmNo)) {
+            pmNo = pmNo.trim();
+        }
+
         Page<OrderVo> listPage = orderProductService.listPage(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate, page);
-        XaResult<List<OrderVo>> result = AppXaResultHelper.success(listPage, listPage.getRows());
+        List<OrderVo> list = listPage.getRows();
+        XaResult<List<OrderVo>> result = AppXaResultHelper.success(listPage, list);
         Map<String, Integer> cuntMap = orderProductService.getCount(customerId, orderNo, pmNo, type, completeStartDate, completeStartEnd, createStartDate, createEndDate);
         Map map = Maps.newHashMap();
         map.put("orderNum", (int) listPage.getTotal());
@@ -262,6 +278,27 @@ public class OrderController extends ProductBaseController {
             e.printStackTrace();
             LOGGER.error("订单导出excel异常");
         }
+    }
+
+    /**
+     * 订单工序详细列表
+     *
+     * @param workSpace
+     * @param orderNo
+     * @param productNo
+     * @return
+     */
+    @RequestMapping(value = "/getProcessDetail", method = RequestMethod.GET)
+    public XaResult<List<ProcessDetail>> getProcessDetail(String workSpace, String orderNo, String productNo) {
+        if (StringUtils.isEmpty(workSpace) || StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(productNo))
+            return XaResult.error("参数不全");
+        OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(orderNo, productNo);
+        List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workSpace, orderNo, productNo);
+        processDetails.forEach(t -> {
+            t.setPencent(BigDecimalUtil.div(t.getNum(), Double.valueOf(orderProduct.getMaxNum())) * 100);
+        });
+
+        return XaResult.success(processDetails);
     }
 
 }

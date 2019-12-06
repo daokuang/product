@@ -5,6 +5,8 @@ import java.util.List;
 public class EmpWorkVo {
 
     private Double total;//计件工资
+    private Double confirmed;
+    private Double unConfirm;
     private List<EmpDayWorkVo> dayWorkVoList;
 
     public Double getTotal() {
@@ -21,5 +23,21 @@ public class EmpWorkVo {
 
     public void setDayWorkVoList(List<EmpDayWorkVo> dayWorkVoList) {
         this.dayWorkVoList = dayWorkVoList;
+    }
+
+    public Double getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Double confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public Double getUnConfirm() {
+        return unConfirm;
+    }
+
+    public void setUnConfirm(Double unConfirm) {
+        this.unConfirm = unConfirm;
     }
 }

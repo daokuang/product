@@ -1,6 +1,7 @@
 package com.btjf.controller.productpm;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.btjf.application.components.xaresult.AppXaResultHelper;
 import com.btjf.application.util.XaResult;
 import com.btjf.common.page.Page;
@@ -10,10 +11,12 @@ import com.btjf.controller.order.vo.WorkShopVo;
 import com.btjf.model.product.Product;
 import com.btjf.model.product.ProductProcedure;
 import com.btjf.model.sys.SysUser;
+import com.btjf.service.order.ProductionProcedureService;
 import com.btjf.service.productpm.ProductProcedureService;
 import com.btjf.service.productpm.ProductService;
 import com.google.common.collect.Lists;
 import com.heige.aikajinrong.base.exception.BusinessException;
+import jdk.nashorn.internal.ir.IdentNode;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -46,6 +49,8 @@ public class ProductProcedureController extends ProductBaseController {
     private ProductProcedureService productProcedureService;
     @Resource
     private ProductService productProcedure;
+    @Resource
+    private ProductionProcedureService productionProcedureService;
 
 
     @RequestMapping(value = "/updateOrAdd", method = RequestMethod.POST)
@@ -79,16 +84,27 @@ public class ProductProcedureController extends ProductBaseController {
     }
 
     @RequestMapping(value = "getByWorkShopAndProductNo", method = RequestMethod.GET)
-    public XaResult<List<WorkShopVo.Procedure>> getByWorkShopAndProductNo(String workShop, String productNo) {
+    public XaResult<List<WorkShopVo.Procedure>> getByWorkShopAndProductNo(String workShop, String productNo, String orderNo) {
         if (workShop == null || productNo == null) return XaResult.error("参数输入有误");
 
-        return XaResult.success(productProcedureService.getByWorkShopAndProductNo(workShop, productNo));
+
+        List<WorkShopVo.Procedure> procedures = productProcedureService.getByWorkShopAndProductNo(workShop, productNo);
+        if (!StringUtils.isEmpty(orderNo) && !CollectionUtils.isEmpty(procedures)) {
+            procedures.stream().forEach(t -> {
+                t.setNum(productionProcedureService.procedureCanAssignNum(orderNo, productNo, t.getProcedureId()));
+            });
+        }
+
+        return XaResult.success(procedures);
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public XaResult<List<ProductProcedure>> list(String productNo, String procedureName, String price, Integer pageSize, Integer currentPage, Integer isConfirm) {
         if (currentPage == null || currentPage < 1) {
             currentPage = 1;
+        }
+        if (!StringUtils.isEmpty(productNo)) {
+            productNo = productNo.trim();
         }
         if (pageSize == null || pageSize < 1) {
             pageSize = 25;
@@ -100,7 +116,7 @@ public class ProductProcedureController extends ProductBaseController {
     }
 
     @RequestMapping(value = "confirm", method = RequestMethod.POST)
-    public XaResult<Integer> confirm(String[] ids){
+    public XaResult<Integer> confirm(String[] ids) {
         LOGGER.info(getRequestParamsAndUrl());
 
         if (null == ids || Arrays.asList(ids).size() <= 0) {
@@ -157,8 +173,8 @@ public class ProductProcedureController extends ProductBaseController {
                 row.createCell(j++).setCellValue(productProcedure.getProductNo());
                 row.createCell(j++).setCellValue(productProcedure.getWorkshop());
                 row.createCell(j++).setCellValue(productProcedure.getProcedureName());
-                row.createCell(j++).setCellValue(productProcedure.getPrice() + "元");
-                row.createCell(j++).setCellValue(productProcedure.getSumPrice() + "元");
+                row.createCell(j++).setCellValue(productProcedure.getPrice()+"");
+                row.createCell(j++).setCellValue(productProcedure.getSumPrice()+"");
                 row.createCell(j++).setCellValue(productProcedure.getIsConfirm() == 1 ? "已确认" : "未确认");
 
             }
@@ -195,5 +211,12 @@ public class ProductProcedureController extends ProductBaseController {
 
         Integer integer = productProcedureService.sameProductNoAdd(oldProductNo, newProductNo, sysUser);
         return XaResult.success(integer);
+    }
+
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public XaResult delete(Integer id){
+        SysUser sysUser = getLoginUser();
+        productProcedureService.delete(id, sysUser);
+        return XaResult.success();
     }
 }
