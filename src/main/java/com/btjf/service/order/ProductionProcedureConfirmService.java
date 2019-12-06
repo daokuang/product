@@ -67,6 +67,9 @@ public class ProductionProcedureConfirmService {
     @Resource
     private ProductProcedureService productProcedureService;
 
+    @Resource
+    private OrderProductService orderProductService;
+
     public List<Order> getOrderByMouth(String date, String deptName) {
         return productionProcedureConfirmMapper.getOrderByMouth(date, deptName);
     }
@@ -263,6 +266,9 @@ public class ProductionProcedureConfirmService {
             productionProcedureConfirm.setInspectionor(inspectionor);
             productionProcedureConfirmMapper.insertSelective(productionProcedureConfirm);
         }
+
+        orderProductService.workShopNum(orderNo, productNo);
+
     }
 
     public List<EmpDayWorkVo> analyseForDay(String date, Integer empId) {
@@ -308,8 +314,8 @@ public class ProductionProcedureConfirmService {
 
         //员工扫描数量
         Integer scanNum = productionProcedureScanService.getHandleNum(orderNo, procedureName, productNo);
-        //Integer changeNum = productionProcedureConfirmMapper.getHandleNum(orderNo, procedureName, productNo);
-        return scanNum;
+        Integer changeNum = productionProcedureConfirmMapper.getHandleNum(orderNo, procedureName, productNo);
+        return changeNum > 0 ? changeNum : scanNum;
     }
 
     public List<ProcessDetail> getCompleteNum(String workspace, String orderNo, String product) {
