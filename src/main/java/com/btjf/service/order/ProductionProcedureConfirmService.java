@@ -111,7 +111,7 @@ public class ProductionProcedureConfirmService {
             productionProcedureConfirm.setOperator(wxEmpVo.getName());
             productionProcedureConfirm.setLastModifyTime(new Date());
             productionProcedureConfirm.setCreateTime(new Date());
-            productionProcedureConfirm.setCompleteTime(new Date());
+            productionProcedureConfirm.setCompleteTime(t.getCreateTime());
             productionProcedureConfirm.setPrice(t.getPrice());
             productionProcedureConfirm.setWorkshop(wxEmpVo.getDeptName());
             productionProcedureConfirm.setProcedureId(t.getProcedureId());
