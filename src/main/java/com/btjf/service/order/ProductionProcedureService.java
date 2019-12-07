@@ -81,7 +81,6 @@ public class ProductionProcedureService {
         return productionProcedureMapper.isContainZj(procedureName, productionNo, multipleProductionId);
 
     }
-
     public List<ProductionProcedure> getByMultipleId(Integer id) {
         return productionProcedureMapper.getByMultipleId(id);
     }

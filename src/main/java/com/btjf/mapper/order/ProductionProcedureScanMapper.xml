@@ -525,4 +525,43 @@
         and isDelete = 0
         group by procedureId, procedureName
     </select>
+
+    <select id="getAllUnConfirm" resultType="decimal">
+        SELECT
+        ifnull(sum(money),0)
+        FROM
+        t_Production_Procedure_Scan s
+        LEFT JOIN t_Emp e ON s.empId = e.id
+        LEFT JOIN t_Production_Luo l ON s.luoId = l.id
+        WHERE
+        s. STATUS = 0
+        AND s.isDelete = 0
+        <if test="name != null ">
+            AND e.name = #{name}
+        </if>
+        <if test="deptId != null ">
+            AND e.deptId = #{deptId}
+        </if>
+        <if test="workId != null ">
+            AND e.workId = #{workId}
+        </if>
+        <if test="orderNo != null ">
+            AND s.orderNo = #{orderNo}
+        </if>
+        <if test="productNo != null ">
+            AND s.productNo = #{productNo}
+        </if>
+        <if test="procedureName != null ">
+            AND s.procedureName = #{procedureName}
+        </if>
+        <if test="yearMonth != null ">
+            AND DATE_FORMAT(s.createTime, "%Y-%m") = #{yearMonth}
+        </if>
+        <if test="startDate != null ">
+            AND 1 !=1
+        </if>
+        <if test="endDate != null ">
+            AND 1 !=1
+        </if>
+    </select>
 </mapper>

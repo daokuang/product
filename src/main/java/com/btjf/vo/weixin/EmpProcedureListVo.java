@@ -7,6 +7,7 @@ public class EmpProcedureListVo {
     private Integer id;//工序ID
     private Integer sort;//序号
     private String name;//工序名称
+    private Boolean changed;//是否已调整
     private List<EmpProcedureDetailVo> list;
 
     public Integer getId() {
@@ -39,5 +40,13 @@ public class EmpProcedureListVo {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Boolean getChanged() {
+        return changed;
+    }
+
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 }

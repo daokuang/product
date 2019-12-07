@@ -74,7 +74,7 @@ INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES
 INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('后道车间-大辅工', NULL,1);
 INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('包装车间', NULL,1);
 INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('财务部', NULL,0);
-INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('仓库', NULL,0);
+INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('仓库', NULL,1);
 INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('样品间', NULL,0);
 INSERT INTO `product`.`t_SysDept` (`deptName`, `deptOrder`, `isWorkShop`) VALUES ('后道车间-小辅工', NULL,1);
 
@@ -757,13 +757,13 @@ ALTER TABLE t_Product_Procedure_Workshop ADD INDEX productNo_workshop (`productN
 
 
 
- ALTER TABLE t_Order_Product add blanking  decimal(4,2)  default 0.0 COMMENT '下料车间 工序数';
-  ALTER TABLE t_Order_Product add frontFm  decimal(4,2)  default 0.0 COMMENT '前道车间 --负面';
-ALTER TABLE t_Order_Product add frontCheck  decimal(4,2)  default 0.0 COMMENT '前道车间 质检';
-ALTER TABLE t_Order_Product add backBigAssist  decimal(4,2)  default 0.0 COMMENT '后到大复工';
+ ALTER TABLE t_Order_Product add blanking  decimal(8,2)  default 0.0 COMMENT '下料车间 工序数';
+  ALTER TABLE t_Order_Product add frontFm  decimal(8,2)  default 0.0 COMMENT '前道车间 --负面';
+ALTER TABLE t_Order_Product add frontCheck  decimal(8,2)  default 0.0 COMMENT '前道车间 质检';
+ALTER TABLE t_Order_Product add backBigAssist  decimal(8,2)  default 0.0 COMMENT '后到大复工';
 
- ALTER TABLE t_Order_Product add backCenterAssist  decimal(4,2)  default 0.0 COMMENT '后道中中复工';
- ALTER TABLE t_Order_Product add assist  decimal(4,2)  default 0.0 COMMENT '外协质检';
- ALTER TABLE t_Order_Product add inspection  decimal(4,2)  default 0.0 COMMENT '成品质检';
+ ALTER TABLE t_Order_Product add backCenterAssist  decimal(8,2)  default 0.0 COMMENT '后道中中复工';
+ ALTER TABLE t_Order_Product add assist  decimal(8,2)  default 0.0 COMMENT '外协质检';
+ ALTER TABLE t_Order_Product add inspection  decimal(8,2)  default 0.0 COMMENT '成品质检';
 
 

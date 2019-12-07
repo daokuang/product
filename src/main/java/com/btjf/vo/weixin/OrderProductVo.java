@@ -5,6 +5,7 @@ public class OrderProductVo {
     private String productNo;
     private Double num;
     private String unit;
+    private Boolean changed;//是否全部工序已调整
 
     public String getProductNo() {
         return productNo;
@@ -28,5 +29,13 @@ public class OrderProductVo {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public Boolean getChanged() {
+        return changed;
+    }
+
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 }

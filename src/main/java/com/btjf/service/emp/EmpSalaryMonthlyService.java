@@ -313,7 +313,7 @@ public class EmpSalaryMonthlyService {
         summarySalaryMonthly.setScore(empSalaryMonthly.getScore());
         //总工时（固定汇总表里用）  白班天数*8，正常加班工时*1.5*3，假日加班工时*2，法定加班工时*3  假日 法定 晚班不计算
         summarySalaryMonthly.setSumWorkHour(BigDecimal.valueOf(BigDecimalUtil.add(
-                BigDecimalUtil.mul(BigDecimalUtil.add(empSalaryMonthly.getDayWork().doubleValue(), empSalaryMonthly.getDayWorkLegal().
+                 BigDecimalUtil.mul(BigDecimalUtil.add(empSalaryMonthly.getDayWork().doubleValue(), empSalaryMonthly.getDayWorkLegal().
                         doubleValue()), 8),  //白班工时 包含正常+法假+节假 白班
                 BigDecimalUtil.mul(empSalaryMonthly.getNightWork().doubleValue(), 1.5, 3))));//正常加班工时
         //BigDecimalUtil.mul(empSalaryMonthly.getNightWorkHoliay().doubleValue(), 2), //假日加班工时

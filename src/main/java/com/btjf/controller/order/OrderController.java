@@ -17,6 +17,7 @@ import com.btjf.model.sys.SysUser;
 import com.btjf.service.order.OrderProductService;
 import com.btjf.service.order.OrderService;
 import com.btjf.service.order.ProductionProcedureConfirmService;
+import com.btjf.service.order.ProductionProcedureService;
 import com.btjf.service.productpm.ProductWorkshopService;
 import com.btjf.util.BigDecimalUtil;
 import com.google.common.collect.Lists;
@@ -59,6 +60,9 @@ public class OrderController extends ProductBaseController {
 
     @Resource
     private ProductionProcedureConfirmService productionProcedureConfirmService;
+
+    @Resource
+    private ProductionProcedureService productionProcedureService;
 
 
     private static final Logger LOGGER = Logger
@@ -211,6 +215,12 @@ public class OrderController extends ProductBaseController {
             products.stream().filter(t -> t != null).forEach(t -> {
                 List<ProductProcedureWorkshop> productProcedureWorkshops =
                         productWorkshopService.getWorkShop(t.getProductNo(), 1);
+                productProcedureWorkshops.forEach(productProcedureWorkshop -> {
+                    productProcedureWorkshop.setNum(productionProcedureService.
+                            procedureCanAssignNum(t.getOrderNo(), t.getProductNo(), productProcedureWorkshop.getProcedureId()));
+                });
+
+
                 OrderProductVo orderProductVo = new OrderProductVo(t, productProcedureWorkshops);
                 productVos.add(orderProductVo);
             });

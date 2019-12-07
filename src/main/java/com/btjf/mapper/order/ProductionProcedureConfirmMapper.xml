@@ -526,18 +526,49 @@
     </update>
 
     <select id="getOrderByMouth" resultType="com.btjf.model.order.Order">
-        select DISTINCT o.*
-        from t_Production_Procedure_Confirm p LEFT JOIN t_Order o ON p.orderNo = o.orderNo
-         where ((p.type = 2 and p.isChange=0) or (p.type =1 and p.isChange=0))
-         and p.isDelete = 0
-        and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
-        and p.workshop = #{deptName,jdbcType=VARCHAR}
-        ORDER BY o.createTime DESC
-;
+        select o.id, o.orderNo, temp.productionOrderTime createTime, o.lastModifyTime, o.isDelete
+        from t_Order o
+        left join (select po.orderId, max(po.createTime) productionOrderTime
+        from t_Production_Order po
+        where po.isDelete = 0
+        and po.workshop = #{deptName,jdbcType=VARCHAR}
+        group by po.orderId) temp on o.id = temp.orderId
+        where exists(select 1
+        from t_Production_Procedure_Confirm p
+        where p.orderNo = o.orderNo
+        and ((p.type = 2 and p.isChange = 0) or (p.type = 1 and p.isChange = 0))
+        and p.isDelete = 0
+        and p.completeTime >= concat(#{date}, '-01')
+        and p.workshop = #{deptName,jdbcType=VARCHAR})
+        and exists(select 1
+        from t_Production_Order po
+        where po.orderId = o.id
+        and po.isDelete = 0
+        and po.workshop = #{deptName,jdbcType=VARCHAR}
+        and DATE_FORMAT(po.createTime, '%Y-%m') = #{date})
+        order by temp.productionOrderTime desc
+        <!--    2019-12-04 替换为上述代码 By Leq
+                select DISTINCT o.*
+                from t_Production_Procedure_Confirm p LEFT JOIN t_Order o ON p.orderNo = o.orderNo
+                 where ((p.type = 2 and p.isChange=0) or (p.type =1 and p.isChange=0))
+                 and p.isDelete = 0
+                and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
+                and p.workshop = #{deptName,jdbcType=VARCHAR}
+                ORDER BY o.createTime DESC
+        -->
     </select>
     <select id="getOrderProductByMouth" resultType="com.btjf.vo.weixin.OrderProductVo">
-      select a.productNo,a.unit, max(a.num) num from
-      (
+      select a.productNo,a.unit, max(a.num) num,
+          (select count(0)=0
+            from t_Production_Procedure_Confirm p
+            where  p.productNo = a.productNo
+              and p.orderNo = #{orderNo,jdbcType=VARCHAR}
+              and p.type = 1
+              and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
+              and p.isChange = 0
+              and p.isDelete = 0
+              and p.workshop = #{deptName,jdbcType=VARCHAR}) changed
+      from(
         select DISTINCT p.productNo, sum(p.num) AS num, pp.unit
         from t_Production_Procedure_Confirm p
         LEFT JOIN t_Product pp ON p.productNo = pp.productNo
@@ -545,7 +576,7 @@
          and p.isDelete = 0
         and p.orderNo = #{orderNo,jdbcType=VARCHAR}
         and p.workshop = #{deptName,jdbcType=VARCHAR}
-        and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
+        and p.completeTime >= concat(#{date}, '-01')
         group by p.productNo,p.procedureId, pp.unit
         ) a group by a.productNo,a.unit
     </select>
@@ -574,6 +605,18 @@
          and p.isDelete = 0
          and p.workshop = #{deptName,jdbcType=VARCHAR}
          group by p.empId,e.name
+    </select>
+
+    <select id="checkProcedureConfirmChanged" resultType="Boolean">
+      select count(0)>0
+      from t_Production_Procedure_Confirm p
+      where p.productNo = #{productNo,jdbcType=VARCHAR}
+        and p.orderNo = #{orderNo,jdbcType=VARCHAR}
+        and p.procedureId = #{id,jdbcType=INTEGER}
+        and DATE_FORMAT(p.completeTime, '%Y-%m' ) = #{date}
+        and p.isChange = 1
+        and p.isDelete = 0
+        and p.workshop = #{deptName,jdbcType=VARCHAR}
     </select>
 
     <select id="select" resultMap="BaseResultMap">
@@ -950,8 +993,8 @@
         and empId = #{empId}
         and isDelete = 0
         and isChange in (0,2)
-        and ((workshop in ("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检") and type = 2)
-            or (workshop not in ("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检")))
+        and ((workshop in ("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检","仓库") and type = 2)
+            or (workshop not in ("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检","仓库")))
 
     </select>
 
@@ -1020,5 +1063,53 @@
         and isDelete = 0
   </select>
 
+
+    <select id="getType2" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_Production_Procedure_Confirm
+        where productNo = #{productNo,jdbcType=VARCHAR}
+        and orderNo = #{orderNo,jdbcType=VARCHAR}
+        and procedureName =#{procedureName}
+        and type = 2
+        and isDelete = 0
+    </select>
+
+    <select id="getAllConfirmed" resultType="decimal">
+        select
+        ifnull(sum(money),0)
+        from t_Production_Procedure_Confirm p LEFT JOIN t_Emp e ON p.empId = e.id
+        LEFT JOIN t_Emp_work w ON w.id = e.workId
+        LEFT JOIN t_Production_Luo l ON p.luoId = l.id
+        where (p.isChange=0 or p.isChange=2)
+        AND p.isDelete = 0
+        <if test="name != null ">
+            AND e.name = #{name}
+        </if>
+        <if test="deptId != null ">
+            AND e.deptId = #{deptId}
+        </if>
+        <if test="workId != null ">
+            AND e.workId = #{workId}
+        </if>
+        <if test="orderNo != null ">
+            AND p.orderNo = #{orderNo}
+        </if>
+        <if test="productNo != null ">
+            AND p.productNo = #{productNo}
+        </if>
+        <if test="procedureName != null ">
+            AND p.procedureName = #{procedureName}
+        </if>
+        <if test="yearMonth != null ">
+            AND DATE_FORMAT(p.completeTime, "%Y-%m") = #{yearMonth}
+        </if>
+        <if test="startDate != null ">
+            AND p.createTime &gt;= #{startDate}
+        </if>
+        <if test="endDate != null ">
+            AND p.createTime &lt;= #{endDate}
+        </if>
+    </select>
 
 </mapper>

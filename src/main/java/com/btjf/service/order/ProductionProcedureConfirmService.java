@@ -15,13 +15,11 @@ import com.btjf.service.productpm.ProductProcedureService;
 import com.btjf.service.productpm.ProductWorkshopService;
 import com.btjf.util.BigDecimalUtil;
 import com.btjf.vo.ProcedureYieldVo;
-import com.btjf.vo.weixin.EmpProcedureDetailVo;
-import com.btjf.vo.weixin.EmpProcedureListVo;
-import com.btjf.vo.weixin.OrderProductVo;
 import com.btjf.vo.weixin.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.stereotype.Service;
@@ -58,6 +56,9 @@ public class ProductionProcedureConfirmService {
     @Resource
     private ProductionProcedureService productionProcedureService;
 
+    /**
+     * 注意！这里订单的创建时间被设为该订单下最新的生产单的创建时间
+     */
     @Resource
     private ProductionOrderService productionOrderService;
 
@@ -69,6 +70,7 @@ public class ProductionProcedureConfirmService {
 
     @Resource
     private OrderProductService orderProductService;
+
 
     public List<Order> getOrderByMouth(String date, String deptName) {
         return productionProcedureConfirmMapper.getOrderByMouth(date, deptName);
@@ -91,6 +93,8 @@ public class ProductionProcedureConfirmService {
                 vo.setSort(list.get(i).getSort());
                 List<EmpProcedureDetailVo> dlist = productionProcedureConfirmMapper.getEmpNum(orderNo, productNo, vo.getId(), date, deptName);
                 vo.setList(dlist);
+                //Long changeCount = productionProcedureConfirmMapper.checkProcedureConfirmChanged(orderNo, productNo, vo.getId(), date, deptName);
+                vo.setChanged(productionProcedureConfirmMapper.checkProcedureConfirmChanged(orderNo, productNo, vo.getId(), date, deptName));
                 volist.add(vo);
             }
         }
@@ -104,7 +108,6 @@ public class ProductionProcedureConfirmService {
     }
 
     public Integer add(Integer orderId, String orderNo, Integer louId, String billOutNo, String productNo, String productionNo, WxEmpVo wxEmpVo, Boolean isCreateInspectionorSalary) {
-
 
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
         List<MultipleProduction> multipleProductions = multipleProductionService.getByProductionNo(productionNo);
@@ -150,7 +153,6 @@ public class ProductionProcedureConfirmService {
             productionProcedureScanService.updateStatue(t);
         });
 
-        //生产单是否包含该质检员包含的质检工序  包含则增加质检员工资
         List<ProductionProcedure> isContainList = productionProcedureService.isContainZj(wxEmpVo.getDeptName() + "质检", productionNo, null);
         if (isCreateInspectionorSalary && !CollectionUtils.isEmpty(isContainList) && productionOrder.getType() == 1) {
             //新增质检工资记录
@@ -328,5 +330,15 @@ public class ProductionProcedureConfirmService {
         List<ProcessDetail> processDetails = productionProcedureScanService.getByProcduct(ids, orderNo, product);
         return processDetails;
 
+    }
+
+    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo) {
+        return productionProcedureConfirmMapper.getType2(orderNo, procedureName, productNo);
+    }
+
+    public Double getAllConfirmed(String name, Integer deptId,
+                                  Integer workId, String orderNo, String productNo, String procedureName,
+                                  String yearMonth, String startDate, String endDate) {
+        return productionProcedureConfirmMapper.getAllConfirmed(name, deptId, workId, orderNo, productNo, procedureName, yearMonth, startDate, endDate).doubleValue();
     }
 }

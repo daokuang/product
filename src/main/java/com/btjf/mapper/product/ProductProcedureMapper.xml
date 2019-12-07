@@ -395,7 +395,8 @@
         t3.workshop as workshop
         FROM
         t_Product_Procedure t1
-        LEFT JOIN ( SELECT productNo, sum( price ) AS sumPrice FROM t_Product_Procedure GROUP BY productNo ) t2
+        LEFT JOIN ( SELECT productNo, sum( price ) AS sumPrice FROM t_Product_Procedure where isDelete = 0 GROUP BY
+        productNo ) t2
         ON t1.productNo = t2.productNo
         LEFT JOIN t_Product_Procedure_Workshop t3
         ON t1.id = t3.procedureId

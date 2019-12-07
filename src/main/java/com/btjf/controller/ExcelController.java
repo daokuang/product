@@ -3,6 +3,7 @@ package com.btjf.controller;
 import com.btjf.application.util.XaResult;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.excel.ExcelHandlerHelper;
+import com.btjf.excel.easyexcel.ProcedureWorkshopHelper;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,9 @@ public class ExcelController extends ProductBaseController {
     @Resource
     private ExcelHandlerHelper excelHandlerHelper;
 
+    @Resource
+    private ProcedureWorkshopHelper procedureWorkshopHelper;
+
 
     /**
      * 获取数据
@@ -39,6 +43,9 @@ public class ExcelController extends ProductBaseController {
         if (file == null || file.isEmpty()) {
             return XaResult.error("请选择上传的文件");
         } else {
+            if (fileType == 5) {
+                return XaResult.success(procedureWorkshopHelper.execute(file, getLoginUser().getUserName()));
+            }
             return XaResult.success(excelHandlerHelper.getHandler(fileType).execute(file, isCover, getLoginUser().getUserName()));
         }
     }

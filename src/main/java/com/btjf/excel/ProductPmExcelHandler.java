@@ -59,7 +59,7 @@ public class ProductPmExcelHandler extends BaseExcelHandler {
                 pm.setOperator(operator);
             }
         }
-        excelImportFactory.saveProductPm(productPms);
+        productPmService.saveList(productPms);
     }
 
     @Override

@@ -71,10 +71,11 @@ public class WorkController extends ProductBaseController {
     @Resource
     private ShortUrlService shortUrlService;
 
+    private static final List<String> NOTCONFIRM_DEPT = Arrays.asList("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检","仓库");
+
     @Resource
     private MultipleProductionService multipleProductionService;
 
-    private static final List<String> NOTCONFIRM_DEPT = Arrays.asList("后道车间-中辅工", "后道车间-车工", "后道车间-小辅工", "包装车间", "外协质检", "质检部-成品质检");
 
     @RequestMapping(value = "getConfirmList", method = RequestMethod.GET)
     public XaResult<WorkListVo> getConfigList(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,

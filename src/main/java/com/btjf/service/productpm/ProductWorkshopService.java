@@ -165,6 +165,7 @@ public class ProductWorkshopService {
             throw new BusinessException("无法删除质检工序");
         }
         productProcedureWorkshop.setIsDelete(1);
+        productProcedureWorkshop.setLastModifyTime(new Date());
         return productProcedureWorkshopMapper.updateByPrimaryKeySelective(productProcedureWorkshop);
     }
 
@@ -178,7 +179,11 @@ public class ProductWorkshopService {
         return productProcedureWorkshopMapper.getInspactPriceByWorkShapAndProductNo(deptName, productNo);
     }
 
-    public ProductProcedureWorkshop getByWorkShopAndProductNoAndName(String workShop,String productNo, String name){
+    public ProductProcedureWorkshop getByWorkShopAndProductNoAndName(String workShop, String productNo, String name) {
         return productProcedureWorkshopMapper.getByWorkShopAndProductNoAndName(workShop, productNo, name);
+    }
+
+    public List<ProductProcedureWorkshop> getNeetDelete() {
+        return productProcedureWorkshopMapper.getNeetDelete();
     }
 }

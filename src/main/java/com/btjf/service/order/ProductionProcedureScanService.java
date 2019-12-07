@@ -89,6 +89,7 @@ public class ProductionProcedureScanService {
 
         Integer deleteRow = productionProcedureConfirmMapper.delete(orderNo, productNo, productionNo, louId, billOutNo, null);
         if (deleteRow > 0) LOGGER.info("员工确认工序 删除之前质检的工序条数：" + deleteRow);
+        Date current = new Date();
         for (WorkShopVo.Procedure procedure : procedures) {
             if (procedure == null) continue;
             row++;
@@ -104,7 +105,7 @@ public class ProductionProcedureScanService {
             productionProcedureScan.setNum(num == null ? procedure.getNum() : num);
             productionProcedureScan.setOrderNo(orderNo);
             productionProcedureScan.setProcedureId(productProcedure.getId());
-            productionProcedureScan.setCreateTime(new Date());
+            productionProcedureScan.setCreateTime(current);
             productionProcedureScan.setIsDelete(0);
             productionProcedureScan.setProcedureName(productProcedure.getProcedureName());
             productionProcedureScan.setPrice(productProcedure.getPrice());
@@ -175,5 +176,11 @@ public class ProductionProcedureScanService {
 
     public List<ProcessDetail> getByProcduct(List<Integer> ids, String orderNo, String product) {
         return productionProcedureScanMapper.getByProcduct(ids, orderNo, product);
+    }
+
+    public Double getAllUnConfirm(String name, Integer deptId, Integer workId, String orderNo,
+                                  String productNo, String procedureName, String yearMonth, String startDate, String endDate){
+        return productionProcedureScanMapper.getAllUnConfirm(name,  deptId,  workId,  orderNo,
+                 productNo,  procedureName,  yearMonth,  startDate,  endDate).doubleValue();
     }
 }

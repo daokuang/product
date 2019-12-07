@@ -35,6 +35,9 @@ public class ProductWorkshopExcelHandler extends BaseExcelHandler {
     @Resource
     private ExcelImportFactory excelImportFactory;
 
+    @Resource
+    private ProductWorkshopService productWorkshopService;
+
     @Override
     public List<String> execute(MultipartFile file, Boolean isCover, String operator) throws Exception {
         return checkLayout(file, fields, operator);
@@ -49,7 +52,7 @@ public class ProductWorkshopExcelHandler extends BaseExcelHandler {
                     productProcedureWorkshop.setOperator(operator);
                 }
             }
-            excelImportFactory.saveProductWorkshop(list);
+            productWorkshopService.saveList(list);
         });
     }
 
