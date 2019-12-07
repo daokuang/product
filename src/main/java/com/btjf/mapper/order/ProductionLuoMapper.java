@@ -99,4 +99,6 @@ public interface ProductionLuoMapper {
     List<ProductionLuo> getByProductionNo(@Param("productionNo") String productionNo);
 
     Integer deleteByProductionNo(@Param("productionNo") String productionNo);
+
+    ProductionLuo getByProductionNoAndSort(@Param("productionNo") String productionNo, @Param("sort") Integer sort);
 }

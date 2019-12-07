@@ -332,8 +332,8 @@ public class ProductionProcedureConfirmService {
 
     }
 
-    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo) {
-        return productionProcedureConfirmMapper.getType2(orderNo, procedureName, productNo);
+    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo, String productionNo, Integer luoId) {
+        return productionProcedureConfirmMapper.getType2(orderNo, procedureName, productNo, productionNo, luoId);
     }
 
     public Double getAllConfirmed(String name, Integer deptId,

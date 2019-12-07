@@ -215,10 +215,11 @@ public class OrderController extends ProductBaseController {
             products.stream().filter(t -> t != null).forEach(t -> {
                 List<ProductProcedureWorkshop> productProcedureWorkshops =
                         productWorkshopService.getWorkShop(t.getProductNo(), 1);
-                productProcedureWorkshops.forEach(productProcedureWorkshop -> {
+                //todo 后续要返回工序数量
+               /* productProcedureWorkshops.forEach(productProcedureWorkshop -> {
                     productProcedureWorkshop.setNum(productionProcedureService.
                             procedureCanAssignNum(t.getOrderNo(), t.getProductNo(), productProcedureWorkshop.getProcedureId()));
-                });
+                });*/
 
 
                 OrderProductVo orderProductVo = new OrderProductVo(t, productProcedureWorkshops);

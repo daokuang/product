@@ -8,11 +8,13 @@ import com.btjf.common.utils.DateUtil;
 import com.btjf.controller.base.ProductBaseController;
 import com.btjf.excel.BaseExcelHandler;
 import com.btjf.model.emp.*;
+import com.btjf.model.order.ProductionLuo;
 import com.btjf.model.order.ProductionProcedureConfirm;
 import com.btjf.model.order.ProductionProcedureScan;
 import com.btjf.model.salary.SalaryMonthly;
 import com.btjf.model.sys.Sysdept;
 import com.btjf.service.emp.*;
+import com.btjf.service.order.ProductionLuoService;
 import com.btjf.service.order.ProductionProcedureConfirmService;
 import com.btjf.service.order.ProductionProcedureScanService;
 import com.btjf.service.salary.SalaryMonthlyService;
@@ -30,6 +32,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,6 +79,8 @@ public class LaborBasicController extends ProductBaseController {
     private SummarySalaryMonthlyService summarySalaryMonthlyService;
     @Resource
     private ProductionProcedureScanService productionProcedureScanService;
+    @Resource
+    private ProductionLuoService productionLuoService;
 
     /**
      * 工资月度 新增 修改
@@ -284,7 +289,16 @@ public class LaborBasicController extends ProductBaseController {
 
         procedureYieldVos.forEach(t -> {
             if (t.getConfirmed() == 1) {
-                ProductionProcedureConfirm productionProcedureConfirm = productionProcedureConfirmService.getType2(t.getOrderNo(), t.getProcedureName(), t.getProductNo());
+                String productionNo = t.getProductionNo();
+                Integer luoId = null;
+                if(!StringUtils.isBlank(productionNo) && productionNo.contains("-")){
+                    productionNo = productionNo.split("-")[0];
+                    ProductionLuo productionLuo = productionLuoService.getByProductionNoAndSort(productionNo, new Integer(productionNo.split("-")[1]));
+                    if(productionLuo != null){
+                        luoId = productionLuo.getId();
+                    }
+                }
+                ProductionProcedureConfirm productionProcedureConfirm = productionProcedureConfirmService.getType2(t.getOrderNo(), t.getProcedureName(), t.getProductNo(), productionNo, luoId);
                 t.setConfirmedMoney(productionProcedureConfirm == null ? t.getMoney() : productionProcedureConfirm.getMoney().doubleValue());
                 t.setMoney(t.getConfirmedMoney());
             } else {

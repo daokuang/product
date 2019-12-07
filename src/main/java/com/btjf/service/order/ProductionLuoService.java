@@ -33,6 +33,10 @@ public class ProductionLuoService {
         if (null == productionNo) return null;
         return productionLuoMapper.getByProductionNo(productionNo);
     }
+    public ProductionLuo getByProductionNoAndSort(String productionNo, Integer sort) {
+        if (null == productionNo) return null;
+        return productionLuoMapper.getByProductionNoAndSort(productionNo, sort);
+    }
 
     public ProductionLuo getById(Integer id){
         if(id == null) return null;

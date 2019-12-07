@@ -1071,8 +1071,12 @@
         where productNo = #{productNo,jdbcType=VARCHAR}
         and orderNo = #{orderNo,jdbcType=VARCHAR}
         and procedureName =#{procedureName}
+        and productionNo = #{productionNo}
+        <if test="luoId != null">
+            and luoId =#{luoId}
+        </if>
         and type = 2
-        and isDelete = 0
+        and isDelete = 0 limit 1
     </select>
 
     <select id="getAllConfirmed" resultType="decimal">

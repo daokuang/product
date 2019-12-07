@@ -376,4 +376,11 @@
     SET isDelete = 1
     WHERE productionNo = #{productionNo}
   </update>
+
+  <select id="getByProductionNoAndSort" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM t_Production_Luo
+    WHERE  productionNo = #{productionNo}
+    and isDelete = 0 and sort = #{sort}
+  </select>
 </mapper>
