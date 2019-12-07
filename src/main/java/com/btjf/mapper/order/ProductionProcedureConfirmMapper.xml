@@ -1075,4 +1075,41 @@
         and isDelete = 0
     </select>
 
+    <select id="getAllConfirmed" resultType="decimal">
+        select
+        ifnull(sum(money),0)
+        from t_Production_Procedure_Confirm p LEFT JOIN t_Emp e ON p.empId = e.id
+        LEFT JOIN t_Emp_work w ON w.id = e.workId
+        LEFT JOIN t_Production_Luo l ON p.luoId = l.id
+        where (p.isChange=0 or p.isChange=2)
+        AND p.isDelete = 0
+        <if test="name != null ">
+            AND e.name = #{name}
+        </if>
+        <if test="deptId != null ">
+            AND e.deptId = #{deptId}
+        </if>
+        <if test="workId != null ">
+            AND e.workId = #{workId}
+        </if>
+        <if test="orderNo != null ">
+            AND p.orderNo = #{orderNo}
+        </if>
+        <if test="productNo != null ">
+            AND p.productNo = #{productNo}
+        </if>
+        <if test="procedureName != null ">
+            AND p.procedureName = #{procedureName}
+        </if>
+        <if test="yearMonth != null ">
+            AND DATE_FORMAT(p.completeTime, "%Y-%m") = #{yearMonth}
+        </if>
+        <if test="startDate != null ">
+            AND p.createTime &gt;= #{startDate}
+        </if>
+        <if test="endDate != null ">
+            AND p.createTime &lt;= #{endDate}
+        </if>
+    </select>
+
 </mapper>

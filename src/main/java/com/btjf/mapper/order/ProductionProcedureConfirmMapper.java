@@ -4,10 +4,12 @@ import com.btjf.model.order.Order;
 import com.btjf.model.order.ProductionProcedureConfirm;
 import com.btjf.model.order.ProductionProcedureConfirmExample;
 import com.btjf.model.product.ProductProcedure;
+import com.btjf.util.BigDecimalUtil;
 import com.btjf.vo.ProcedureYieldVo;
 import com.btjf.vo.weixin.*;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductionProcedureConfirmMapper {
@@ -154,4 +156,8 @@ public interface ProductionProcedureConfirmMapper {
     Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 
     ProductionProcedureConfirm getType2(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
+
+    BigDecimal getAllConfirmed(@Param("name") String name, @Param("deptId") Integer deptId, @Param("workId")
+            Integer workId, @Param("orderNo") String orderNo, @Param("productNo") String productNo, @Param("procedureName") String procedureName,
+                               @Param("yearMonth") String yearMonth, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

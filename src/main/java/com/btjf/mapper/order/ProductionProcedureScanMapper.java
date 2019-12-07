@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductionProcedureScanMapper {
@@ -114,4 +115,8 @@ public interface ProductionProcedureScanMapper {
     Integer getHandleNum(@Param("orderNo") String orderNo, @Param("procedureName") String procedureName, @Param("productNo") String productNo);
 
     List<ProcessDetail> getByProcduct(@Param("ids") List<Integer> ids, @Param("orderNo") String orderNo, @Param("product") String product);
+
+    BigDecimal getAllUnConfirm(@Param("name") String name, @Param("deptId") Integer deptId, @Param("workId")
+            Integer workId, @Param("orderNo") String orderNo, @Param("productNo") String productNo, @Param("procedureName") String procedureName,
+                               @Param("yearMonth") String yearMonth, @Param("startDate") String startDate, @Param("endDate") String endDate);
 }

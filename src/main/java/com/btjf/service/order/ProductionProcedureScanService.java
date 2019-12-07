@@ -177,4 +177,10 @@ public class ProductionProcedureScanService {
     public List<ProcessDetail> getByProcduct(List<Integer> ids, String orderNo, String product) {
         return productionProcedureScanMapper.getByProcduct(ids, orderNo, product);
     }
+
+    public Double getAllUnConfirm(String name, Integer deptId, Integer workId, String orderNo,
+                                  String productNo, String procedureName, String yearMonth, String startDate, String endDate){
+        return productionProcedureScanMapper.getAllUnConfirm(name,  deptId,  workId,  orderNo,
+                 productNo,  procedureName,  yearMonth,  startDate,  endDate).doubleValue();
+    }
 }

@@ -19,6 +19,7 @@ import com.btjf.vo.weixin.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.stereotype.Service;
@@ -330,7 +331,14 @@ public class ProductionProcedureConfirmService {
         return processDetails;
 
     }
-    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo){
+
+    public ProductionProcedureConfirm getType2(String orderNo, String procedureName, String productNo) {
         return productionProcedureConfirmMapper.getType2(orderNo, procedureName, productNo);
+    }
+
+    public Double getAllConfirmed(String name, Integer deptId,
+                                  Integer workId, String orderNo, String productNo, String procedureName,
+                                  String yearMonth, String startDate, String endDate) {
+        return productionProcedureConfirmMapper.getAllConfirmed(name, deptId, workId, orderNo, productNo, procedureName, yearMonth, startDate, endDate).doubleValue();
     }
 }

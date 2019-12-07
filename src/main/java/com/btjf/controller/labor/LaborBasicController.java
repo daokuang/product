@@ -9,10 +9,12 @@ import com.btjf.controller.base.ProductBaseController;
 import com.btjf.excel.BaseExcelHandler;
 import com.btjf.model.emp.*;
 import com.btjf.model.order.ProductionProcedureConfirm;
+import com.btjf.model.order.ProductionProcedureScan;
 import com.btjf.model.salary.SalaryMonthly;
 import com.btjf.model.sys.Sysdept;
 import com.btjf.service.emp.*;
 import com.btjf.service.order.ProductionProcedureConfirmService;
+import com.btjf.service.order.ProductionProcedureScanService;
 import com.btjf.service.salary.SalaryMonthlyService;
 import com.btjf.service.sys.SysDeptService;
 import com.btjf.util.BigDecimalUtil;
@@ -72,6 +74,8 @@ public class LaborBasicController extends ProductBaseController {
     private ScoreService scoreService;
     @Resource
     private SummarySalaryMonthlyService summarySalaryMonthlyService;
+    @Resource
+    private ProductionProcedureScanService productionProcedureScanService;
 
     /**
      * 工资月度 新增 修改
@@ -288,8 +292,14 @@ public class LaborBasicController extends ProductBaseController {
             }
         });
 
-        Double confirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 1).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
-        Double notConfirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 0).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
+        //Double confirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 1).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
+        //Double notConfirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 0).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
+
+        Double confirmedMoney = productionProcedureConfirmService.getAllConfirmed(name, deptId, workId,
+                orderNo, productNo, procedureName, yearMonth, startDate, endDate);
+
+        Double notConfirmedMoney = productionProcedureScanService.getAllUnConfirm(name, deptId, workId,
+                orderNo, productNo, procedureName, yearMonth, startDate, endDate);
 
         Map<String, Object> map = Maps.newHashMap();
         map.put("confirmedMoney", confirmedMoney);
