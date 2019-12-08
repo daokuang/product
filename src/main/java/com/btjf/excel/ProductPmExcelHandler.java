@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 @Component
 public class ProductPmExcelHandler extends BaseExcelHandler {
 
-    public final static List<String> fields = Stream.of("型号", "物料编号", "数量（耗料/双）",
+    public final static List<String> fields = Stream.of("型号", "物料编号","物料名称", "数量（耗料/双）",
             "单位", "类别", "序号", "备注").collect(Collectors.toList());
 
     @Resource

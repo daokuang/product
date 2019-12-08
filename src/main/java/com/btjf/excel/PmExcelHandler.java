@@ -203,8 +203,10 @@ public class PmExcelHandler extends BaseExcelHandler {
         //insert
         pmService.saveList(pmList, isCover);
         result.add("提交成功！新增导入" + pmList.size() + "条数据！");
-        result.add("导入失败，以下数据请修改后再重新上传");
-        result.addAll(error);
+        if (error.size() > 0) {
+            result.add("导入失败，以下数据请修改后再重新上传");
+            result.addAll(error);
+        }
 
         return result;
 
