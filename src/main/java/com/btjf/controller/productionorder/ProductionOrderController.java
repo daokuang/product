@@ -384,7 +384,7 @@ public class ProductionOrderController extends ProductBaseController {
                     batchAssignOrder.setProductNo(t.getProductNo());
 
                     List<WorkShopVo.Procedure> procedures = WorkShopVo.Procedure.productionProcedureTransfor(
-                            productionProcedureService.getByMultipleId(t.getId()));
+                            productionProcedureService.getByMultipleCantenZJ(t.getId()));
                     batchAssignOrder.setProcedures(procedures);
 
                     batchAssignOrders.add(batchAssignOrder);

@@ -108,5 +108,7 @@ public interface ProductionProcedureMapper {
 
     List<ProductionProcedure> getByMultipleId(@Param("multipleId") Integer multipleId);
 
+    List<ProductionProcedure> getByMultipleCantenZJ(@Param("multipleId") Integer multipleId);
+
     void deletByProductionProcedureId(@Param("id") Integer id);
 }

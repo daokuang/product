@@ -85,6 +85,9 @@ public class ProductionProcedureService {
         return productionProcedureMapper.getByMultipleId(id);
     }
 
+    public List<ProductionProcedure> getByMultipleCantenZJ(Integer id) {
+        return productionProcedureMapper.getByMultipleCantenZJ(id);
+    }
     /**
      * 通过工序id删除
      * @param id

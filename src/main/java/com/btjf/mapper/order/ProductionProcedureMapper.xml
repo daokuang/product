@@ -484,6 +484,13 @@
         where multipleProductionId = #{multipleId} and isDelete = 0  and procedureName not like '%质检%'
     </select>
 
+    <select id="getByMultipleCantenZJ" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_Production_Procedure
+        where multipleProductionId = #{multipleId} and isDelete = 0
+    </select>
+
     <update id="deletByProductionProcedureId">
         UPDATE t_Production_Procedure
         SET isDelete = 1
