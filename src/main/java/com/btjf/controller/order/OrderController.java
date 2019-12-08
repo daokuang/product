@@ -303,6 +303,9 @@ public class OrderController extends ProductBaseController {
     public XaResult<List<ProcessDetail>> getProcessDetail(String workSpace, String orderNo, String productNo) {
         if (StringUtils.isEmpty(workSpace) || StringUtils.isEmpty(orderNo) || StringUtils.isEmpty(productNo))
             return XaResult.error("参数不全");
+        if(workSpace.equals("前道车间-复面") || workSpace.equals("前道车间-质检")){
+            workSpace = "一车间";
+        }
         OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(orderNo, productNo);
         List<ProcessDetail> processDetails = productionProcedureConfirmService.getCompleteNum(workSpace, orderNo, productNo);
         processDetails.forEach(t -> {

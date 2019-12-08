@@ -71,19 +71,21 @@ public class WorkController extends ProductBaseController {
     @Resource
     private ShortUrlService shortUrlService;
 
-    private static final List<String> NOTCONFIRM_DEPT = Arrays.asList("后道车间-中辅工","后道车间-车工","后道车间-小辅工","包装车间","外协质检","质检部-成品质检","仓库");
+    private static final List<String> NOTCONFIRM_DEPT = Arrays.asList("后道车间-中辅工", "后道车间-车工", "后道车间-小辅工", "包装车间", "外协质检", "质检部-成品质检", "仓库");
 
     @Resource
     private MultipleProductionService multipleProductionService;
 
 
     @RequestMapping(value = "getConfirmList", method = RequestMethod.GET)
-    public XaResult<WorkListVo> getConfigList(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
-                                              @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
-                                              @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billNo) throws BusinessException {
+    public XaResult<List<WorkListVo>> getConfigList(@ApiParam("订单id") Integer orderId, @ApiParam("订单编号") String orderNo,
+                                                    @ApiParam("产品编号") String productNo, @ApiParam("生产单编号") String productionNo,
+                                                    @ApiParam("罗id") Integer louId, @ApiParam("领料单编号") String billNo) throws BusinessException {
         WxEmpVo wxEmpVo = getWxLoginUser();
         if (orderId == null || orderNo == null || productNo == null) return XaResult.error("无效二维码");
 
+
+        List<WorkListVo> result = Lists.newArrayList();
         WorkListVo workListVo = new WorkListVo();
         workListVo.setOrderId(orderId);
         workListVo.setOrderNo(orderNo);
@@ -134,7 +136,8 @@ public class WorkController extends ProductBaseController {
         } else {
             return XaResult.error("没有您所需处理的工序。(如有疑问，请咨询客服)");
         }
-        XaResult result = XaResult.success(workListVo);
+        result.add(workListVo);
+        XaResult results = XaResult.success(result);
         if (wxEmpVo.getWorkName().equals("检验")) {
             if (NOTCONFIRM_DEPT.contains(wxEmpVo.getDeptName())) {
                 return XaResult.error(wxEmpVo.getDeptName() + "默认无需质检");
@@ -142,9 +145,9 @@ public class WorkController extends ProductBaseController {
             Map map = Maps.newHashMap();
             map.put("assignNum", assignNum);
             map.put("unit", unit);
-            result.setMap(map);
+            results.setMap(map);
         }
-        return result;
+        return results;
     }
 
     @RequestMapping(value = "/checkConfirm", method = RequestMethod.GET)
@@ -258,9 +261,9 @@ public class WorkController extends ProductBaseController {
 
         if (productionNo == null && billOutNo == null) return XaResult.error("生产单号和领料单号不能同时为空");
         if (productionNo != null && billOutNo != null) return XaResult.error("生产单号和领料单号不能同时存在");
-
+        ProductionOrder productionOrder = null;
         if (productionNo != null) {
-            ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
+            productionOrder =productionOrderService.getByNo(productionNo);
             if (productionOrder == null) return XaResult.error("生产单号不存在");
             if (!wxEmpVo.getDeptName().equals(productionOrder.getWorkshop())) return XaResult.error("您无法质检不属于自己部门的单子");
         }
@@ -280,6 +283,10 @@ public class WorkController extends ProductBaseController {
         productionProcedureConfirm.setIsDelete(0);
         if (!StringUtils.isEmpty(productionNo)) {
             productionProcedureConfirm.setProductionNo(productionNo);
+            if(productionOrder.getType() == 2){
+                productionProcedureConfirm.setOrderNo(null);
+                productionProcedureConfirm.setProductNo(null);
+            }
             if (louId != null) {
                 productionProcedureConfirm.setLuoId(louId);
             }

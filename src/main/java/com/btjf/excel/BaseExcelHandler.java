@@ -68,7 +68,7 @@ public abstract class BaseExcelHandler {
         }
         //检验要导入的数据重复问题
 
-        if (this.getClass().equals(ProductWorkshopExcelHandler.class)) {
+        if (this.getClass().equals(ProductWorkshopExcelHandler.class) || getClass().equals(ProductPmExcelHandler.class)) {
             if (CollectionUtils.isNotEmpty(result)) {
                 insert(result, operator);
                 response.add("提交成功！新增导入" + result.size() + "条数据！");

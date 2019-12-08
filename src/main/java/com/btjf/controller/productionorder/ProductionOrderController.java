@@ -135,10 +135,10 @@ public class ProductionOrderController extends ProductBaseController {
         if (pageSize == null || pageSize < 1) {
             pageSize = 25;
         }
-        if(!StringUtils.isEmpty(productionNo)){
+        if (!StringUtils.isEmpty(productionNo)) {
             productionNo = productionNo.trim();
         }
-        if(!StringUtils.isEmpty(orderNo)){
+        if (!StringUtils.isEmpty(orderNo)) {
             orderNo = orderNo.trim();
         }
         Page page = new Page(pageSize, currentPage);
@@ -364,7 +364,7 @@ public class ProductionOrderController extends ProductBaseController {
 
         BatchAssignVo batchAssignVo = new BatchAssignVo();
         batchAssignVo.setCodeUrl(productionOrder.getCodeUrl());
-        batchAssignVo.setPrintCount(productionOrder.getPrintCount());
+        batchAssignVo.setPrintCount(productionOrder.getPrintCount() == 0 ? 1 : productionOrder.getPrintCount() + 1);
         batchAssignVo.setPrinter(sysUser.getLoginName());
         batchAssignVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
         batchAssignVo.setWorkshop(productionOrder.getWorkshop());

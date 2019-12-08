@@ -291,10 +291,10 @@ public class LaborBasicController extends ProductBaseController {
             if (t.getConfirmed() == 1) {
                 String productionNo = t.getProductionNo();
                 Integer luoId = null;
-                if(!StringUtils.isBlank(productionNo) && productionNo.contains("-")){
+                if (!StringUtils.isBlank(productionNo) && productionNo.contains("-")) {
                     productionNo = productionNo.split("-")[0];
                     ProductionLuo productionLuo = productionLuoService.getByProductionNoAndSort(productionNo, new Integer(productionNo.split("-")[1]));
-                    if(productionLuo != null){
+                    if (productionLuo != null) {
                         luoId = productionLuo.getId();
                     }
                 }
@@ -309,11 +309,18 @@ public class LaborBasicController extends ProductBaseController {
         //Double confirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 1).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
         //Double notConfirmedMoney = procedureYieldVos.stream().filter(t -> t.getConfirmed() == 0).map(ProcedureYieldVo::getMoney).reduce(BigDecimal.ZERO.doubleValue(), BigDecimalUtil::add);
 
-        Double confirmedMoney = productionProcedureConfirmService.getAllConfirmed(name, deptId, workId,
-                orderNo, productNo, procedureName, yearMonth, startDate, endDate);
+        Double confirmedMoney = BigDecimal.ZERO.doubleValue();
+        Double notConfirmedMoney = BigDecimal.ZERO.doubleValue();
+        if (confirmed == null || confirmed == 1) {
+            confirmedMoney = productionProcedureConfirmService.getAllConfirmed(name, deptId, workId,
+                    orderNo, productNo, procedureName, yearMonth, startDate, endDate);
 
-        Double notConfirmedMoney = productionProcedureScanService.getAllUnConfirm(name, deptId, workId,
-                orderNo, productNo, procedureName, yearMonth, startDate, endDate);
+        }
+
+        if (confirmed == null || confirmed == 0) {
+            notConfirmedMoney = productionProcedureScanService.getAllUnConfirm(name, deptId, workId,
+                    orderNo, productNo, procedureName, yearMonth, startDate, endDate);
+        }
 
         Map<String, Object> map = Maps.newHashMap();
         map.put("confirmedMoney", confirmedMoney);

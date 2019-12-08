@@ -64,7 +64,7 @@ public class ProductionOrderDetailVo implements Serializable {
             this.isLuo = productionOrder.getIsLuo();
             this.luoNum = productionOrder.getLuoNum();
             this.maxNum = productionOrder.getMaxNum();
-            this.printCount = productionOrder.getPrintCount() == null ? 1 : productionOrder.getPrintCount() + 1;
+            this.printCount = productionOrder.getPrintCount() == 0 ? 1 : productionOrder.getPrintCount() + 1;
             this.workshop = productionOrder.getWorkshop();
             this.workshopDirector = productionOrder.getWorkshopDirector();
             this.productNo = productionOrder.getProductNo();

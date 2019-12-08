@@ -7,6 +7,7 @@ import com.btjf.model.pm.Pm;
 import com.btjf.service.dictionary.DictionaryService;
 import com.btjf.service.pm.PmService;
 import com.google.common.collect.Lists;
+import jdk.nashorn.internal.runtime.ECMAException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -47,6 +48,7 @@ public class PmExcelHandler extends BaseExcelHandler {
         } catch (IOException e) {
             throw new BusinessException("workbook工具解析excel文件报错!!");
         }
+        List<String> result = Lists.newArrayList();
         //错误信息
         List<String> error = Lists.newArrayList();
 
@@ -68,140 +70,144 @@ public class PmExcelHandler extends BaseExcelHandler {
                 }
             }
 
-            Pm pm = new Pm();
-            pm.setOperator(operator);
-            pm.setCreateTime(new Date());
-            //excel就只有 8 列数据;  从1开始循环取值取到8
-            StringBuffer name = new StringBuffer();
-            for (int j = 0; j < 8; j++) {
-                String stringCellValue;
-                Cell cell = row.getCell(j);
-                switch (j) {
-                    //材料
-                    case 0:
-                        if (cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            if (StringUtils.isEmpty(stringCellValue)) {
-                                error.add("第" + k  + "行的材料编号为空");
-                            } else if (null != pmService.getByNo(stringCellValue) && !Boolean.TRUE.equals(isCover)) {
-                                error.add("第" + k + "行的材料编号已经存在");
-                            } else {
-                                pm.setPmNo(stringCellValue);
+            try {
+                Pm pm = new Pm();
+                pm.setOperator(operator);
+                pm.setCreateTime(new Date());
+                //excel就只有 8 列数据;  从1开始循环取值取到8
+                StringBuffer name = new StringBuffer();
+                for (int j = 0; j < 8; j++) {
+                    String stringCellValue;
+                    Cell cell = row.getCell(j);
+                    switch (j) {
+                        //材料
+                        case 0:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                if (StringUtils.isEmpty(stringCellValue)) {
+                                    throw new BusinessException("第" + k + "行的材料编号为空");
+                                } else if (null != pmService.getByNo(stringCellValue) && !Boolean.TRUE.equals(isCover)) {
+                                    throw new BusinessException("第" + k + "行的材料编号已经存在");
+                                } else {
+                                    pm.setPmNo(stringCellValue);
 
-                            }
-                        } else {
-                            error.add("第" + k + "行的材料编号为空");
-                        }
-                        break;
-                    //颜色
-                    case 1:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            name.append(stringCellValue).append("-");
-                            pm.setColour(stringCellValue);
-                        }
-                        break;
-                    //规格
-                    case 2:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            name.append(stringCellValue);
-                            if (!stringCellValue.endsWith("-")) {
-                                name.append("-");
-                            }
-                            pm.setNorms(stringCellValue);
-                        }
-                        break;
-                    //材质
-                    case 3:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            name.append(stringCellValue);
-                            if (!stringCellValue.endsWith("-")) {
-                                name.append("-");
-                            }
-                            pm.setMaterial(stringCellValue);
-                        }
-                        break;
-                    //称呼
-                    case 4:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            name.append(stringCellValue);
-                            if (StringUtils.isEmpty(name.toString())) {
-                                error.add("第" + k + "行的材料名称为空");
-                            }
-                            pm.setCallStr(stringCellValue);
-                            pm.setName(name.toString());
-                        }
-                        break;
-
-                    //类别
-                    case 5:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            if (CollectionUtils.isEmpty(dictionaryService.getListByNameAndType(stringCellValue, 1))) {
-                                error.add("第" + k + "行的材料类别不存在");
+                                }
                             } else {
-                                pm.setType(stringCellValue);
+                                throw new BusinessException("第" + k + "行的材料编号为空");
                             }
-                        }else{
-                            error.add("第" + k + "行的材料类别未填写");
-                        }
-                        break;
-                    //单位
-                    case 6:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            if (CollectionUtils.isEmpty(dictionaryService.getListByNameAndType(stringCellValue, 2))) {
-                                error.add("第" + k + "行的材料单位有误");
-                            } else {
-                                pm.setUnit(stringCellValue);
+                            break;
+                        //颜色
+                        case 1:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                name.append(stringCellValue).append("-");
+                                pm.setColour(stringCellValue);
                             }
-                        }else{
-                            error.add("第" + k + "行的材料单位未填写");
-                        }
-                        break;
-                    //备注
-                    case 7:
-                        if(cell != null) {
-                            cell.setCellType(CellType.STRING);
-                            //去空格
-                            stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
-                            pm.setRemark(stringCellValue);
-                        }
-                        break;
+                            break;
+                        //规格
+                        case 2:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                name.append(stringCellValue);
+                                if (!stringCellValue.endsWith("-")) {
+                                    name.append("-");
+                                }
+                                pm.setNorms(stringCellValue);
+                            }
+                            break;
+                        //材质
+                        case 3:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                name.append(stringCellValue);
+                                if (!stringCellValue.endsWith("-")) {
+                                    name.append("-");
+                                }
+                                pm.setMaterial(stringCellValue);
+                            }
+                            break;
+                        //称呼
+                        case 4:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                name.append(stringCellValue);
+                                if (StringUtils.isEmpty(name.toString())) {
+                                    throw new BusinessException("第" + k + "行的材料名称为空");
+                                }
+                                pm.setCallStr(stringCellValue);
+                                pm.setName(name.toString());
+                            }
+                            break;
 
+                        //类别
+                        case 5:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                if (CollectionUtils.isEmpty(dictionaryService.getListByNameAndType(stringCellValue, 1))) {
+                                    throw new BusinessException("第" + k + "行的材料类别不存在");
+                                } else {
+                                    pm.setType(stringCellValue);
+                                }
+                            } else {
+                                throw new BusinessException("第" + k + "行的材料类别未填写");
+                            }
+                            break;
+                        //单位
+                        case 6:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                if (CollectionUtils.isEmpty(dictionaryService.getListByNameAndType(stringCellValue, 2))) {
+                                    throw new BusinessException("第" + k + "行的材料单位有误");
+                                } else {
+                                    pm.setUnit(stringCellValue);
+                                }
+                            } else {
+                                throw new BusinessException("第" + k + "行的材料单位未填写");
+                            }
+                            break;
+                        //备注
+                        case 7:
+                            if (cell != null) {
+                                cell.setCellType(CellType.STRING);
+                                //去空格
+                                stringCellValue = cell.getStringCellValue().replaceAll("\u00A0", "").trim();
+                                pm.setRemark(stringCellValue);
+                            }
+                            break;
+
+                    }
+                    pm.setIsDelete(0);
+                    pm.setName(name.toString());
+                    pm.setNum(BigDecimal.ZERO);
                 }
-                pm.setIsDelete(0);
-                pm.setName(name.toString());
-                pm.setNum(BigDecimal.ZERO);
+                pmList.add(pm);
+            } catch (Exception e) {
+                error.add(e.getMessage());
             }
-            pmList.add(pm);
-        }
 
-        if (error.size() > 0) {
-            return error;
-        } else {
-            //insert
-            pmService.saveList(pmList, isCover);
-            error.add("提交成功！新增导入" + sheet.getLastRowNum() + "条数据！");
-            return error;
         }
+        //insert
+        pmService.saveList(pmList, isCover);
+        result.add("提交成功！新增导入" + pmList.size() + "条数据！");
+        result.add("导入失败，以下数据请修改后再重新上传");
+        result.addAll(error);
+
+        return result;
+
     }
 
     @Override
