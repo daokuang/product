@@ -89,7 +89,9 @@ public class OrderProductService {
                     productProcedureWorkshop.setOperator(sysUser);
                     productProcedureWorkshop.setProductId(productId);
                     productProcedureWorkshop.setProductNo(orderProduct.getProductNo());
-                    productProcedureWorkshop.setSort(WorkShopProductionMapEnum.getByName(sysdept.getDeptName()).getValue());
+                    WorkShopProductionMapEnum workShopProductionMapEnum = WorkShopProductionMapEnum.getByName(sysdept.getDeptName());
+                    if(workShopProductionMapEnum == null) continue;
+                    productProcedureWorkshop.setSort(workShopProductionMapEnum.getValue());
                     productProcedureWorkshop.setProcedureName(sysdept.getDeptName() + "质检");
                     productProcedureWorkshop.setWorkshop(sysdept.getDeptName());
                     productProcedureWorkshop.setPrice(BigDecimal.valueOf(0));
