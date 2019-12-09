@@ -70,6 +70,9 @@ public class OrderExcelHandler extends BaseExcelHandler {
                         throw new BusinessException("产品编号为空");
                     }
                     orderProduct.setProductNo(productNo);
+                    if(null != orderProductService.getByOrderNoAndProductNo(orderProduct.getOrderNo(), orderProduct.getProductNo())){
+                        throw new BusinessException("订单："+orderProduct.getOrderNo()+"型号"+orderProduct.getProductNo()+"已存在");
+                    }
                     break;
                 case 2:
                     String num = getCellValue(row.getCell(i), i);
