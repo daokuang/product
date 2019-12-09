@@ -292,8 +292,8 @@ public class LaborBasicController extends ProductBaseController {
                 String productionNo = t.getProductionNo();
                 Integer luoId = null;
                 if (!StringUtils.isBlank(productionNo) && productionNo.contains("-")) {
-                    productionNo = productionNo.split("-")[0];
-                    ProductionLuo productionLuo = productionLuoService.getByProductionNoAndSort(productionNo, new Integer(productionNo.split("-")[1]));
+                    String[] productionNos = productionNo.split("-");
+                    ProductionLuo productionLuo = productionLuoService.getByProductionNoAndSort(productionNos[0], new Integer(productionNos[1]));
                     if (productionLuo != null) {
                         luoId = productionLuo.getId();
                     }
