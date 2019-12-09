@@ -395,7 +395,7 @@ public class WorkController extends ProductBaseController {
                 for (WorkShopVo.Procedure procedure : procedures) {
                     if (procedure == null) continue;
                     if (!CollectionUtils.isEmpty(productionProcedureScanService.select(t.getOrderNo(), t.getProductNo(), t.getProductionNo(),
-                            null, null, procedure.getProcedureId()))) {
+                            t.getLouId(), t.getBillNo(), procedure.getProcedureId()))) {
                         stringBuffer.append("订单编号：" + t.getOrderNo() + "型号：" + t.getProductNo());
                         stringBuffer.append("工序：" + procedure.getProcedureName() + "、");
                     }
@@ -436,14 +436,14 @@ public class WorkController extends ProductBaseController {
                 //生产单
                 if (!StringUtils.isEmpty(workListVo.getProductionNo())) {
                     try {
-                        checkComfig(workListVo.getOrderNo(), workListVo.getProductNo(), workListVo.getProductionNo(), null, null, workListVo.getProcedures());
+                        checkComfig(workListVo.getOrderNo(), workListVo.getProductNo(), workListVo.getProductionNo(), workListVo.getLouId(), workListVo.getBillNo(), workListVo.getProcedures());
                     } catch (BusinessException e) {
                         LOGGER.info(wxEmpVo.getName() + "扫码生成单:" + workListVo.getProductionNo() + "无效的二维码");
                         throw new BusinessException("生成单：" + workListVo.getProductionNo() + "中的" + e.getMessage());
                     }
                 }
                 num += productionProcedureScanService.deleteAndInsert(workListVo.getOrderNo(), workListVo.getProductNo(),
-                        workListVo.getProductionNo(), null, null, workListVo.getProcedures(), wxEmpVo, NOTCONFIRM_DEPT);
+                        workListVo.getProductionNo(), workListVo.getLouId(), workListVo.getBillNo(), workListVo.getProcedures(), wxEmpVo, NOTCONFIRM_DEPT);
             }
         }
 
