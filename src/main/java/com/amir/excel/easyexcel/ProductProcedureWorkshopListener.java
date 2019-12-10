@@ -61,8 +61,9 @@ public class ProductProcedureWorkshopListener extends AnalysisEventListener<Proc
             responseList.addAll(current);
             contentModel.setResponse(responseList);
             ResponseContent.setCurrentProxy(contentModel);
+        }else {
+            list.add(productProcedureWorkshop);
         }
-        list.add(productProcedureWorkshop);
         // if (list.size() >= BATCH_COUNT) {
         //    saveData();
         // 存储完成清理 list
@@ -103,9 +104,9 @@ public class ProductProcedureWorkshopListener extends AnalysisEventListener<Proc
             productProcedureWorkshop.setOperator(contentModel.getOperator());
             productProcedureWorkshops.add(productProcedureWorkshop);
         });
-        if (contentModel.getResponse().size() == 0) {
-            productWorkshopService.saveList(productProcedureWorkshops);
-        }
+
+        productWorkshopService.saveList(productProcedureWorkshops);
+
         ResponseContent.setCurrentProxy(contentModel);
         LOGGER.info("存储数据库成功！");
     }

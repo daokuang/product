@@ -33,11 +33,10 @@ public class ProcedureWorkshopHelper {
             EasyExcel.read(inputStream, ProcedureWorkShop.class, new ProductProcedureWorkshopListener(productWorkshopService, productService)).sheet().doRead();
             ContentModel contentModel = ResponseContent.currentProxy();
             List<String> result = contentModel.getResponse();
+            response.add("提交成功！新增导入" + contentModel.getSize() + "条数据！");
             if (CollectionUtils.isNotEmpty(result)) {
                 response.add("导入失败，以下数据请修改后再重新上传");
                 response.addAll(result);
-            } else {
-                response.add("提交成功！新增导入" + contentModel.getSize() + "条数据！");
             }
         } finally {
             ResponseContent.remove();
