@@ -2,7 +2,7 @@ package com.amir.service.order;
 
 import com.amir.mapper.order.BillNoMapper;
 import com.amir.model.order.BillNo;
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

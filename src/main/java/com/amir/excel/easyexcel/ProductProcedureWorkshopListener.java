@@ -1,6 +1,5 @@
 package com.amir.excel.easyexcel;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.fastjson.JSON;
@@ -9,6 +8,7 @@ import com.amir.model.product.ProductProcedureWorkshop;
 import com.amir.service.productpm.ProductService;
 import com.amir.service.productpm.ProductWorkshopService;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;

@@ -5,12 +5,12 @@ package com.amir.controller.customer;
  */
 
 import com.amir.controller.base.ProductBaseController;
+import com.amir.model.AppXaResultHelper;
+import com.amir.model.Page;
+import com.amir.model.XaResult;
 import com.amir.model.customer.Customer;
 import com.amir.service.customer.CustomerService;
-import com.btjf.application.components.xaresult.AppXaResultHelper;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,13 +1,13 @@
 package com.amir.service.productpm;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.amir.mapper.product.ProductMapper;
 import com.amir.mapper.product.ProductPmMapper;
+import com.amir.model.Page;
 import com.amir.model.product.Product;
 import com.amir.model.product.ProductPm;
-import com.btjf.common.page.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

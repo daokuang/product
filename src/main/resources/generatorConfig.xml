@@ -1,193 +1,195 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
-	<!--<classPathEntry location="D:\mysql-connector-java-5.1.28-bin.jar" />-->
-	<classPathEntry location="D:\Development\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />
-	<!--<classPathEntry location="C:\Users\admin\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar" />-->
+    <!--<classPathEntry location="D:\mysql-connector-java-5.1.28-bin.jar" />-->
+    <classPathEntry
+            location="D:\Development\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar"/>
+    <!--<classPathEntry location="C:\Users\admin\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar" />-->
 
-	<context id="beitaijinfu" targetRuntime="MyBatis3">
-		<property name="javaFileEncoding" value="UTF-8"/>
-		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
-		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
-		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
-		<commentGenerator >
-			<!--<commentGenerator type="org.mybatis.generator.internal.MyGenerator">-->
+    <context id="beitaijinfu" targetRuntime="MyBatis3">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <!--<commentGenerator type="org.mybatis.generator.internal.MyGenerator">-->
 
-			<property name="suppressDate" value="true" />
-		</commentGenerator>
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-						connectionURL="jdbc:mysql://118.25.11.127:35330/amir?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;zeroDateTimeBehavior=round"
-						userId="amir"
-						password="Amir6^6Test"/>
-		<javaTypeResolver>
-			<property name="forceBigDecimals" value="false"/>
-		</javaTypeResolver>
-
-
-		<javaModelGenerator targetPackage="com.amir.model.procurement" targetProject="src/main/java">
-			<property name="enableSubPackages" value="true" />
-			<property name="trimStrings" value="true" />
-		</javaModelGenerator>
-		<sqlMapGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java">
-			<property name="enableSubPackages" value="true" />
-		</sqlMapGenerator>
-		<javaClientGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java" type="XMLMAPPER">
-			<property name="enableSubPackages" value="true" />
-		</javaClientGenerator>
-
-		<table tableName="t_Raw_Material_Vendor" domainObjectName="RawMaterialVendor">
-		<property name="useActualColumnNames" value="true"/>
-		<generatedKey column="id" sqlStatement="MySql" identity="true"/>
-		<columnRenamingRule searchString="^F" replaceString="" />
-		</table>
-
-		<!--customer-->
-		<!--<table tableName="t_Customer" domainObjectName="Customer">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>		-->
-		<!--<table tableName="t_CustomerToken" domainObjectName="CustomerToken">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://118.25.11.127:35330/amir?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;zeroDateTimeBehavior=round"
+                        userId="amir"
+                        password="Amir6^6Test"/>
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
 
 
-		<!--fi-->
-		<!--<table tableName="t_CustomerRechargeRecord" domainObjectName="CustomerRechargeRecord">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_CustomerFinancialFlow" domainObjectName="CustomerFinancialFlow">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_ProviderSettlementRecord" domainObjectName="ProviderSettlementRecord">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_CustomerFinancialInfo" domainObjectName="CustomerFinancialInfo">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
+        <javaModelGenerator targetPackage="com.amir.model.procurement" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
 
-		<!--foundation-->
-		<!--<table tableName="t_Brand" domainObjectName="Brand">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_BrandFactory" domainObjectName="BrandFactory">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_SystemConfig" domainObjectName="SystemConfig">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_BrandFactoryQueryConfig" domainObjectName="BrandFactoryQueryConfig">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_BrandFactoryQueryConfigHistory" domainObjectName="BrandFactoryQueryConfigHistory">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_SetMenuConfig" domainObjectName="SetMenuConfig">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_SetMenuConfigDetail" domainObjectName="SetMenuConfigDetail">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
+        <table tableName="t_Raw_Material_Vendor" domainObjectName="RawMaterialVendor">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnRenamingRule searchString="^F" replaceString=""/>
+        </table>
 
-		<!--order-->
-		<!--<table tableName="t_Order" domainObjectName="order">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_OrderOperateLog" domainObjectName="OrderOperateLog">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_OrderRefundRecord" domainObjectName="OrderRefundRecord">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_OrderResult" domainObjectName="OrderResult">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_OrderResultPic" domainObjectName="OrderResultPic">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_OrderReAssignResultLog" domainObjectName="OrderReAssignResultLog">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
+        <!--customer-->
+        <!--<table tableName="t_Customer" domainObjectName="Customer">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>		-->
+        <!--<table tableName="t_CustomerToken" domainObjectName="CustomerToken">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
 
-		<!--provider-->
-		<!--<table tableName="t_Provider" domainObjectName="Provider">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_ProviderBrand" domainObjectName="ProviderBrand">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
 
-		<!--thirdpartprovider-->
-		<!--<table tableName="t_TP_BrandMapping" domainObjectName="ThirdpartBrandMapping">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_TP_HXResult" domainObjectName="ThirdpartHXResult">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_TP_InvokeLog" domainObjectName="ThirdpartInvokeLog">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_TP_PurOrder" domainObjectName="ThirdpartPurOrder">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_TP_SupplierBrand" domainObjectName="ThirdpartSupplierBrand">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
-		<!--<table tableName="t_TP_QueryConfig" domainObjectName="ThirdpartQueryConfig">-->
-			<!--<property name="useActualColumnNames" value="true"/>-->
-			<!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
-			<!--<columnRenamingRule searchString="^F" replaceString="" />-->
-		<!--</table>-->
+        <!--fi-->
+        <!--<table tableName="t_CustomerRechargeRecord" domainObjectName="CustomerRechargeRecord">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_CustomerFinancialFlow" domainObjectName="CustomerFinancialFlow">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_ProviderSettlementRecord" domainObjectName="ProviderSettlementRecord">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_CustomerFinancialInfo" domainObjectName="CustomerFinancialInfo">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
 
-	</context>
+        <!--foundation-->
+        <!--<table tableName="t_Brand" domainObjectName="Brand">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_BrandFactory" domainObjectName="BrandFactory">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_SystemConfig" domainObjectName="SystemConfig">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_BrandFactoryQueryConfig" domainObjectName="BrandFactoryQueryConfig">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_BrandFactoryQueryConfigHistory" domainObjectName="BrandFactoryQueryConfigHistory">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_SetMenuConfig" domainObjectName="SetMenuConfig">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_SetMenuConfigDetail" domainObjectName="SetMenuConfigDetail">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+
+        <!--order-->
+        <!--<table tableName="t_Order" domainObjectName="order">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_OrderOperateLog" domainObjectName="OrderOperateLog">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_OrderRefundRecord" domainObjectName="OrderRefundRecord">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_OrderResult" domainObjectName="OrderResult">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_OrderResultPic" domainObjectName="OrderResultPic">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_OrderReAssignResultLog" domainObjectName="OrderReAssignResultLog">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+
+        <!--provider-->
+        <!--<table tableName="t_Provider" domainObjectName="Provider">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_ProviderBrand" domainObjectName="ProviderBrand">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+
+        <!--thirdpartprovider-->
+        <!--<table tableName="t_TP_BrandMapping" domainObjectName="ThirdpartBrandMapping">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_TP_HXResult" domainObjectName="ThirdpartHXResult">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_TP_InvokeLog" domainObjectName="ThirdpartInvokeLog">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_TP_PurOrder" domainObjectName="ThirdpartPurOrder">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_TP_SupplierBrand" domainObjectName="ThirdpartSupplierBrand">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+        <!--<table tableName="t_TP_QueryConfig" domainObjectName="ThirdpartQueryConfig">-->
+        <!--<property name="useActualColumnNames" value="true"/>-->
+        <!--<generatedKey column="Fid" sqlStatement="MySql" identity="true"/>-->
+        <!--<columnRenamingRule searchString="^F" replaceString="" />-->
+        <!--</table>-->
+
+    </context>
 </generatorConfiguration>

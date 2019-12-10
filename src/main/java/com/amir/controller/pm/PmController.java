@@ -1,18 +1,18 @@
 package com.amir.controller.pm;
 
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.amir.controller.base.ProductBaseController;
+import com.amir.model.AppXaResultHelper;
+import com.amir.model.Page;
+import com.amir.model.XaResult;
 import com.amir.model.pm.Pm;
 import com.amir.model.pm.PmRequstPojo;
 import com.amir.model.sys.SysUser;
 import com.amir.service.pm.PmService;
-import com.btjf.application.components.xaresult.AppXaResultHelper;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 import com.google.common.collect.Lists;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
@@ -164,7 +164,9 @@ public class PmController extends ProductBaseController {
     public XaResult<Pm> getDetail(@ApiParam("id") Integer id) {
         getLoginUser();
         LOGGER.info(getRequestParamsAndUrl());
-        if (id == null) return XaResult.error("请选中项");
+        if (id == null) {
+            return XaResult.error("请选中项");
+        }
 
         Pm pm = pmService.getByID(id);
         return XaResult.success(pm);

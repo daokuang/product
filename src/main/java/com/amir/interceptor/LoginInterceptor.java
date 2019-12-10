@@ -1,9 +1,9 @@
 package com.amir.interceptor;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
+import com.amir.model.XaResult;
 import com.amir.model.sys.SysUser;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.utils.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,14 +33,14 @@ public class LoginInterceptor implements HandlerInterceptor {
         if (StringUtils.isEmpty(secretKey)) {
             response.setStatus(HttpStatus.PAYMENT_REQUIRED.value());
             response.setContentType("text/xml;charset=UTF-8");
-            response.getOutputStream().write(JSONUtils.toJSONByJackson(XaResult.unloginForNoAccessToken()).getBytes("UTF-8"));
+            response.getOutputStream().write(JSON.toJSONStringWithDateFormat(XaResult.unloginForNoAccessToken(), "yyyy-MM-dd HH:mm:ss").getBytes("UTF-8"));
             return false;
         }
         SysUser sysUser = (SysUser) loginInfoCache.get(secretKey);
         if (sysUser == null) {
             response.setStatus(HttpStatus.PAYMENT_REQUIRED.value());
             response.setContentType("text/xml;charset=UTF-8");
-            response.getOutputStream().write(JSONUtils.toJSONByJackson(XaResult.unloginForNoAccessToken()).getBytes("UTF-8"));
+            response.getOutputStream().write(JSON.toJSONStringWithDateFormat(XaResult.unloginForNoAccessToken(), "yyyy-MM-dd HH:mm:ss").getBytes("UTF-8"));
             return false;
         }
         return true;
@@ -55,6 +55,4 @@ public class LoginInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
     }
-
-
 }

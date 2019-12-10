@@ -1,25 +1,25 @@
 package com.amir.controller.productionorder;
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.amir.controller.base.ProductBaseController;
 import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.productionorder.vo.BatchAssignVo;
 import com.amir.controller.productionorder.vo.ProductionOrderDetailVo;
 import com.amir.controller.productionorder.vo.ProductionOrderVo;
+import com.amir.exception.BusinessException;
+import com.amir.model.AppXaResultHelper;
+import com.amir.model.Page;
+import com.amir.model.XaResult;
 import com.amir.model.order.*;
 import com.amir.model.sys.SysUser;
 import com.amir.service.order.*;
-import com.btjf.application.components.xaresult.AppXaResultHelper;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.heige.aikajinrong.base.exception.BusinessException;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -67,12 +67,22 @@ public class ProductionOrderController extends ProductBaseController {
     public synchronized XaResult<String> assign(Integer orderProductId, Integer assignNum, String workshop, String workshopDirector,
                                                 Integer isLuo, Integer luoNum, String procedure) throws BusinessException {
 
-        if (orderProductId == null) return XaResult.error("订单型号id不能为null");
+        if (orderProductId == null) {
+            return XaResult.error("订单型号id不能为null");
+        }
         OrderProduct orderProduct = orderProductService.getByID(orderProductId);
-        if (null == orderProduct) return XaResult.error("订单不存在");
-        if (null == assignNum) return XaResult.error("请输入分配数额");
-        if (null == isLuo || (isLuo != 1 && isLuo != 0)) return XaResult.error("请选择是否分萝");
-        if (isLuo == 1 && (null == luoNum || luoNum < 0)) return XaResult.error("请输入一萝数量");
+        if (null == orderProduct) {
+            return XaResult.error("订单不存在");
+        }
+        if (null == assignNum) {
+            return XaResult.error("请输入分配数额");
+        }
+        if (null == isLuo || (isLuo != 1 && isLuo != 0)) {
+            return XaResult.error("请选择是否分萝");
+        }
+        if (isLuo == 1 && (null == luoNum || luoNum < 0)) {
+            return XaResult.error("请输入一萝数量");
+        }
 
         //if (isLuo == 1 && (orderProduct.getNotAssignNum() < luoNum)) return XaResult.error("可分配数量小于一萝数量，无法分萝处理");
         List<WorkShopVo.Procedure> procedures = Lists.newArrayList();
@@ -102,10 +112,14 @@ public class ProductionOrderController extends ProductBaseController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public XaResult<ProductionOrderDetailVo> detail(String productionNo) {
-        if (productionNo == null) return XaResult.error("请输入生产单编号");
+        if (productionNo == null) {
+            return XaResult.error("请输入生产单编号");
+        }
 
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
-        if (null == productionOrder) return XaResult.error("生产单不存在");
+        if (null == productionOrder) {
+            return XaResult.error("生产单不存在");
+        }
 
         OrderProduct orderProduct = orderProductService.getByID(productionOrder.getOrderId());
 
@@ -152,13 +166,17 @@ public class ProductionOrderController extends ProductBaseController {
     public XaResult getDetailByProductionNo(String productionNo) throws BusinessException {
         SysUser sysUser = getLoginUser();
 
-        if (null == productionNo) return XaResult.error("请输入要打印是生成单号");
+        if (null == productionNo) {
+            return XaResult.error("请输入要打印是生成单号");
+        }
 
         productionNo = productionNo.trim();
 
 
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
-        if (productionOrder == null) return XaResult.error("该生产单不存在");
+        if (productionOrder == null) {
+            return XaResult.error("该生产单不存在");
+        }
         Map<String, Object> map = Maps.newHashMap();
         if (productionOrder.getType() == 2) {
             BatchAssignVo batchAssignVo = this.getBatchDetail(productionOrder, sysUser);
@@ -205,9 +223,13 @@ public class ProductionOrderController extends ProductBaseController {
 
     @RequestMapping(value = "/addPrintCount", method = RequestMethod.POST)
     public XaResult addPrintCount(String productionNo) {
-        if (productionNo == null) return XaResult.error("请输入生成单号");
+        if (productionNo == null) {
+            return XaResult.error("请输入生成单号");
+        }
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
-        if (null == productionOrder) return XaResult.error("生成单不存在");
+        if (null == productionOrder) {
+            return XaResult.error("生成单不存在");
+        }
         productionOrder.setPrintCount(productionOrder.getPrintCount() + 1);
         productionOrderService.update(productionOrder);
         return XaResult.success();
@@ -344,7 +366,9 @@ public class ProductionOrderController extends ProductBaseController {
         }
 
         ProductionOrder productionOrder = productionOrderService.getByNo(productionNo);
-        if (productionOrder == null || productionOrder.getType() != 2) return XaResult.error("生产单编号错误");
+        if (productionOrder == null || productionOrder.getType() != 2) {
+            return XaResult.error("生产单编号错误");
+        }
 
         BatchAssignVo batchAssignVo = getBatchDetail(productionOrder, sysUser);
 
@@ -363,7 +387,9 @@ public class ProductionOrderController extends ProductBaseController {
         batchAssignVo.setProductionNo(productionOrder.getProductionNo());
 
         List<MultipleProduction> multipleProductions = multipleProductionService.getByProductionNo(productionOrder.getProductionNo());
-        if (CollectionUtils.isEmpty(multipleProductions)) return batchAssignVo;
+        if (CollectionUtils.isEmpty(multipleProductions)) {
+            return batchAssignVo;
+        }
 
         List<BatchAssignVo.BatchAssignOrder> batchAssignOrders = Lists.newArrayList();
         multipleProductions.stream()

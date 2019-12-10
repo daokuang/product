@@ -1,11 +1,11 @@
 package com.amir.service.order;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.amir.controller.order.vo.ProcessDetail;
 import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.weixin.vo.WxEmpVo;
+import com.amir.exception.BusinessException;
 import com.amir.mapper.order.ProductionProcedureConfirmMapper;
+import com.amir.model.Page;
 import com.amir.model.order.*;
 import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
@@ -14,11 +14,11 @@ import com.amir.service.productpm.ProductWorkshopService;
 import com.amir.util.BigDecimalUtil;
 import com.amir.vo.ProcedureYieldVo;
 import com.amir.vo.weixin.*;
-import com.btjf.business.common.exception.BusinessException;
-import com.btjf.common.page.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -2,6 +2,7 @@ package com.amir.controller.weixin;
 
 import com.amir.controller.base.ProductBaseController;
 import com.amir.controller.weixin.vo.WxEmpVo;
+import com.amir.model.XaResult;
 import com.amir.model.emp.Emp;
 import com.amir.model.emp.SummarySalaryMonthly;
 import com.amir.model.order.Order;
@@ -11,9 +12,8 @@ import com.amir.service.emp.SummarySalaryMonthlyService;
 import com.amir.service.order.ProductionProcedureConfirmService;
 import com.amir.service.sys.SysDeptService;
 import com.amir.util.BigDecimalUtil;
+import com.amir.util.DateUtil;
 import com.amir.vo.weixin.*;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.utils.DateUtil;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

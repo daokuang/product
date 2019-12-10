@@ -1,14 +1,14 @@
 package com.amir.service.pm;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.amir.mapper.pm.PmMapper;
+import com.amir.model.Page;
 import com.amir.model.pm.Pm;
 import com.amir.model.pm.PmRequstPojo;
 import com.amir.service.productpm.ProductPmService;
-import com.btjf.common.page.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

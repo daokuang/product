@@ -1,21 +1,21 @@
 package com.amir.service.productpm;
 
 import com.alibaba.druid.util.StringUtils;
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.amir.constant.WorkShopProductionMapEnum;
 import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.productpm.vo.ProductWorkShopVo;
+import com.amir.exception.BusinessException;
 import com.amir.mapper.product.ProductMapper;
 import com.amir.mapper.product.ProductProcedureWorkshopMapper;
+import com.amir.model.Page;
 import com.amir.model.product.Product;
 import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.BeanUtil;
+import com.amir.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import com.heige.aikajinrong.base.exception.BusinessException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

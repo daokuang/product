@@ -3,7 +3,7 @@ package com.amir.controller;
 import com.amir.controller.base.ProductBaseController;
 import com.amir.excel.ExcelHandlerHelper;
 import com.amir.excel.easyexcel.ProcedureWorkshopHelper;
-import com.btjf.application.util.XaResult;
+import com.amir.model.XaResult;
 import com.wordnik.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;

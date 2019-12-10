@@ -1,6 +1,6 @@
 package com.amir.vo;
 
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -1,6 +1,7 @@
 package com.amir.controller;
 
 import com.amir.controller.order.vo.WorkShopVo;
+import com.amir.model.XaResult;
 import com.amir.model.emp.Emp;
 import com.amir.model.emp.EmpWork;
 import com.amir.model.sys.Sysdept;
@@ -10,7 +11,6 @@ import com.amir.service.emp.EmpWorkService;
 import com.amir.service.order.BillNoService;
 import com.amir.service.productpm.ProductWorkshopService;
 import com.amir.service.sys.SysDeptService;
-import com.btjf.application.util.XaResult;
 import com.google.common.collect.Lists;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiParam;

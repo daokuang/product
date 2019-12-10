@@ -1,18 +1,18 @@
 package com.amir.service.order;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
-import com.alibaba.dubbo.common.utils.StringUtils;
 import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.productionorder.vo.BatchAssignVo;
 import com.amir.controller.productionorder.vo.ProductionOrderVo;
+import com.amir.exception.BusinessException;
 import com.amir.mapper.order.ProductionOrderMapper;
+import com.amir.model.Page;
 import com.amir.model.order.*;
 import com.amir.service.sys.ShortUrlService;
-import com.btjf.business.common.exception.BusinessException;
-import com.btjf.common.page.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,7 +61,9 @@ public class ProductionOrderService {
     public static void main(String[] ars) {
         Integer num = 41;
         Integer luoNum = 4;
-        if (num % luoNum > 1) throw new BusinessException("分萝错误，请修改");
+        if (num % luoNum > 1) {
+            throw new BusinessException("分萝错误，请修改");
+        }
         do {
             System.out.println(luoNum);
             num -= luoNum;
@@ -71,13 +73,17 @@ public class ProductionOrderService {
     }
 
     public ProductionOrder getByOrderProductID(Integer orderProductID) {
-        if (orderProductID == null) return null;
+        if (orderProductID == null) {
+            return null;
+        }
 
         return productionOrderMapper.getByOrderProductID(orderProductID);
     }
 
     public Integer assign(ProductionOrder productionOrder, List<WorkShopVo.Procedure> procedures) {
-        if (null == productionOrder) return 0;
+        if (null == productionOrder) {
+            return 0;
+        }
 
         String longUrl = "/wx/work/getConfirmList?orderId=" + productionOrder.getOrderProductId() + "&orderNo=" + productionOrder.getOrderNo()
                 + "&productNo=" + productionOrder.getProductNo() + "&productionNo=" + productionOrder.getProductionNo() + "&type=1";
@@ -137,7 +143,9 @@ public class ProductionOrderService {
         Integer assignNum = productionOrder.getAssignNum();
         Integer sort = 0;
         if (null != productionOrder && productionOrder.getIsLuo() == 1) {
-            if (assignNum % productionOrder.getLuoNum() > 1) throw new BusinessException("分萝错误，请修改");
+            if (assignNum % productionOrder.getLuoNum() > 1) {
+                throw new BusinessException("分萝错误，请修改");
+            }
             do {
                 ProductionLuo productionLuo = new ProductionLuo();
                 productionLuo.setIsDelete(0);
@@ -188,7 +196,9 @@ public class ProductionOrderService {
     }
 
     public ProductionOrder getByNo(String productionNo) {
-        if (StringUtils.isEmpty(productionNo)) return null;
+        if (StringUtils.isEmpty(productionNo)) {
+            return null;
+        }
 
         return productionOrderMapper.getByNo(productionNo);
     }
@@ -211,7 +221,9 @@ public class ProductionOrderService {
 
     public Integer delete(String productionNo, String orderNo) {
         ProductionOrder productionOrder = productionOrderMapper.getByNo(productionNo);
-        if (productionOrder == null) throw new BusinessException("生成单不存在");
+        if (productionOrder == null) {
+            throw new BusinessException("生成单不存在");
+        }
 
         //删除生成单
         productionOrder.setIsDelete(1);
@@ -255,7 +267,9 @@ public class ProductionOrderService {
 
         List<BatchAssignVo.BatchAssignOrder> batchAssignOrders = batchAssignVo.getBatchAssignOrders();
 
-        if (CollectionUtils.isEmpty(batchAssignOrders)) throw new BusinessException("请选择订单和型号");
+        if (CollectionUtils.isEmpty(batchAssignOrders)) {
+            throw new BusinessException("请选择订单和型号");
+        }
 
 
         batchAssignOrders
@@ -264,11 +278,14 @@ public class ProductionOrderService {
                 .forEach(t -> {
                     //
                     List<WorkShopVo.Procedure> procedures = t.getProcedures();
-                    if (CollectionUtils.isEmpty(procedures)) throw new BusinessException("请选择工序");
+                    if (CollectionUtils.isEmpty(procedures)) {
+                        throw new BusinessException("请选择工序");
+                    }
 
                     OrderProduct orderProduct = orderProductService.getByOrderNoAndProductNo(t.getOrderNo(), t.getProductNo());
-                    if (orderProduct == null)
+                    if (orderProduct == null) {
                         throw new BusinessException("订单编号：" + t.getOrderNo() + "型号：" + t.getProductNo() + "不存在");
+                    }
                     MultipleProduction multipleProduction = new MultipleProduction();
                     multipleProduction.setCreateTime(new Date());
                     multipleProduction.setFristNum(procedures.get(0).getNum());

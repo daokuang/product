@@ -1,79 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scanPeriod="60 seconds" debug="false">
-	<!--
-		部署新工程的配置文件修改步骤
-		1、修改ContextName
-		2、修改KAFKA_SERVER_LOCATION
-		3、修改INFO_KAFKA_OUT->topic
-	 -->
-	<!-- 工程、上下文名字 -->
-	<property name="APPLICATION_NAME" value="bt-business-sync" />
-	<contextName>${APPLICATION_NAME}</contextName>
-	<!-- 日志最大的历史 30天 -->
-	<property name="MAX_HISTORY" value="30"/>
-	<!-- 定义日志文件 输出位置 -->
-	<property name="LOG_DIR" value="${catalina.home}/logs" />
-	<property name="KAFKA_SERVER_LOCATION" value="kafka:9092" />
+    <!--
+        部署新工程的配置文件修改步骤
+        1、修改ContextName
+     -->
+    <!-- 工程、上下文名字 -->
+    <property name="APPLICATION_NAME" value="bt-business-sync"/>
+    <contextName>${APPLICATION_NAME}</contextName>
+    <!-- 日志最大的历史 30天 -->
+    <property name="MAX_HISTORY" value="30"/>
+    <!-- 定义日志文件 输出位置 -->
+    <property name="LOG_DIR" value="${catalina.home}/logs"/>
 
-	<!-- 控制台输出 -->
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<layout>
-				<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
-				<charset>UTF-8</charset>
-			</layout>
-		</encoder>
-	</appender>
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <layout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
+                <charset>UTF-8</charset>
+            </layout>
+        </encoder>
+    </appender>
 
-	<appender name="WARN_FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 过滤器，只记录ERROR级别的日志 -->
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>WARN</level>
-		</filter>
+    <appender name="WARN_FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录ERROR级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
 
-		<!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!--日志输出位置  可相对、和绝对路径 -->
-			<fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/error-log.log</fileNamePattern>
-			<!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件假设设置每个月滚动，且<maxHistory>是6，
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志输出位置  可相对、和绝对路径 -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/error-log.log</fileNamePattern>
+            <!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件假设设置每个月滚动，且<maxHistory>是6，
             则只保存最近6个月的文件，删除之前的旧文件。注意，删除旧文件是，那些为了归档而创建的目录也会被删除-->
-			<maxHistory>${MAX_HISTORY}</maxHistory>
-		</rollingPolicy>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
 
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
-		</encoder>
-	</appender>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-	<appender name="INFO_FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<!-- 过滤器，只记录ERROR级别的日志 -->
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>INFO</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>
+    <appender name="INFO_FILE_OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录ERROR级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
 
-		<!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
-		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<!--日志输出位置  可相对、和绝对路径 -->
-			<fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/info-log.log</fileNamePattern>
-			<!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件假设设置每个月滚动，且<maxHistory>是6，
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责出发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志输出位置  可相对、和绝对路径 -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/info-log.log</fileNamePattern>
+            <!-- 可选节点，控制保留的归档文件的最大数量，超出数量就删除旧文件假设设置每个月滚动，且<maxHistory>是6，
             则只保存最近6个月的文件，删除之前的旧文件。注意，删除旧文件是，那些为了归档而创建的目录也会被删除-->
-			<maxHistory>${MAX_HISTORY}</maxHistory>
-		</rollingPolicy>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
 
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
-		</encoder>
-	</appender>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
 
-	<root level="DEBUG">
-		<!-- 生产环境［不］配置此Appender -->
-		<appender-ref ref="STDOUT" />
-		<!-- 生产环境需要配置此Appender -->
-		<appender-ref ref="INFO_FILE_OUT" />
-		<!-- 生产环境需要配置此Appender -->
-		<appender-ref ref="WARN_FILE_OUT" />
-	</root>
+    <root level="DEBUG">
+        <!-- 生产环境［不］配置此Appender -->
+        <appender-ref ref="STDOUT"/>
+        <!-- 生产环境需要配置此Appender -->
+        <appender-ref ref="INFO_FILE_OUT"/>
+        <!-- 生产环境需要配置此Appender -->
+        <appender-ref ref="WARN_FILE_OUT"/>
+    </root>
 
 </configuration>

@@ -1,20 +1,21 @@
 package com.amir.service.productpm;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
+
 import com.amir.constant.WorkShopProductionMapEnum;
 import com.amir.controller.order.vo.WorkShopVo;
+import com.amir.exception.BusinessException;
 import com.amir.mapper.product.ProductProcedureMapper;
 import com.amir.mapper.product.ProductProcedureWorkshopMapper;
+import com.amir.model.Page;
 import com.amir.model.product.Product;
 import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
 import com.amir.model.sys.SysUser;
 import com.amir.service.order.ProductionProcedureService;
-import com.btjf.business.common.exception.BusinessException;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.BeanUtil;
+import com.amir.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -120,9 +121,13 @@ public class ProductProcedureService {
         List<ProductProcedure> productProcedures = productProcedureMapper.getByProductNo(oldProductNo);
         if (!CollectionUtils.isEmpty(productProcedures)) {
             for (ProductProcedure productProcedure : productProcedures) {
-                if (productProcedure == null) continue;
+                if (productProcedure == null) {
+                    continue;
+                }
                 List<ProductProcedureWorkshop> productProcedureWorkshops = productProcedureWorkshopMapper.getWorkShop(productProcedure.getProductNo(), productProcedure.getId(), null);
-                if (CollectionUtils.isEmpty(productProcedureWorkshops)) continue;
+                if (CollectionUtils.isEmpty(productProcedureWorkshops)) {
+                    continue;
+                }
                 ProductProcedureWorkshop productProcedureWorkshop = productProcedureWorkshops.get(0);
 
                 //新增工序
@@ -165,7 +170,9 @@ public class ProductProcedureService {
 
     public void delete(Integer id, SysUser sysUser) {
         ProductProcedure productProcedure = productProcedureMapper.selectByPrimaryKey(id);
-        if (productProcedure == null) return;
+        if (productProcedure == null) {
+            return;
+        }
         productProcedure.setIsDelete(1);
         productProcedure.setLastModifyTime(new Date());
         productProcedure.setOperator(sysUser.getUserName());

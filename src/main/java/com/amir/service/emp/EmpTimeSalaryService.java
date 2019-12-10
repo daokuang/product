@@ -1,10 +1,10 @@
 package com.amir.service.emp;
 
 import com.amir.mapper.emp.EmpTimesalaryMonthlyMapper;
+import com.amir.model.Page;
 import com.amir.model.emp.EmpTimesalaryMonthly;
+import com.amir.util.BeanUtil;
 import com.amir.vo.EmpTimesalaryMonthlyVo;
-import com.btjf.common.page.Page;
-import com.btjf.common.utils.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;

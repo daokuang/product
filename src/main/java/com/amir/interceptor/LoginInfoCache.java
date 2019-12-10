@@ -1,8 +1,8 @@
 package com.amir.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.amir.service.emp.EmpService;
-import com.btjf.common.utils.JSONUtils;
-import com.btjf.common.utils.MD5Utils;
+import com.amir.util.MD5Utils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.springframework.context.ApplicationListener;
@@ -51,8 +51,8 @@ public class LoginInfoCache implements ApplicationListener<ContextRefreshedEvent
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         if (foreverCashe.size() == 0) {
-            empService.getAll().stream().forEach(t -> {
-                String json = JSONUtils.toJSON(t);
+            empService.getAll().forEach(t -> {
+                String json = JSONObject.toJSONString(t);
                 String key = MD5Utils.ecodeByMD5(json);
                 foreverCashe.put(key, t);
             });

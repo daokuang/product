@@ -1,17 +1,16 @@
 package com.amir.controller;
 
-
+import com.alibaba.fastjson.JSONObject;
 import com.amir.interceptor.LoginInfoCache;
+import com.amir.model.XaResult;
 import com.amir.model.sys.SysRole;
 import com.amir.model.sys.SysUser;
 import com.amir.model.sys.Sysdept;
 import com.amir.service.sys.SysDeptService;
 import com.amir.service.sys.SysRoleService;
 import com.amir.service.sys.SysUserService;
+import com.amir.util.MD5Utils;
 import com.amir.vo.UserInfoVo;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.utils.JSONUtils;
-import com.btjf.common.utils.MD5Utils;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-
 
 /**
  * Created by Administrator on 2018/7/3 0003.
@@ -41,8 +39,6 @@ public class LoginController {
 
     /**
      * 登录
-     *
-     * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public XaResult<UserInfoVo> login(@ApiParam("登录名") String loginName,
@@ -66,12 +62,10 @@ public class LoginController {
             SysRole sysRole = sysRoleService.get(sysUser.getRoleId());
             userInfoVo.setRoleName(sysRole != null ? sysRole.getName() : null);
         }
-        String json = JSONUtils.toJSON(sysUser);
+        String json = JSONObject.toJSONString(sysUser);
         String key = MD5Utils.ecodeByMD5(json);
         loginInfoCache.add(key, sysUser);
         userInfoVo.setSecretKey(key);
         return XaResult.success(userInfoVo);
     }
-
-
 }

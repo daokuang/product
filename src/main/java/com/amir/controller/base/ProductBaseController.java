@@ -1,12 +1,12 @@
 package com.amir.controller.base;
 
 import com.amir.controller.weixin.vo.WxEmpVo;
+import com.amir.exception.BusinessException;
 import com.amir.interceptor.LoginInfoCache;
 import com.amir.interceptor.LoginInterceptor;
+import com.amir.model.XaResult;
 import com.amir.model.sys.SysUser;
 import com.amir.util.RdStringUtil;
-import com.btjf.application.util.XaResult;
-import com.btjf.business.common.exception.BusinessException;
 import org.apache.log4j.Logger;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.validation.BindException;

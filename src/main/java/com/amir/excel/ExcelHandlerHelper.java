@@ -1,6 +1,6 @@
 package com.amir.excel;
 
-import com.btjf.business.common.exception.BusinessException;
+import com.amir.exception.BusinessException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

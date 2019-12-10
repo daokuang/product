@@ -1,11 +1,11 @@
 package com.amir.service.order;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.amir.constant.WorkShopProductionMapEnum;
 import com.amir.controller.emp.vo.MapVo;
 import com.amir.controller.order.vo.OrderVo;
 import com.amir.controller.order.vo.ProcessDetail;
 import com.amir.mapper.order.OrderProductMapper;
+import com.amir.model.Page;
 import com.amir.model.order.Order;
 import com.amir.model.order.OrderProduct;
 import com.amir.model.product.Product;
@@ -15,9 +15,9 @@ import com.amir.service.productpm.ProductService;
 import com.amir.service.productpm.ProductWorkshopService;
 import com.amir.service.sys.SysDeptService;
 import com.amir.util.BigDecimalUtil;
-import com.btjf.common.page.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,11 +1,11 @@
 package com.amir.controller.order.vo;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.amir.model.emp.Emp;
 import com.amir.model.order.ProductionProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
 import com.amir.model.sys.Sysdept;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.amir.constant;
 
-import com.btjf.common.enums.ContentEnum;
+import com.amir.enums.ContentEnum;
 
 /**
  * Created by liuyq on 2019/8/9.

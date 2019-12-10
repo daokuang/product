@@ -1,6 +1,9 @@
 package com.amir.controller.pm;
 
 import com.amir.controller.base.ProductBaseController;
+import com.amir.model.AppXaResultHelper;
+import com.amir.model.Page;
+import com.amir.model.XaResult;
 import com.amir.model.order.OrderProduct;
 import com.amir.model.pm.PmOutBill;
 import com.amir.model.pm.PmOutBillDetail;
@@ -10,9 +13,6 @@ import com.amir.service.pm.PmOutService;
 import com.amir.service.productpm.ProductPmService;
 import com.amir.service.sys.ShortUrlService;
 import com.amir.vo.*;
-import com.btjf.application.components.xaresult.AppXaResultHelper;
-import com.btjf.application.util.XaResult;
-import com.btjf.common.page.Page;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;

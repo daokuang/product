@@ -6,15 +6,15 @@ import com.amir.controller.base.ProductBaseController;
 import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.weixin.vo.WorkListVo;
 import com.amir.controller.weixin.vo.WxEmpVo;
+import com.amir.exception.BusinessException;
+import com.amir.model.XaResult;
 import com.amir.model.order.*;
 import com.amir.model.pm.PmOutBill;
 import com.amir.service.order.*;
 import com.amir.service.pm.PmOutService;
 import com.amir.service.productpm.ProductWorkshopService;
 import com.amir.service.sys.ShortUrlService;
-import com.btjf.application.util.XaResult;
-import com.btjf.business.common.exception.BusinessException;
-import com.btjf.common.utils.DateUtil;
+import com.amir.util.DateUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.wordnik.swagger.annotations.Api;
@@ -147,7 +147,7 @@ public class WorkController extends ProductBaseController {
 
         List<WorkShopVo.Procedure> procedures = JSONObject.parseArray(proceduresJosn, WorkShopVo.Procedure.class);
         if ((StringUtils.isEmpty(productionNo) && StringUtils.isEmpty(billOutNo)) || (!StringUtils.isEmpty(productionNo) && !StringUtils.isEmpty(billOutNo)))
-            throw new com.btjf.business.common.exception.BusinessException("生成单和领料单不能存在，且不能同时未空");
+            throw new BusinessException("生成单和领料单不能存在，且不能同时未空");
         StringBuffer stringBuffer = new StringBuffer();
 
         for (WorkShopVo.Procedure procedure : procedures) {
