@@ -2,40 +2,40 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
 	<!--<classPathEntry location="D:\mysql-connector-java-5.1.28-bin.jar" />-->
-	<classPathEntry location="/Users/lycs/.m2/repository/mysql/mysql-connector-java/5.1.27/mysql-connector-java-5.1.27.jar" />
+	<classPathEntry location="D:\Development\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar" />
 	<!--<classPathEntry location="C:\Users\admin\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar" />-->
 
 	<context id="beitaijinfu" targetRuntime="MyBatis3">
 		<property name="javaFileEncoding" value="UTF-8"/>
 		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
-		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"></plugin>
-		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
 		<commentGenerator >
 			<!--<commentGenerator type="org.mybatis.generator.internal.MyGenerator">-->
 
 			<property name="suppressDate" value="true" />
 		</commentGenerator>
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-						connectionURL="jdbc:mysql://122.152.194.33:3306/product?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;zeroDateTimeBehavior=round"
-						userId="root"
-						password="testabc"/>
+						connectionURL="jdbc:mysql://118.25.11.127:35330/amir?characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;zeroDateTimeBehavior=round"
+						userId="amir"
+						password="Amir6^6Test"/>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false"/>
 		</javaTypeResolver>
 
 
-		<javaModelGenerator targetPackage="com.btjf.model.order" targetProject="src/main/java">
+		<javaModelGenerator targetPackage="com.amir.model.procurement" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
-		<sqlMapGenerator targetPackage="com.btjf.mapper.order" targetProject="src/main/java">
+		<sqlMapGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
-		<javaClientGenerator targetPackage="com.btjf.mapper.order" targetProject="src/main/java" type="XMLMAPPER">
+		<javaClientGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table tableName="t_Order_Product" domainObjectName="OrderProduct">
+		<table tableName="t_Raw_Material_Vendor" domainObjectName="RawMaterialVendor">
 		<property name="useActualColumnNames" value="true"/>
 		<generatedKey column="id" sqlStatement="MySql" identity="true"/>
 		<columnRenamingRule searchString="^F" replaceString="" />

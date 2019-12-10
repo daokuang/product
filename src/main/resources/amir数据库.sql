@@ -740,7 +740,7 @@ ALTER TABLE t_Production_Order MODIFY orderNo varchar(100) DEFAULT NULL comment 
 ALTER TABLE t_Production_Order MODIFY  productNo varchar(100) DEFAULT NULL comment '产品型号' ;
 ALTER TABLE t_Production_Order MODIFY  orderProductId  int(11) DEFAULT NULL comment '订单 型号表ID' ;
 ALTER TABLE t_Production_Order add  type int(11) DEFAULT 0 comment '订单 型号表ID' ;
-update t_Production_Order set type = 1
+update t_Production_Order set type = 1;
 
 
 
@@ -765,5 +765,32 @@ ALTER TABLE t_Order_Product add backBigAssist  decimal(8,2)  default 0.0 COMMENT
  ALTER TABLE t_Order_Product add backCenterAssist  decimal(8,2)  default 0.0 COMMENT '后道中中复工';
  ALTER TABLE t_Order_Product add assist  decimal(8,2)  default 0.0 COMMENT '外协质检';
  ALTER TABLE t_Order_Product add inspection  decimal(8,2)  default 0.0 COMMENT '成品质检';
+
+-- 原料厂商表
+create table t_Raw_Material_Vendor
+(
+    id int auto_increment comment '自增主键'
+        primary key,
+    factoryName int not null comment '工厂名称',
+    productType int null comment '生产类别',
+    contactPerson varchar(100) null comment '联系人',
+    factoryAddress varchar(1000) null comment '工厂地址',
+    contactPhone varchar(100) null comment '联系方式',
+    contactFax varchar(100) null comment '传真',
+    contactEMail varchar(100) null comment '电子邮箱',
+    legalRepresentative varchar(100) null comment '法人代表',
+    bankName varchar(100) null comment '开户银行',
+    bankAccountNum varchar(100) null comment '银行账号',
+    vendorShortName varchar(100) not null comment '厂商简称',
+    layerOneCorrugated varchar(100) null comment '单瓦双层',
+    layerTwoCorrugated varchar(100) null comment '双瓦五层',
+    layerThreeCorrugated varchar(100) null comment '三瓦七层',
+    remark varchar(1000) null comment '备注',
+    shortNameIndex int default 0 not null comment '简称索引',
+    updateTime datetime null comment '更新时间',
+    createTime datetime null comment '创建时间'
+)
+    comment '原料厂商';
+
 
 

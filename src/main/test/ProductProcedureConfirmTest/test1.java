@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class test1 {
     @Test
-    public void test(){
-        FileSystemXmlApplicationContext f  = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
+    public void test() {
+        FileSystemXmlApplicationContext f = new FileSystemXmlApplicationContext("classpath:applicationContext.xml");
 
         EmpSalaryMonthlyService empSalaryMonthlyService = (EmpSalaryMonthlyService) f.getBean("empSalaryMonthlyService");
 
-        List<String>  empSalaryMonthlyServiceYearMonth  =  empSalaryMonthlyService.getYearMonth();
+        List<String> empSalaryMonthlyServiceYearMonth = empSalaryMonthlyService.getYearMonth();
         System.out.println(empSalaryMonthlyServiceYearMonth);
     }
 

@@ -31,11 +31,11 @@
 	      	</set>
 	    </property>
 	</bean>
-	
+
   	<bean id="beanFactoryManager" class="com.btjf.application.components.spring.BeanFactoryManager"/>
 
 
-	<context:component-scan base-package="com.btjf.service.*,com.btjf.controller.*,com.btjf.mapper.*,com.btjf.interceptor,com.btjf.excel,com.btjf.factory">
+	<context:component-scan base-package="com.amir.service.*,com.amir.controller.*,com.amir.mapper.*,com.amir.interceptor,com.amir.excel,com.amir.factory">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 
