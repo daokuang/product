@@ -5,9 +5,9 @@ package com.amir.controller.customer;
  */
 
 import com.amir.controller.base.ProductBaseController;
-import com.amir.model.AppXaResultHelper;
-import com.amir.model.Page;
-import com.amir.model.XaResult;
+import com.amir.model.common.AppXaResultHelper;
+import com.amir.model.common.Page;
+import com.amir.model.common.XaResult;
 import com.amir.model.customer.Customer;
 import com.amir.service.customer.CustomerService;
 import com.amir.util.DateUtil;

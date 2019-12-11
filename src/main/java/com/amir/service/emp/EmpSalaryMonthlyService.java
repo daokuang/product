@@ -2,7 +2,7 @@ package com.amir.service.emp;
 
 import com.amir.constant.SubsidyTypeEnum;
 import com.amir.mapper.emp.EmpSalaryMonthlyMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.emp.Emp;
 import com.amir.model.emp.EmpSalaryMonthly;
 import com.amir.model.emp.SummarySalaryMonthly;

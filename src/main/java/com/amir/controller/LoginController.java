@@ -2,7 +2,7 @@ package com.amir.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.amir.interceptor.LoginInfoCache;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.sys.SysRole;
 import com.amir.model.sys.SysUser;
 import com.amir.model.sys.Sysdept;

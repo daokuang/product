@@ -3,7 +3,7 @@ package com.amir.controller.emp;
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.amir.controller.base.ProductBaseController;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.emp.EmpWork;
 import com.amir.service.emp.EmpWorkService;
 import org.springframework.web.bind.annotation.RequestMapping;

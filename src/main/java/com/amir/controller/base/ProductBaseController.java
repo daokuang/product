@@ -4,7 +4,7 @@ import com.amir.controller.weixin.vo.WxEmpVo;
 import com.amir.exception.BusinessException;
 import com.amir.interceptor.LoginInfoCache;
 import com.amir.interceptor.LoginInterceptor;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.sys.SysUser;
 import com.amir.util.RdStringUtil;
 import org.apache.log4j.Logger;

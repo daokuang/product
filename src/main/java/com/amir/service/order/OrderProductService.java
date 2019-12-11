@@ -5,7 +5,7 @@ import com.amir.controller.emp.vo.MapVo;
 import com.amir.controller.order.vo.OrderVo;
 import com.amir.controller.order.vo.ProcessDetail;
 import com.amir.mapper.order.OrderProductMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.order.Order;
 import com.amir.model.order.OrderProduct;
 import com.amir.model.product.Product;

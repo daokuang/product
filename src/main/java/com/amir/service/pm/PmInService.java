@@ -1,7 +1,7 @@
 package com.amir.service.pm;
 
 import com.amir.mapper.pm.PmInMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.pm.PmIn;
 import com.amir.vo.PmInVo;
 import com.github.pagehelper.PageHelper;

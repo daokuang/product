@@ -1,11 +1,11 @@
-package com.amir.model;
+package com.amir.model.common;
 
 
 import com.amir.enums.PlatformSourceEnum;
 
 import java.io.Serializable;
 
-public class Page2 implements Serializable {
+public class PageRequest implements Serializable {
     private static final long serialVersionUID = 4512602932002080027L;
     public Integer totalPages = null;
     private Integer currentPage = 0;
@@ -17,14 +17,14 @@ public class Page2 implements Serializable {
     private boolean hasNextPage = false;
     private boolean hasPreviousPage = false;
 
-    public Page2() {
+    public PageRequest() {
     }
 
-    public Page2(Integer pageRecords) {
+    public PageRequest(Integer pageRecords) {
         this.pageRecords = pageRecords;
     }
 
-    public Page2(Integer pageRecords, Integer currentPage) {
+    public PageRequest(Integer pageRecords, Integer currentPage) {
         if (pageRecords != null) {
             this.pageRecords = pageRecords;
         }
@@ -35,11 +35,11 @@ public class Page2 implements Serializable {
 
     }
 
-    public Page2(Integer pageRecords, Integer currentPage, Integer totalRecords) {
+    public PageRequest(Integer pageRecords, Integer currentPage, Integer totalRecords) {
         this.reset(pageRecords, currentPage, totalRecords);
     }
 
-    public Page2(Page page, PlatformSourceEnum platformSource) {
+    public PageRequest(Page page, PlatformSourceEnum platformSource) {
         if (platformSource != null) {
             switch (platformSource) {
                 case APP:
@@ -52,7 +52,8 @@ public class Page2 implements Serializable {
 
     }
 
-    public Page2(org.springframework.data.domain.Page page) {
+/*
+    public PageRequest(org.springframework.data.domain.Page page) {
         this.currentPage = page.getNumber();
         this.pageRecords = page.getSize();
         if (page.getTotalPages() == 0 && page.getTotalElements() > 0L) {
@@ -85,8 +86,10 @@ public class Page2 implements Serializable {
         }
 
     }
+*/
 
-    public Page2(org.springframework.data.domain.Page page, boolean isCheOk) {
+/*
+    public PageRequest(org.springframework.data.domain.Page page, boolean isCheOk) {
         int num;
         if (isCheOk) {
             this.currentPage = page.getNumber() + 1;
@@ -153,6 +156,7 @@ public class Page2 implements Serializable {
         }
 
     }
+*/
 
     public void reset(Page page) {
         if (page == null) {

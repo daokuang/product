@@ -2,7 +2,7 @@ package com.amir.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.amir.controller.weixin.vo.WxEmpVo;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;

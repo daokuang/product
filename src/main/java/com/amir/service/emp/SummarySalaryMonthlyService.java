@@ -1,7 +1,7 @@
 package com.amir.service.emp;
 
 import com.amir.mapper.emp.SummarySalaryMonthlyMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.emp.SummarySalaryMonthly;
 import com.amir.vo.SubsidyVo;
 import com.github.pagehelper.PageHelper;

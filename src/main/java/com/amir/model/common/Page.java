@@ -1,4 +1,4 @@
-package com.amir.model;
+package com.amir.model.common;
 
 
 import com.github.pagehelper.PageInfo;

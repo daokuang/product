@@ -1,7 +1,7 @@
 package com.amir.service.customer;
 
 import com.amir.mapper.customer.CustomerMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.customer.Customer;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

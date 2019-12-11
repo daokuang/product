@@ -1,9 +1,9 @@
 package com.amir.controller.pm;
 
 import com.amir.controller.base.ProductBaseController;
-import com.amir.model.AppXaResultHelper;
-import com.amir.model.Page;
-import com.amir.model.XaResult;
+import com.amir.model.common.AppXaResultHelper;
+import com.amir.model.common.Page;
+import com.amir.model.common.XaResult;
 import com.amir.model.order.OrderProduct;
 import com.amir.model.pm.PmOutBill;
 import com.amir.model.pm.PmOutBillDetail;

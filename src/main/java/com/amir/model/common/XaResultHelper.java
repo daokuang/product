@@ -1,8 +1,5 @@
-package com.amir.model;
+package com.amir.model.common;
 
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 import java.util.Map;
 
 public class XaResultHelper {
@@ -15,14 +12,6 @@ public class XaResultHelper {
 
     public static <R> XaResult<R> success(R object, Map<String, Object> map) {
         return XaResult.success(object, map);
-    }
-
-    public static <K> XaResult<List<K>> success(org.springframework.data.domain.Page page) {
-        return XaResult.success(page);
-    }
-
-    public static <K> XaResult<List<K>> success(Page page, List<K> contents) {
-        return XaResult.success(page, contents);
     }
 
     public static <R> XaResult<R> success() {

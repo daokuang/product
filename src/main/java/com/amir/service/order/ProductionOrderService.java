@@ -5,7 +5,7 @@ import com.amir.controller.productionorder.vo.BatchAssignVo;
 import com.amir.controller.productionorder.vo.ProductionOrderVo;
 import com.amir.exception.BusinessException;
 import com.amir.mapper.order.ProductionOrderMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.order.*;
 import com.amir.service.sys.ShortUrlService;
 import com.github.pagehelper.PageHelper;

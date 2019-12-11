@@ -1,7 +1,7 @@
 package com.amir.controller;
 
 import com.amir.controller.order.vo.WorkShopVo;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.emp.Emp;
 import com.amir.model.emp.EmpWork;
 import com.amir.model.sys.Sysdept;

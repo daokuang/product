@@ -3,7 +3,7 @@ package com.amir.service.emp;
 import com.amir.controller.emp.vo.EmpSubsidyVo;
 import com.amir.controller.weixin.vo.WxEmpVo;
 import com.amir.mapper.emp.EmpMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.emp.Emp;
 import com.amir.vo.weixin.EmpVo;
 import com.amir.vo.weixin.MineIndexVo;

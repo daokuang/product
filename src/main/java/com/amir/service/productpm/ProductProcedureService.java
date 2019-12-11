@@ -6,7 +6,7 @@ import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.exception.BusinessException;
 import com.amir.mapper.product.ProductProcedureMapper;
 import com.amir.mapper.product.ProductProcedureWorkshopMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.product.Product;
 import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;

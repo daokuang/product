@@ -1,7 +1,7 @@
 package com.amir.service.emp;
 
 import com.amir.mapper.emp.EmpTimesalaryMonthlyMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.emp.EmpTimesalaryMonthly;
 import com.amir.util.BeanUtil;
 import com.amir.vo.EmpTimesalaryMonthlyVo;

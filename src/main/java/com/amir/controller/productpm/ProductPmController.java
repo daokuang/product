@@ -2,9 +2,9 @@ package com.amir.controller.productpm;
 
 import com.alibaba.druid.util.StringUtils;
 import com.amir.controller.base.ProductBaseController;
-import com.amir.model.AppXaResultHelper;
-import com.amir.model.Page;
-import com.amir.model.XaResult;
+import com.amir.model.common.AppXaResultHelper;
+import com.amir.model.common.Page;
+import com.amir.model.common.XaResult;
 import com.amir.model.pm.Pm;
 import com.amir.model.product.ProductPm;
 import com.amir.model.sys.SysUser;

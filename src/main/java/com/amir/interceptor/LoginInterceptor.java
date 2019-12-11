@@ -2,7 +2,7 @@ package com.amir.interceptor;
 
 import com.alibaba.druid.util.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.sys.SysUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

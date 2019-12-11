@@ -2,9 +2,9 @@ package com.amir.controller.pm;
 
 import com.amir.controller.base.ProductBaseController;
 import com.amir.excel.PmInExcelHandler;
-import com.amir.model.AppXaResultHelper;
-import com.amir.model.Page;
-import com.amir.model.XaResult;
+import com.amir.model.common.AppXaResultHelper;
+import com.amir.model.common.Page;
+import com.amir.model.common.XaResult;
 import com.amir.model.pm.Pm;
 import com.amir.model.pm.PmIn;
 import com.amir.model.sys.SysUser;

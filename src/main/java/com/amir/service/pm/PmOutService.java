@@ -3,7 +3,7 @@ package com.amir.service.pm;
 import com.amir.exception.BusinessException;
 import com.amir.mapper.pm.PmOutBillDetailMapper;
 import com.amir.mapper.pm.PmOutBillMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.pm.Pm;
 import com.amir.model.pm.PmOutBill;
 import com.amir.model.pm.PmOutBillDetail;
@@ -167,7 +167,7 @@ public class PmOutService {
                                                  String startDate, String endDate, Page page) {
         PageHelper.startPage(page.getPage(), page.getRp());
         List<PmPlanOutVo> pmList = mapper.findPlanOutList(pmNo, operator, startDate, endDate);
-        PageInfo pageInfo = new PageInfo(pmList);
+        PageInfo<PmPlanOutVo> pageInfo = new PageInfo<>(pmList);
         pageInfo.setList(pmList);
         return new Page<>(pageInfo);
     }

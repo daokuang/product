@@ -3,9 +3,9 @@ package com.amir.controller.labor;
 
 import com.amir.controller.base.ProductBaseController;
 import com.amir.excel.BaseExcelHandler;
-import com.amir.model.AppXaResultHelper;
-import com.amir.model.Page;
-import com.amir.model.XaResult;
+import com.amir.model.common.AppXaResultHelper;
+import com.amir.model.common.Page;
+import com.amir.model.common.XaResult;
 import com.amir.model.emp.*;
 import com.amir.model.order.ProductionLuo;
 import com.amir.model.order.ProductionProcedureConfirm;

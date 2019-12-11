@@ -7,7 +7,7 @@ import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.controller.weixin.vo.WorkListVo;
 import com.amir.controller.weixin.vo.WxEmpVo;
 import com.amir.exception.BusinessException;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.order.*;
 import com.amir.model.pm.PmOutBill;
 import com.amir.service.order.*;

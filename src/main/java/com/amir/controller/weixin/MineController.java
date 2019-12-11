@@ -2,7 +2,7 @@ package com.amir.controller.weixin;
 
 import com.amir.controller.base.ProductBaseController;
 import com.amir.controller.weixin.vo.WxEmpVo;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.emp.Emp;
 import com.amir.model.emp.SummarySalaryMonthly;
 import com.amir.model.order.Order;

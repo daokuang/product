@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.amir.controller.base.ProductBaseController;
 import com.amir.controller.weixin.vo.WxEmpVo;
 import com.amir.interceptor.LoginInfoCache;
-import com.amir.model.XaResult;
+import com.amir.model.common.XaResult;
 import com.amir.model.emp.Emp;
 import com.amir.service.emp.EmpService;
 import com.amir.util.MD5Utils;

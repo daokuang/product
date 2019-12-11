@@ -1,7 +1,7 @@
 package com.amir.service.pm;
 
 import com.amir.mapper.pm.PmMapper;
-import com.amir.model.Page;
+import com.amir.model.common.Page;
 import com.amir.model.pm.Pm;
 import com.amir.model.pm.PmRequstPojo;
 import com.amir.service.productpm.ProductPmService;
