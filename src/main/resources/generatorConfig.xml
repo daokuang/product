@@ -7,7 +7,7 @@
             location="D:\Development\.m2\repository\mysql\mysql-connector-java\8.0.18\mysql-connector-java-8.0.18.jar"/>
     <!--<classPathEntry location="C:\Users\admin\.m2\repository\mysql\mysql-connector-java\5.1.38\mysql-connector-java-5.1.38.jar" />-->
 
-    <context id="beitaijinfu" targetRuntime="MyBatis3">
+    <context id="amir" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
         <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
         <plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin"/>
@@ -26,18 +26,24 @@
         </javaTypeResolver>
 
 
-        <javaModelGenerator targetPackage="com.amir.model.procurement" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.amir.model.carton" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
-        <sqlMapGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java">
+        <sqlMapGenerator targetPackage="com.amir.mapper.carton" targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
-        <javaClientGenerator targetPackage="com.amir.mapper.procurement" targetProject="src/main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.amir.mapper.carton" targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="t_Raw_Material_Vendor" domainObjectName="RawMaterialVendor">
+        <table tableName="t_shipping_mark_image" domainObjectName="ShippingMarkImage">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            <columnRenamingRule searchString="^F" replaceString=""/>
+        </table>
+
+        <table tableName="t_shipping_mark" domainObjectName="ShippingMark">
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
             <columnRenamingRule searchString="^F" replaceString=""/>

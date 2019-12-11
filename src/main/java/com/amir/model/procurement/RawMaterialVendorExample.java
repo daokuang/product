@@ -65,8 +65,8 @@ public class RawMaterialVendorExample {
      *
      * @mbg.generated
      */
-    public boolean isDistinct() {
-        return distinct;
+    public void setDistinct(boolean distinct) {
+        this.distinct = distinct;
     }
 
     /**
@@ -75,8 +75,8 @@ public class RawMaterialVendorExample {
      *
      * @mbg.generated
      */
-    public void setDistinct(boolean distinct) {
-        this.distinct = distinct;
+    public boolean isDistinct() {
+        return distinct;
     }
 
     /**
@@ -255,63 +255,73 @@ public class RawMaterialVendorExample {
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameIsNull() {
-            addCriterion("factoryName is null");
+        public Criteria andVendorNameIsNull() {
+            addCriterion("vendorName is null");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameIsNotNull() {
-            addCriterion("factoryName is not null");
+        public Criteria andVendorNameIsNotNull() {
+            addCriterion("vendorName is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameEqualTo(Integer value) {
-            addCriterion("factoryName =", value, "factoryName");
+        public Criteria andVendorNameEqualTo(String value) {
+            addCriterion("vendorName =", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameNotEqualTo(Integer value) {
-            addCriterion("factoryName <>", value, "factoryName");
+        public Criteria andVendorNameNotEqualTo(String value) {
+            addCriterion("vendorName <>", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameGreaterThan(Integer value) {
-            addCriterion("factoryName >", value, "factoryName");
+        public Criteria andVendorNameGreaterThan(String value) {
+            addCriterion("vendorName >", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameGreaterThanOrEqualTo(Integer value) {
-            addCriterion("factoryName >=", value, "factoryName");
+        public Criteria andVendorNameGreaterThanOrEqualTo(String value) {
+            addCriterion("vendorName >=", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameLessThan(Integer value) {
-            addCriterion("factoryName <", value, "factoryName");
+        public Criteria andVendorNameLessThan(String value) {
+            addCriterion("vendorName <", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameLessThanOrEqualTo(Integer value) {
-            addCriterion("factoryName <=", value, "factoryName");
+        public Criteria andVendorNameLessThanOrEqualTo(String value) {
+            addCriterion("vendorName <=", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameIn(List<Integer> values) {
-            addCriterion("factoryName in", values, "factoryName");
+        public Criteria andVendorNameLike(String value) {
+            addCriterion("vendorName like", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameNotIn(List<Integer> values) {
-            addCriterion("factoryName not in", values, "factoryName");
+        public Criteria andVendorNameNotLike(String value) {
+            addCriterion("vendorName not like", value, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameBetween(Integer value1, Integer value2) {
-            addCriterion("factoryName between", value1, value2, "factoryName");
+        public Criteria andVendorNameIn(List<String> values) {
+            addCriterion("vendorName in", values, "vendorName");
             return (Criteria) this;
         }
 
-        public Criteria andFactoryNameNotBetween(Integer value1, Integer value2) {
-            addCriterion("factoryName not between", value1, value2, "factoryName");
+        public Criteria andVendorNameNotIn(List<String> values) {
+            addCriterion("vendorName not in", values, "vendorName");
+            return (Criteria) this;
+        }
+
+        public Criteria andVendorNameBetween(String value1, String value2) {
+            addCriterion("vendorName between", value1, value2, "vendorName");
+            return (Criteria) this;
+        }
+
+        public Criteria andVendorNameNotBetween(String value1, String value2) {
+            addCriterion("vendorName not between", value1, value2, "vendorName");
             return (Criteria) this;
         }
 
@@ -1345,6 +1355,66 @@ public class RawMaterialVendorExample {
             return (Criteria) this;
         }
 
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("createTime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("createTime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("createTime =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("createTime <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("createTime >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("createTime >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("createTime <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("createTime <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("createTime in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("createTime not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("createTime between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("createTime not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
         public Criteria andUpdateTimeIsNull() {
             addCriterion("updateTime is null");
             return (Criteria) this;
@@ -1405,63 +1475,8 @@ public class RawMaterialVendorExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIsNull() {
-            addCriterion("createTime is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIsNotNull() {
-            addCriterion("createTime is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeEqualTo(Date value) {
-            addCriterion("createTime =", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotEqualTo(Date value) {
-            addCriterion("createTime <>", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThan(Date value) {
-            addCriterion("createTime >", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("createTime >=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThan(Date value) {
-            addCriterion("createTime <", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
-            addCriterion("createTime <=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIn(List<Date> values) {
-            addCriterion("createTime in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotIn(List<Date> values) {
-            addCriterion("createTime not in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeBetween(Date value1, Date value2) {
-            addCriterion("createTime between", value1, value2, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
-            addCriterion("createTime not between", value1, value2, "createTime");
+        public Criteria andVendorNameLikeInsensitive(String value) {
+            addCriterion("upper(vendorName) like", value.toUpperCase(), "vendorName");
             return (Criteria) this;
         }
 
@@ -1567,6 +1582,38 @@ public class RawMaterialVendorExample {
 
         private String typeHandler;
 
+        public String getCondition() {
+            return condition;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public Object getSecondValue() {
+            return secondValue;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
+
+        public boolean isSingleValue() {
+            return singleValue;
+        }
+
+        public boolean isBetweenValue() {
+            return betweenValue;
+        }
+
+        public boolean isListValue() {
+            return listValue;
+        }
+
+        public String getTypeHandler() {
+            return typeHandler;
+        }
+
         protected Criterion(String condition) {
             super();
             this.condition = condition;
@@ -1601,38 +1648,6 @@ public class RawMaterialVendorExample {
 
         protected Criterion(String condition, Object value, Object secondValue) {
             this(condition, value, secondValue, null);
-        }
-
-        public String getCondition() {
-            return condition;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public Object getSecondValue() {
-            return secondValue;
-        }
-
-        public boolean isNoValue() {
-            return noValue;
-        }
-
-        public boolean isSingleValue() {
-            return singleValue;
-        }
-
-        public boolean isBetweenValue() {
-            return betweenValue;
-        }
-
-        public boolean isListValue() {
-            return listValue;
-        }
-
-        public String getTypeHandler() {
-            return typeHandler;
         }
     }
 }

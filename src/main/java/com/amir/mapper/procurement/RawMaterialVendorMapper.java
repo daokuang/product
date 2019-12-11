@@ -94,4 +94,11 @@ public interface RawMaterialVendorMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(RawMaterialVendor record);
+
+    List<RawMaterialVendor> findList(@Param("vendorName") String vendorName,
+                                     @Param("startDate") String startDate,
+                                     @Param("endDate") String endDate,
+                                     @Param("productType") Integer productType);
+
+    RawMaterialVendor getByVendorName(@Param("vendorName") String vendorName);
 }
