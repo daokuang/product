@@ -102,6 +102,9 @@ public class ExcelController extends ProductBaseController {
             case 13:
                 filename = "批量新增工资补贴.xlsx";
                 break;
+            case 14:
+                filename = "批量导入唛头.xlsx";
+                break;
         }
         if (StringUtils.isEmpty(filename)) {
             return XaResult.error("模板不存在");

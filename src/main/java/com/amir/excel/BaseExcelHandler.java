@@ -3,7 +3,6 @@ package com.amir.excel;
 
 import com.amir.util.DateUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -24,16 +23,12 @@ import java.util.List;
 /**
  * Created by yj on 2019/7/31.
  */
-public abstract class BaseExcelHandler {
+public abstract class BaseExcelHandler<T> {
 
     public static ThreadLocal<String> yearMonthCash = ThreadLocal.withInitial(() -> DateUtil.dateToString(new Date(), DateUtil.ymFormat));
 
     /**
      * 判断是否是对应的格式的日期字符串
-     *
-     * @param dateStr
-     * @param datePattern
-     * @return
      */
     public static boolean isRightDateStr(String dateStr, String datePattern) {
         DateFormat dateFormat = new SimpleDateFormat(datePattern);
@@ -44,11 +39,7 @@ public abstract class BaseExcelHandler {
             Date date = (Date) dateFormat.parse(dateStr);
             //重复比对一下，防止类似 “2017-5-15” 类型的字符串通过
             String newDateStr = dateFormat.format(date);
-            if (dateStr.equals(newDateStr)) {
-                return true;
-            } else {
-                return false;
-            }
+            return dateStr.equals(newDateStr);
         } catch (ParseException e) {
             return false;
         }
@@ -82,7 +73,9 @@ public abstract class BaseExcelHandler {
         List<T> result = new ArrayList<>();
         for (int j = 1; j <= sheet.getLastRowNum(); j++) {
             XSSFRow row = (XSSFRow) sheet.getRow(j);
-            if (row == null) continue;
+            if (row == null) {
+                continue;
+            }
             try {
                 result.addAll(create(row));
             } catch (Exception e) {
@@ -99,13 +92,11 @@ public abstract class BaseExcelHandler {
                 response.add("提交成功！新增导入" + result.size() + "条数据！");
             }
             if (errResponse.size() > 0) {
-                int sum = sheet.getLastRowNum() - errResponse.size();
                 response.add("导入失败，以下数据请修改后再重新上传");
                 response.addAll(errResponse);
             }
         } else {
             if (errResponse.size() > 0) {
-                int sum = sheet.getLastRowNum() - errResponse.size();
                 response.add("导入失败，以下数据请修改后再重新上传");
                 response.addAll(errResponse);
             } else {
