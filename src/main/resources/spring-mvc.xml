@@ -92,6 +92,7 @@
             <mvc:exclude-mapping path="/download/**"/>
             <mvc:exclude-mapping path="/backDoor/**"/>
             <mvc:exclude-mapping path="/wx/**"/>
+            <mvc:exclude-mapping path="/carton/shipping-mark/show/**"/>
             <bean class="com.amir.interceptor.LoginInterceptor">
             </bean>
         </mvc:interceptor>

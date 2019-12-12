@@ -1,17 +1,26 @@
 package com.amir.controller.carton;
 
+import com.amir.model.carton.ShippingMarkImage;
 import com.amir.model.common.AppXaResultHelper;
 import com.amir.model.common.Page;
 import com.amir.model.common.XaResult;
 import com.amir.model.procurement.RawMaterialVendor;
+import com.amir.service.carton.ShippingMarkService;
 import com.amir.service.procurement.RawMaterialVendorService;
+import com.amir.vo.ShippingMarkImageResultVo;
 import com.wordnik.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.io.IOUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -25,6 +34,8 @@ public class CartonController {
 
     @Resource
     private RawMaterialVendorService rawMaterialVendorService;
+    @Resource
+    private ShippingMarkService shippingMarkService;
 
     @GetMapping("list")
     public XaResult<List<RawMaterialVendor>> list(String vendorName,
@@ -65,5 +76,33 @@ public class CartonController {
         }
         rawMaterialVendorService.save(rawMaterialVendor);
         return XaResult.success();
+    }
+
+    /**
+     * 批量上传唛头图片
+     */
+    @PostMapping("shipping-mark/image/upload")
+    public XaResult<List<ShippingMarkImageResultVo>> shippingMarkImageUpload(MultipartHttpServletRequest request) {
+        List<MultipartFile> shippingMarkImageFileList = request.getFiles("shippingMarkImages");
+        return XaResult.success(shippingMarkService.imageUpload(shippingMarkImageFileList));
+    }
+
+    /**
+     * 获取唛头图片
+     */
+    @GetMapping("shipping-mark/show/{fileId}")
+    public void getShippingMarkImage(@PathVariable int fileId, HttpServletResponse response) throws IOException {
+        ShippingMarkImage shippingMarkImage = shippingMarkService.getById(fileId);
+        if (shippingMarkImage != null) {
+            File file = new File(shippingMarkService.getShippingMarkImageWholePath() + shippingMarkImage.getFileStoreName());
+
+            response.setHeader("Content-Disposition", "inline;filename=" + new String((shippingMarkImage.getFileName() + "." + shippingMarkImage.getFileType()).getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
+
+            response.setContentType(shippingMarkImage.getContentType());
+            OutputStream outputStream = response.getOutputStream();
+            FileInputStream fileInputStream = new FileInputStream(file);
+            IOUtils.copy(fileInputStream, outputStream);
+            outputStream.flush();
+        }
     }
 }

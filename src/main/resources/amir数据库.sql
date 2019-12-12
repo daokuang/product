@@ -948,6 +948,7 @@ create table t_shipping_mark_image
         primary key,
     fileName      varchar(255) not null comment '文件名称，不含类型后缀',
     fileType      varchar(10)  not null comment '文件类型，jpg、png、jpeg，其他格式暂不支持',
+    contentType   varchar(255) not null comment '文件的MIME',
     fileStoreName varchar(255) not null comment '文件存储名称，字符串，需保证唯一性',
     createTime    datetime     null comment '创建时间',
     updateTime    datetime     null comment '更新时间',

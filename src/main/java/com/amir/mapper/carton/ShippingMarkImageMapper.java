@@ -94,4 +94,6 @@ public interface ShippingMarkImageMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ShippingMarkImage record);
+
+    ShippingMarkImage getByFileName(@Param("fileName") String fileName);
 }

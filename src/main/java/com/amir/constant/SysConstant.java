@@ -1,9 +1,11 @@
 package com.amir.constant;
 
-/**
- * Created by liuyq on 2019/7/28.
- */
-public class SysConstant {
+import java.util.Arrays;
+import java.util.List;
 
-    public static final String LOGINUSER = "login_user";
+public interface SysConstant {
+
+    String LOGINUSER = "login_user";
+
+    List<String> SHIPPING_MARK_IMAGE_SUPPORT = Arrays.asList("image/png", "image/jpeg");
 }
