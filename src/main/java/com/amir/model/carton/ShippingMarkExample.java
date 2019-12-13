@@ -255,63 +255,63 @@ public class ShippingMarkExample {
             return (Criteria) this;
         }
 
-        public Criteria andClientIdIsNull() {
-            addCriterion("clientId is null");
+        public Criteria andCustomerIdIsNull() {
+            addCriterion("customerId is null");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdIsNotNull() {
-            addCriterion("clientId is not null");
+        public Criteria andCustomerIdIsNotNull() {
+            addCriterion("customerId is not null");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdEqualTo(Integer value) {
-            addCriterion("clientId =", value, "clientId");
+        public Criteria andCustomerIdEqualTo(Integer value) {
+            addCriterion("customerId =", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdNotEqualTo(Integer value) {
-            addCriterion("clientId <>", value, "clientId");
+        public Criteria andCustomerIdNotEqualTo(Integer value) {
+            addCriterion("customerId <>", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdGreaterThan(Integer value) {
-            addCriterion("clientId >", value, "clientId");
+        public Criteria andCustomerIdGreaterThan(Integer value) {
+            addCriterion("customerId >", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("clientId >=", value, "clientId");
+        public Criteria andCustomerIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("customerId >=", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdLessThan(Integer value) {
-            addCriterion("clientId <", value, "clientId");
+        public Criteria andCustomerIdLessThan(Integer value) {
+            addCriterion("customerId <", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdLessThanOrEqualTo(Integer value) {
-            addCriterion("clientId <=", value, "clientId");
+        public Criteria andCustomerIdLessThanOrEqualTo(Integer value) {
+            addCriterion("customerId <=", value, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdIn(List<Integer> values) {
-            addCriterion("clientId in", values, "clientId");
+        public Criteria andCustomerIdIn(List<Integer> values) {
+            addCriterion("customerId in", values, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdNotIn(List<Integer> values) {
-            addCriterion("clientId not in", values, "clientId");
+        public Criteria andCustomerIdNotIn(List<Integer> values) {
+            addCriterion("customerId not in", values, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdBetween(Integer value1, Integer value2) {
-            addCriterion("clientId between", value1, value2, "clientId");
+        public Criteria andCustomerIdBetween(Integer value1, Integer value2) {
+            addCriterion("customerId between", value1, value2, "customerId");
             return (Criteria) this;
         }
 
-        public Criteria andClientIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("clientId not between", value1, value2, "clientId");
+        public Criteria andCustomerIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("customerId not between", value1, value2, "customerId");
             return (Criteria) this;
         }
 
@@ -445,76 +445,6 @@ public class ShippingMarkExample {
             return (Criteria) this;
         }
 
-        public Criteria andOutsideMarkIsNull() {
-            addCriterion("outsideMark is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkIsNotNull() {
-            addCriterion("outsideMark is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkEqualTo(String value) {
-            addCriterion("outsideMark =", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkNotEqualTo(String value) {
-            addCriterion("outsideMark <>", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkGreaterThan(String value) {
-            addCriterion("outsideMark >", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkGreaterThanOrEqualTo(String value) {
-            addCriterion("outsideMark >=", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkLessThan(String value) {
-            addCriterion("outsideMark <", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkLessThanOrEqualTo(String value) {
-            addCriterion("outsideMark <=", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkLike(String value) {
-            addCriterion("outsideMark like", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkNotLike(String value) {
-            addCriterion("outsideMark not like", value, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkIn(List<String> values) {
-            addCriterion("outsideMark in", values, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkNotIn(List<String> values) {
-            addCriterion("outsideMark not in", values, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkBetween(String value1, String value2) {
-            addCriterion("outsideMark between", value1, value2, "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkNotBetween(String value1, String value2) {
-            addCriterion("outsideMark not between", value1, value2, "outsideMark");
-            return (Criteria) this;
-        }
-
         public Criteria andInsideMarkIdIsNull() {
             addCriterion("insideMarkId is null");
             return (Criteria) this;
@@ -572,76 +502,6 @@ public class ShippingMarkExample {
 
         public Criteria andInsideMarkIdNotBetween(Integer value1, Integer value2) {
             addCriterion("insideMarkId not between", value1, value2, "insideMarkId");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkIsNull() {
-            addCriterion("insideMark is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkIsNotNull() {
-            addCriterion("insideMark is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkEqualTo(String value) {
-            addCriterion("insideMark =", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkNotEqualTo(String value) {
-            addCriterion("insideMark <>", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkGreaterThan(String value) {
-            addCriterion("insideMark >", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkGreaterThanOrEqualTo(String value) {
-            addCriterion("insideMark >=", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkLessThan(String value) {
-            addCriterion("insideMark <", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkLessThanOrEqualTo(String value) {
-            addCriterion("insideMark <=", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkLike(String value) {
-            addCriterion("insideMark like", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkNotLike(String value) {
-            addCriterion("insideMark not like", value, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkIn(List<String> values) {
-            addCriterion("insideMark in", values, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkNotIn(List<String> values) {
-            addCriterion("insideMark not in", values, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkBetween(String value1, String value2) {
-            addCriterion("insideMark between", value1, value2, "insideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkNotBetween(String value1, String value2) {
-            addCriterion("insideMark not between", value1, value2, "insideMark");
             return (Criteria) this;
         }
 
@@ -767,16 +627,6 @@ public class ShippingMarkExample {
 
         public Criteria andProductNoLikeInsensitive(String value) {
             addCriterion("upper(productNo) like", value.toUpperCase(), "productNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andOutsideMarkLikeInsensitive(String value) {
-            addCriterion("upper(outsideMark) like", value.toUpperCase(), "outsideMark");
-            return (Criteria) this;
-        }
-
-        public Criteria andInsideMarkLikeInsensitive(String value) {
-            addCriterion("upper(insideMark) like", value.toUpperCase(), "insideMark");
             return (Criteria) this;
         }
     }

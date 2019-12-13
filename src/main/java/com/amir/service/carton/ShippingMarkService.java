@@ -3,6 +3,7 @@ package com.amir.service.carton;
 import com.amir.constant.SysConstant;
 import com.amir.mapper.carton.ShippingMarkImageMapper;
 import com.amir.mapper.carton.ShippingMarkMapper;
+import com.amir.model.carton.ShippingMark;
 import com.amir.model.carton.ShippingMarkImage;
 import com.amir.util.DateUtil;
 import com.amir.vo.ShippingMarkImageResultVo;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +39,42 @@ public class ShippingMarkService {
 
     @Value("${amir.file.path:}")
     private String amirFilePath;
+
+    public void save(ShippingMark shippingMark) {
+        if (shippingMark.getId() == null) {
+            shippingMarkMapper.insert(shippingMark);
+        } else {
+            shippingMarkMapper.updateByPrimaryKeySelective(shippingMark);
+        }
+    }
+
+    public ShippingMark getByCustomerAndNoProduct(Integer customerId) {
+        List<ShippingMark> shippingMarkList = shippingMarkMapper.getByCustomerAndNoProduct(customerId);
+        if (shippingMarkList.isEmpty()) {
+            return null;
+        }
+        if (shippingMarkList.size() > 1) {
+            shippingMarkList.sort(Comparator.comparing(ShippingMark::getUpdateTime).reversed());
+            for (int i = 1; i < shippingMarkList.size(); i++) {
+                shippingMarkMapper.deleteByPrimaryKey(shippingMarkList.get(0).getId());
+            }
+        }
+        return shippingMarkList.get(0);
+    }
+
+    public ShippingMark getByCustomerAndProduct(Integer customerId, String productNo) {
+        List<ShippingMark> shippingMarkList = shippingMarkMapper.getByCustomerAndProduct(customerId, productNo);
+        if (shippingMarkList.isEmpty()) {
+            return null;
+        }
+        if (shippingMarkList.size() > 1) {
+            shippingMarkList.sort(Comparator.comparing(ShippingMark::getUpdateTime).reversed());
+            for (int i = 1; i < shippingMarkList.size(); i++) {
+                shippingMarkMapper.deleteByPrimaryKey(shippingMarkList.get(0).getId());
+            }
+        }
+        return shippingMarkList.get(0);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public List<ShippingMarkImageResultVo> imageUpload(List<MultipartFile> shippingMarkImageFileList) {
@@ -144,4 +182,5 @@ public class ShippingMarkService {
         }
         return wholePath;
     }
+
 }

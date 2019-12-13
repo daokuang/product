@@ -94,4 +94,8 @@ public interface ShippingMarkMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ShippingMark record);
+
+    List<ShippingMark> getByCustomerAndNoProduct(@Param("customerId") Integer customerId);
+
+    List<ShippingMark> getByCustomerAndProduct(@Param("customerId") Integer customerId, @Param("productNo") String productNo);
 }

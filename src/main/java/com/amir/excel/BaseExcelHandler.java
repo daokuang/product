@@ -115,7 +115,7 @@ public abstract class BaseExcelHandler<T> {
     protected abstract List<T> create(XSSFRow row) throws Exception;
 
     public String getCellValue(Cell cell) {
-        String cellValue = "";
+        String cellValue;
         // 以下是判断数据的类型
         switch (cell.getCellType().ordinal() - 1) {
             case 0: // 数字

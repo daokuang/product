@@ -964,7 +964,7 @@ create table t_shipping_mark
 (
     id            int auto_increment
         primary key,
-    clientId      int          not null comment '客户ID',
+    customerId    int          not null comment '客户ID',
     productNo     varchar(100) null comment '特殊型号，对应t_Product->productNo',
     outsideMarkId int          null comment '外箱唛头图片ID',
     outsideMark   varchar(100) null comment '外箱唛头图片名称',

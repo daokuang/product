@@ -2,9 +2,13 @@ package com.amir.excel;
 
 import com.amir.exception.BusinessException;
 import com.amir.model.carton.ShippingMark;
+import com.amir.model.carton.ShippingMarkImage;
+import com.amir.model.customer.Customer;
+import com.amir.model.product.Product;
 import com.amir.service.carton.ShippingMarkService;
 import com.amir.service.customer.CustomerService;
 import com.amir.service.productpm.ProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.springframework.stereotype.Component;
@@ -13,13 +17,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
 @Component
 public class ShippingMarkExcelHandler extends BaseExcelHandler<ShippingMark> {
 
-    public final static List<String> fields = Arrays.asList("客户名称", "图片名称", "特殊型号", "唛头类型");
+    public final static List<String> fields = Arrays.asList("客户名称", "特殊型号", "外箱唛头图片名称", "内箱唛头图片名称");
 
     @Resource
     private CustomerService customerService;
@@ -37,76 +42,83 @@ public class ShippingMarkExcelHandler extends BaseExcelHandler<ShippingMark> {
     protected List<ShippingMark> create(XSSFRow row) throws BusinessException {
         List<ShippingMark> shippingMarkList = new ArrayList<>();
         ShippingMark shippingMark = new ShippingMark();
-/*        for (int i = 0; i < fields.size(); i++) {
-            String cellValue = getCellValue(row.getCell(i), i);
-            if (cellValue == null) {
-                continue;
-            }
-            switch (i) {
-                case 0:
+        String customerName = getCellValue(row.getCell(0), 0);
+        String specialProductNumber = getCellValue(row.getCell(1), 1);
+        String outsideShippingMarkImageName = getCellValue(row.getCell(2), 2);
+        String insideShippingMarkImageName = getCellValue(row.getCell(3), 3);
 
-                    shippingMark.set(getCellValue(row.getCell(i), i));
-                    break;
-                case 1:
-                    shippingMark.setPmName(getCellValue(row.getCell(i), i));
-                    break;
-                case 2:
-                    shippingMark.setType(getCellValue(row.getCell(i), i));
-                    break;
-                case 3:
-                    shippingMark.setSupplier(getCellValue(row.getCell(i), i));
-                    break;
-                case 4:
-                    shippingMark.setNum(BigDecimal.valueOf(Double.parseDouble(getCellValue(row.getCell(i), i))));
-                    break;
-                case 5:
-                    shippingMark.setUnit(getCellValue(row.getCell(i), i));
-                    break;
-                case 6:
-                    shippingMark.setRemark(getCellValue(row.getCell(i), i));
-                    break;
-                default:
-                    break;
-            }
+        if (StringUtils.isBlank(outsideShippingMarkImageName) && StringUtils.isBlank(insideShippingMarkImageName)) {
+            throw new BusinessException("外箱唛头和内箱唛头不可都为空");
         }
-        Pm pm = pmService.getByNo(shippingMark.getPmNo());
-        if (pm == null) {
-            throw new BusinessException("第" + 1 + "列" + fields.get(0) + " 填写错误");
-        } else if (!pm.getName().equals(shippingMark.getPmName())) {
-            throw new BusinessException("第" + 2 + "列" + fields.get(1) + " 填写错误");
-        } else if (!pm.getType().equals(shippingMark.getType())) {
-            throw new BusinessException("第" + 3 + "列" + fields.get(2) + " 填写错误");
-        } else if (!pm.getUnit().equals(shippingMark.getUnit())) {
-            throw new BusinessException("第" + 6 + "列" + fields.get(5) + " 填写错误");
-        }*/
+
+        Customer customer = customerService.getByName(customerName);
+        if (customer == null) {
+            throw new BusinessException("名称为“" + customerName + "”的客户不存在");
+        }
+        shippingMark.setCustomerId(customer.getId());
+
+        if (specialProductNumber != null) {
+            Product product = productService.getByNO(specialProductNumber);
+            if (product == null) {
+                throw new BusinessException("特殊型号“" + specialProductNumber + "”有误");
+            }
+            shippingMark.setProductNo(product.getProductNo());
+        }
+
+        if (StringUtils.isNotBlank(outsideShippingMarkImageName)) {
+            String fileNameOnly = outsideShippingMarkImageName;
+            if (fileNameOnly.contains(".")) {
+                fileNameOnly = fileNameOnly.substring(0, fileNameOnly.lastIndexOf("."));
+            }
+            ShippingMarkImage shippingMarkImage = shippingMarkService.getByFileName(fileNameOnly);
+            if (shippingMarkImage == null) {
+                throw new BusinessException("未匹配到外箱唛头图片“" + outsideShippingMarkImageName + "”");
+            }
+            shippingMark.setOutsideMarkId(shippingMarkImage.getId());
+        }
+
+        if (StringUtils.isNotBlank(insideShippingMarkImageName)) {
+            String fileNameOnly = insideShippingMarkImageName;
+            if (fileNameOnly.contains(".")) {
+                fileNameOnly = fileNameOnly.substring(0, fileNameOnly.lastIndexOf("."));
+            }
+            ShippingMarkImage shippingMarkImage = shippingMarkService.getByFileName(fileNameOnly);
+            if (shippingMarkImage == null) {
+                throw new BusinessException("未匹配到内箱唛头图片“" + insideShippingMarkImageName + "”");
+            }
+            shippingMark.setInsideMarkId(shippingMarkImage.getId());
+        }
+
         shippingMarkList.add(shippingMark);
         return shippingMarkList;
     }
 
     @Override
-    protected void insert(List shippingMarkList, String operator) {
-/*
-        if (shippingMarkList != null && shippingMarkList.size() > 0) {
-            for (int i = 0; i < shippingMarkList.size(); i++) {
-                PmIn pmIn = (PmIn) shippingMarkList.get(i);
-                Pm pm = pmService.getByNo(pmIn.getPmNo());
-
-                pmIn.setPmId(pm.getId());
-                pmIn.setPerNum(pm.getNum());
-                pmIn.setBackNum(pm.getNum().add(pmIn.getNum()));
-                pmIn.setOperator(operator);
-                pmIn.setCreateTime(new Date());
-                pmIn.setIsDelete(0);
-                pmIn.setInDate(new Date());
-                pmInService.create(pmIn);
-                Pm pm1 = new Pm();
-                pm1.setId(pm.getId());
-                pm1.setNum(pmIn.getBackNum());
-                pm.setLastModifyTime(new Date());
-                pmService.updateByID(pm1);
+    protected void insert(List<ShippingMark> shippingMarkList, String operator) {
+        Date now = new Date();
+        for (ShippingMark shippingMarkParam : shippingMarkList) {
+            ShippingMark shippingMark;
+            if (StringUtils.isNotBlank(shippingMarkParam.getProductNo())) {
+                shippingMark = shippingMarkService.getByCustomerAndProduct(shippingMarkParam.getCustomerId(), shippingMarkParam.getProductNo());
+            } else {
+                shippingMark = shippingMarkService.getByCustomerAndNoProduct(shippingMarkParam.getCustomerId());
             }
+            if (shippingMark == null) {
+                shippingMark = new ShippingMark();
+                shippingMark.setCreateTime(now);
+            }
+            shippingMark.setCustomerId(shippingMarkParam.getCustomerId());
+            shippingMark.setProductNo(shippingMarkParam.getProductNo());
+            if (shippingMarkParam.getOutsideMarkId() != null) {
+                shippingMark.setOutsideMarkId(shippingMarkParam.getOutsideMarkId());
+            }
+            if (shippingMarkParam.getInsideMarkId() != null) {
+                shippingMark.setInsideMarkId(shippingMarkParam.getInsideMarkId());
+            }
+            shippingMark.setUpdateTime(now);
+
+            shippingMarkService.save(shippingMark);
         }
-*/
     }
 
     private String getCellValue(XSSFCell cell, int i) {
@@ -114,6 +126,9 @@ public class ShippingMarkExcelHandler extends BaseExcelHandler<ShippingMark> {
         if (cell == null && i == 2) {
             //特殊型号列 允许为空
             return null;
+        }
+        if (cell == null) {
+            throw new BusinessException("第" + (i + 1) + "列" + fields.get(i) + " 填写错误");
         }
         try {
             value = getCellValue(cell);
@@ -125,6 +140,4 @@ public class ShippingMarkExcelHandler extends BaseExcelHandler<ShippingMark> {
         }
         return value;
     }
-
-
 }

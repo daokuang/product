@@ -14,7 +14,6 @@ import com.amir.service.salary.SalaryMonthlyService;
 import com.amir.service.sys.SysDeptService;
 import com.amir.util.BigDecimalUtil;
 import com.amir.util.DateUtil;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -27,10 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +34,7 @@ import java.util.stream.Stream;
  * Created by liuyq on 2019/9/7.
  */
 @Service
-public class EmpSalaryMothlyHandler extends BaseExcelHandler {
+public class EmpSalaryMothlyHandler extends BaseExcelHandler<EmpSalaryMothlyPojo> {
 
     private final static List<String> neetNigthSnack = Stream.of("车工", "辅工", "大辅工", "杂工", "下料工", "印刷", "剪辅料", "切包边条",
             "分料", "电脑车工", "包装工", "新学徒车工", "新熟练车工", "小辅工", "整形，打包", "中辅工").collect(Collectors.toList());
@@ -150,7 +146,7 @@ public class EmpSalaryMothlyHandler extends BaseExcelHandler {
     }
 
     @Override
-    protected List<T> create(XSSFRow row) throws Exception {
+    protected List<EmpSalaryMothlyPojo> create(XSSFRow row) throws Exception {
         return null;
     }
 
@@ -160,12 +156,12 @@ public class EmpSalaryMothlyHandler extends BaseExcelHandler {
     }
 
     @Override
-    protected void insert(List list, String operator) {
+    protected void insert(List<EmpSalaryMothlyPojo> list, String operator) {
         if (!CollectionUtils.isEmpty(list)) {
             String yearMonth = yearMonthCash.get();
             yearMonthCash.remove(); //防止内存泄漏
             //按名称分组
-            Map<String, List<EmpSalaryMothlyPojo>> modelMap = (Map<String, List<EmpSalaryMothlyPojo>>) list.stream().filter(t -> t != null).
+            Map<String, List<EmpSalaryMothlyPojo>> modelMap = list.stream().filter(Objects::nonNull).
                     collect(Collectors.groupingBy(EmpSalaryMothlyPojo::getName));
             for (Map.Entry<String, List<EmpSalaryMothlyPojo>> entry : modelMap.entrySet()) {
                 EmpSalaryMonthly monthly = new EmpSalaryMonthly();
