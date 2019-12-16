@@ -35,6 +35,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by liuyq on 2019/8/8.
@@ -393,7 +394,7 @@ public class ProductionOrderController extends ProductBaseController {
 
         List<BatchAssignVo.BatchAssignOrder> batchAssignOrders = Lists.newArrayList();
         multipleProductions.stream()
-                .filter(t -> t != null)
+                .filter(Objects::nonNull)
                 .forEach(t -> {
 
                     BatchAssignVo.BatchAssignOrder batchAssignOrder = new BatchAssignVo.BatchAssignOrder();

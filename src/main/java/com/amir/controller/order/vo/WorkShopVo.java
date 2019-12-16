@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -123,6 +124,8 @@ public class WorkShopVo implements Serializable {
 
         private String procedureName;
 
+        private BigDecimal price;
+
         private Integer sort;
 
         private Integer num;
@@ -133,6 +136,7 @@ public class WorkShopVo implements Serializable {
         public Procedure(ProductProcedureWorkshop productProcedureWorkshop) {
             this.procedureId = productProcedureWorkshop.getProcedureId();
             this.procedureName = productProcedureWorkshop.getProcedureName();
+            this.price = productProcedureWorkshop.getPrice();
             this.sort = productProcedureWorkshop.getSort();
             this.num = productProcedureWorkshop.getNum();
         }
@@ -140,6 +144,7 @@ public class WorkShopVo implements Serializable {
         public Procedure(ProductionProcedure productionProcedure) {
             this.procedureId = productionProcedure.getProcedureId();
             this.procedureName = productionProcedure.getProcedureName();
+            //this.price = productionProcedure.getPrice();
             this.sort = productionProcedure.getSort();
             this.num = productionProcedure.getAssignNum();
         }
@@ -178,6 +183,14 @@ public class WorkShopVo implements Serializable {
 
         public void setProcedureName(String procedureName) {
             this.procedureName = procedureName;
+        }
+
+        public BigDecimal getPrice() {
+            return price;
+        }
+
+        public void setPrice(BigDecimal price) {
+            this.price = price;
         }
 
         public Integer getNum() {

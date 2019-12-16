@@ -11,7 +11,6 @@ import com.amir.service.emp.EmpService;
 import com.amir.service.emp.SummarySalaryMonthlyService;
 import com.amir.service.order.ProductionProcedureConfirmService;
 import com.amir.service.sys.SysDeptService;
-import com.amir.util.BigDecimalUtil;
 import com.amir.util.DateUtil;
 import com.amir.vo.weixin.*;
 import com.wordnik.swagger.annotations.Api;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +90,7 @@ public class MineController extends ProductBaseController {
                 orderVo.setOrderNo(o.getOrderNo());
                 List<OrderProductVo> ops = productionProcedureConfirmService.getOrderProductByMouth(o.getOrderNo(), date, vo.getDeptName());
                 orderVo.setList(ops);
+                orderVo.setChanged(ops.stream().allMatch(OrderProductVo::getChanged));
                 voList.add(orderVo);
             }
 
@@ -225,8 +226,6 @@ public class MineController extends ProductBaseController {
 
     /**
      * 工作产出
-     *
-     * @return
      */
     @RequestMapping(value = "/work", method = RequestMethod.GET)
     public XaResult<EmpWorkVo> work(String date) {
@@ -237,51 +236,18 @@ public class MineController extends ProductBaseController {
         WxEmpVo vo = getWxLoginUser();
         //TODO 质检员 工作量另算
         EmpWorkVo empWorkVo = new EmpWorkVo();
-        double total = 0.0;
-        double confirmedSum = 0.0;
-        double unConfirmSum = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal confirmedSum = BigDecimal.ZERO;
+        BigDecimal unConfirmSum = BigDecimal.ZERO;
 
         List<EmpDayWorkVo> dayWorkVos = productionProcedureConfirmService.analyseForDay(date, vo.getId());
         if (dayWorkVos == null || dayWorkVos.size() < 1) {
             return XaResult.error("查无数据");
         }
         for (EmpDayWorkVo dayWorkVo : dayWorkVos) {
-            List<EmpDayWorkDetailVo> dayWorkDetailVoList =
-                    productionProcedureConfirmService.getWorkForDay(dayWorkVo.getDate(), vo.getId());
-            //为了应对 一天内 多次扫码，每次扫一个工序的情况
-            List<EmpDayWorkDetailVo> dayWorkDetailVoList_new = new ArrayList<>();
-            for (EmpDayWorkDetailVo dayWorkDetailVo : dayWorkDetailVoList) {
-                //TODO 根据 type 罗ID  精确搜索工序
-                String billNo = dayWorkDetailVo.getBillNo();
-                if (dayWorkDetailVo.getLuoId() != null) {
-                    billNo = StringUtils.substringBefore(billNo, "-");
-                }
-                boolean flag = false;
-                for (EmpDayWorkDetailVo newVo : dayWorkDetailVoList_new) {
-
-                    if ((newVo.getBillNo() != null && newVo.getBillNo().equals(dayWorkDetailVo.getBillNo()) || (newVo.getBillNo() == null && dayWorkDetailVo.getBillNo() == null))
-                            && ((newVo.getLuoId() != null && newVo.getLuoId().equals(dayWorkDetailVo.getLuoId())) || (newVo.getLuoId() == null && dayWorkDetailVo.getLuoId() == null))
-                            && newVo.getOrderNo().equals(dayWorkDetailVo.getOrderNo())
-                            && newVo.getProductNo().equals(dayWorkDetailVo.getProductNo())
-                            && ((newVo.getType() != null && newVo.getType().equals(dayWorkDetailVo.getType())) || (newVo.getType() == null && dayWorkDetailVo.getType() == null))
-                            && newVo.getStatusDesc().equals(dayWorkDetailVo.getStatusDesc())) {
-                        flag = true;
-                    }
-                }
-                if (!flag) {
-                    List<ProcedureInfoVo> procedureInfoVos =
-                            productionProcedureConfirmService.getWorkProcedureInfo(dayWorkVo.getDate(), vo.getId(),
-                                    dayWorkDetailVo.getOrderNo(), dayWorkDetailVo.getProductNo(), billNo, dayWorkDetailVo.getLuoId(),
-                                    dayWorkDetailVo.getType());
-                    dayWorkDetailVo.setProcedureInfoVoList(procedureInfoVos);
-                    dayWorkDetailVoList_new.add(dayWorkDetailVo);
-                }
-            }
-            dayWorkVo.setDayWorkDetailVoList(dayWorkDetailVoList_new);
-            total = BigDecimalUtil.add(total, dayWorkVo.getSum());
-            confirmedSum = BigDecimalUtil.add(confirmedSum, dayWorkVo.getConfirmedSum());
-            unConfirmSum = BigDecimalUtil.add(unConfirmSum, dayWorkVo.getUnConfirmSum());
-
+            total = total.add(dayWorkVo.getSum());
+            confirmedSum = confirmedSum.add(dayWorkVo.getConfirmedSum());
+            unConfirmSum = unConfirmSum.add(dayWorkVo.getUnConfirmSum());
         }
         empWorkVo.setTotal(total);
         empWorkVo.setConfirmed(confirmedSum);
@@ -289,6 +255,50 @@ public class MineController extends ProductBaseController {
         empWorkVo.setDayWorkVoList(dayWorkVos);
 
         return XaResult.success(empWorkVo);
+    }
+
+    /**
+     * 工作产出 单日明细
+     */
+    @RequestMapping(value = "/work-detail", method = RequestMethod.GET)
+    public XaResult<List<EmpDayWorkDetailVo>> workDetail(String date) {
+        //2019-12-15
+        if (StringUtils.isEmpty(date)) {
+            return XaResult.error("日期不能为空");
+        }
+        WxEmpVo vo = getWxLoginUser();
+
+        List<EmpDayWorkDetailVo> dayWorkDetailVoList = productionProcedureConfirmService.getWorkForDay(date, vo.getId());
+        //为了应对 一天内 多次扫码，每次扫一个工序的情况
+        List<EmpDayWorkDetailVo> dayWorkDetailVoListNew = new ArrayList<>();
+        for (EmpDayWorkDetailVo dayWorkDetailVo : dayWorkDetailVoList) {
+            //TODO 根据 type 罗ID  精确搜索工序
+            String billNo = dayWorkDetailVo.getBillNo();
+            if (dayWorkDetailVo.getLuoId() != null) {
+                billNo = StringUtils.substringBefore(billNo, "-");
+            }
+            boolean flag = false;
+            for (EmpDayWorkDetailVo newVo : dayWorkDetailVoListNew) {
+                if ((newVo.getBillNo() != null && newVo.getBillNo().equals(dayWorkDetailVo.getBillNo()) || (newVo.getBillNo() == null && dayWorkDetailVo.getBillNo() == null))
+                        && ((newVo.getLuoId() != null && newVo.getLuoId().equals(dayWorkDetailVo.getLuoId())) || (newVo.getLuoId() == null && dayWorkDetailVo.getLuoId() == null))
+                        && newVo.getOrderNo().equals(dayWorkDetailVo.getOrderNo())
+                        && newVo.getProductNo().equals(dayWorkDetailVo.getProductNo())
+                        && ((newVo.getType() != null && newVo.getType().equals(dayWorkDetailVo.getType())) || (newVo.getType() == null && dayWorkDetailVo.getType() == null))
+                        && newVo.getStatusDesc().equals(dayWorkDetailVo.getStatusDesc())) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                List<ProcedureInfoVo> procedureInfoVos =
+                        productionProcedureConfirmService.getWorkProcedureInfo(date, vo.getId(),
+                                dayWorkDetailVo.getOrderNo(), dayWorkDetailVo.getProductNo(), billNo, dayWorkDetailVo.getLuoId(),
+                                dayWorkDetailVo.getType());
+                dayWorkDetailVo.setProcedureInfoVoList(procedureInfoVos);
+                dayWorkDetailVoListNew.add(dayWorkDetailVo);
+            }
+        }
+
+        return XaResult.success(dayWorkDetailVoListNew);
     }
 
     /**

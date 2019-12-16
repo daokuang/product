@@ -1,20 +1,37 @@
 package com.amir.vo.weixin;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class EmpWorkVo {
 
-    private Double total;//计件工资
-    private Double confirmed;
-    private Double unConfirm;
+    private BigDecimal total;//计件工资
+    private BigDecimal confirmed;
+    private BigDecimal unConfirm;
     private List<EmpDayWorkVo> dayWorkVoList;
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public BigDecimal getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(BigDecimal confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    public BigDecimal getUnConfirm() {
+        return unConfirm;
+    }
+
+    public void setUnConfirm(BigDecimal unConfirm) {
+        this.unConfirm = unConfirm;
     }
 
     public List<EmpDayWorkVo> getDayWorkVoList() {
@@ -23,21 +40,5 @@ public class EmpWorkVo {
 
     public void setDayWorkVoList(List<EmpDayWorkVo> dayWorkVoList) {
         this.dayWorkVoList = dayWorkVoList;
-    }
-
-    public Double getConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(Double confirmed) {
-        this.confirmed = confirmed;
-    }
-
-    public Double getUnConfirm() {
-        return unConfirm;
-    }
-
-    public void setUnConfirm(Double unConfirm) {
-        this.unConfirm = unConfirm;
     }
 }

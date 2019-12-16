@@ -1,14 +1,13 @@
 package com.amir.vo.weixin;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 public class EmpDayWorkVo {
 
     private String date;
-    private Double sum;
-    private Double confirmedSum;
-    private Double unConfirmSum;
-    private List<EmpDayWorkDetailVo> dayWorkDetailVoList;
+    private BigDecimal sum;
+    private BigDecimal confirmedSum;
+    private BigDecimal unConfirmSum;
 
     public String getDate() {
         return date;
@@ -18,35 +17,27 @@ public class EmpDayWorkVo {
         this.date = date;
     }
 
-    public Double getSum() {
+    public BigDecimal getSum() {
         return sum;
     }
 
-    public void setSum(Double sum) {
+    public void setSum(BigDecimal sum) {
         this.sum = sum;
     }
 
-    public List<EmpDayWorkDetailVo> getDayWorkDetailVoList() {
-        return dayWorkDetailVoList;
-    }
-
-    public void setDayWorkDetailVoList(List<EmpDayWorkDetailVo> dayWorkDetailVoList) {
-        this.dayWorkDetailVoList = dayWorkDetailVoList;
-    }
-
-    public Double getConfirmedSum() {
+    public BigDecimal getConfirmedSum() {
         return confirmedSum;
     }
 
-    public void setConfirmedSum(Double confirmedSum) {
+    public void setConfirmedSum(BigDecimal confirmedSum) {
         this.confirmedSum = confirmedSum;
     }
 
-    public Double getUnConfirmSum() {
+    public BigDecimal getUnConfirmSum() {
         return unConfirmSum;
     }
 
-    public void setUnConfirmSum(Double unConfirmSum) {
+    public void setUnConfirmSum(BigDecimal unConfirmSum) {
         this.unConfirmSum = unConfirmSum;
     }
 }

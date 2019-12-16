@@ -6,6 +6,7 @@ public class OrderVo {
 
     private String orderNo;
     private String date;
+    private Boolean changed;//是否全部工序已调整
     private List<OrderProductVo> list;
 
     public String getOrderNo() {
@@ -22,6 +23,14 @@ public class OrderVo {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Boolean getChanged() {
+        return changed;
+    }
+
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
     }
 
     public List<OrderProductVo> getList() {
