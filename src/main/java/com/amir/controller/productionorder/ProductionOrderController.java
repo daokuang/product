@@ -12,8 +12,10 @@ import com.amir.model.common.AppXaResultHelper;
 import com.amir.model.common.Page;
 import com.amir.model.common.XaResult;
 import com.amir.model.order.*;
+import com.amir.model.product.ProductProcedure;
 import com.amir.model.sys.SysUser;
 import com.amir.service.order.*;
+import com.amir.service.productpm.ProductProcedureService;
 import com.amir.util.DateUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by liuyq on 2019/8/8.
@@ -59,6 +62,8 @@ public class ProductionOrderController extends ProductBaseController {
     private ProductionLuoService productionLuoService;
     @Resource
     private ProductionProcedureScanService productionProcedureScanService;
+    @Resource
+    private ProductProcedureService productProcedureService;
     @Resource
     private BillNoService billNoService;
     @Resource
@@ -127,7 +132,7 @@ public class ProductionOrderController extends ProductBaseController {
         //工序
         List<ProductionProcedure> productionProcedures = productionProcedureService.findByProductionNo(productionOrder.getProductionNo());
 
-        ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, orderProduct);
+        ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, null, orderProduct);
         return XaResult.success(productionOrderDetailVo);
     }
 
@@ -189,8 +194,13 @@ public class ProductionOrderController extends ProductBaseController {
             OrderProduct orderProduct = orderProductService.getByID(productionOrder.getOrderProductId());
             //工序
             List<ProductionProcedure> productionProcedures = productionProcedureService.findByProductionNo(productionOrder.getProductionNo());
+            List<ProductProcedure> productProcedureList = productProcedureService.getById(productionProcedures.stream().map(ProductionProcedure::getProcedureId).collect(Collectors.toList()));
+            Map<Integer, ProductProcedure> productProcedureMap = null;
+            if (productProcedureList != null) {
+                productProcedureMap = productProcedureList.stream().collect(Collectors.toMap(ProductProcedure::getId, p -> p));
+            }
 
-            ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, orderProduct);
+            ProductionOrderDetailVo productionOrderDetailVo = new ProductionOrderDetailVo(productionOrder, productionProcedures, productProcedureMap, orderProduct);
             productionOrderDetailVo.setPrintTime(DateUtil.dateToString(new Date(), DateUtil.ymdFormat));
             productionOrderDetailVo.setPrinter(sysUser.getUserName());
             //未分
@@ -401,8 +411,8 @@ public class ProductionOrderController extends ProductBaseController {
                     batchAssignOrder.setOrderNo(t.getOrderNo());
                     batchAssignOrder.setProductNo(t.getProductNo());
 
-                    List<WorkShopVo.Procedure> procedures = WorkShopVo.Procedure.productionProcedureTransfor(
-                            productionProcedureService.getByMultipleCantenZJ(t.getId()));
+                    List<WorkShopVo.Procedure> procedures = WorkShopVo.Procedure.productionProcedureTransfer(
+                            productionProcedureService.getByMultipleCantenZJ(t.getId()), null);
                     batchAssignOrder.setProcedures(procedures);
 
                     batchAssignOrders.add(batchAssignOrder);

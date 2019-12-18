@@ -2,6 +2,7 @@ package com.amir.controller.order.vo;
 
 import com.amir.model.emp.Emp;
 import com.amir.model.order.ProductionProcedure;
+import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
 import com.amir.model.sys.Sysdept;
 import com.google.common.collect.Lists;
@@ -10,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuyq on 2019/8/8.
@@ -141,10 +143,12 @@ public class WorkShopVo implements Serializable {
             this.num = productProcedureWorkshop.getNum();
         }
 
-        public Procedure(ProductionProcedure productionProcedure) {
+        public Procedure(ProductionProcedure productionProcedure, ProductProcedure productProcedure) {
             this.procedureId = productionProcedure.getProcedureId();
             this.procedureName = productionProcedure.getProcedureName();
-            //this.price = productionProcedure.getPrice();
+            if (productProcedure != null) {
+                this.price = productProcedure.getPrice();
+            }
             this.sort = productionProcedure.getSort();
             this.num = productionProcedure.getAssignNum();
         }
@@ -159,11 +163,15 @@ public class WorkShopVo implements Serializable {
             return procedures;
         }
 
-        public static List<Procedure> productionProcedureTransfor(List<ProductionProcedure> productionProcedures) {
+        public static List<Procedure> productionProcedureTransfer(List<ProductionProcedure> productionProcedures, Map<Integer, ProductProcedure> productProcedureMap) {
             List<Procedure> procedures = Lists.newArrayList();
             if (productionProcedures != null) {
                 for (ProductionProcedure productionProcedure : productionProcedures) {
-                    procedures.add(new Procedure(productionProcedure));
+                    ProductProcedure productProcedure = null;
+                    if (productProcedureMap != null) {
+                        productProcedure = productProcedureMap.get(productionProcedure.getProcedureId());
+                    }
+                    procedures.add(new Procedure(productionProcedure, productProcedure));
                 }
             }
             return procedures;

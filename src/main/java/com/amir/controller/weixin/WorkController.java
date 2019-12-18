@@ -340,7 +340,7 @@ public class WorkController extends ProductBaseController {
                         workListVo.setOrderNo(t.getOrderNo());
                         workListVo.setProductNo(t.getProductNo());
                         workListVo.setProcedures(WorkShopVo.Procedure.
-                                productionProcedureTransfor(productionProcedureService.getByMultipleId(t.getId())));
+                                productionProcedureTransfer(productionProcedureService.getByMultipleId(t.getId()), null));
                         workListVos.add(workListVo);
 
                     });

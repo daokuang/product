@@ -4,10 +4,12 @@ import com.amir.controller.order.vo.WorkShopVo;
 import com.amir.model.order.OrderProduct;
 import com.amir.model.order.ProductionOrder;
 import com.amir.model.order.ProductionProcedure;
+import com.amir.model.product.ProductProcedure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by liuyq on 2019/8/9.
@@ -55,7 +57,9 @@ public class ProductionOrderDetailVo implements Serializable {
     public ProductionOrderDetailVo() {
     }
 
-    public ProductionOrderDetailVo(ProductionOrder productionOrder, List<ProductionProcedure> productionProcedures,
+    public ProductionOrderDetailVo(ProductionOrder productionOrder,
+                                   List<ProductionProcedure> productionProcedures,
+                                   Map<Integer, ProductProcedure> productProcedureMap,
                                    OrderProduct orderProduct) {
         if (productionOrder != null) {
             this.orderNo = productionOrder.getOrderNo();
@@ -73,7 +77,7 @@ public class ProductionOrderDetailVo implements Serializable {
         }
 
         if (!CollectionUtils.isEmpty(productionProcedures)) {
-            this.procedures = WorkShopVo.Procedure.productionProcedureTransfor(productionProcedures);
+            this.procedures = WorkShopVo.Procedure.productionProcedureTransfer(productionProcedures, productProcedureMap);
         }
         if (orderProduct != null) {
             this.unit = orderProduct.getUnit();

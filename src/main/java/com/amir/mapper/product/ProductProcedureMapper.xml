@@ -430,4 +430,18 @@
         from t_Product_Procedure
         WHERE productNo =#{productNo} and isDelete = 0
     </select>
+
+    <select id="getByIds" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_Product_Procedure
+        where id IN
+        (
+        <foreach collection="ids" index="index" item="item" separator=",">
+            #{item, jdbcType=INTEGER}
+        </foreach>
+        )
+        and isDelete = 0
+    </select>
+
 </mapper>

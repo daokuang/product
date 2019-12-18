@@ -11,7 +11,6 @@ import com.amir.model.product.Product;
 import com.amir.model.product.ProductProcedure;
 import com.amir.model.product.ProductProcedureWorkshop;
 import com.amir.model.sys.SysUser;
-import com.amir.service.order.ProductionProcedureService;
 import com.amir.util.BeanUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -39,9 +38,6 @@ public class ProductProcedureService {
 
     @Resource
     private ProductService productService;
-
-    @Resource
-    private ProductionProcedureService productionProcedureService;
 
     public Integer addOrUpdate(ProductProcedure productProcedure, String optionName) {
 
@@ -84,6 +80,10 @@ public class ProductProcedureService {
 
     public ProductProcedure getById(Integer id) {
         return productProcedureMapper.selectByPrimaryKey(id);
+    }
+
+    public List<ProductProcedure> getById(List<Integer> ids) {
+        return productProcedureMapper.getByIds(ids);
     }
 
     public Integer update(ProductProcedure productProcedure) {

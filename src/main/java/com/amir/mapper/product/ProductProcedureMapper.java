@@ -107,4 +107,6 @@ public interface ProductProcedureMapper {
 
     List<ProductProcedure> getByProductNo(@Param("productNo") String productNo);
 
+    List<ProductProcedure> getByIds(@Param("ids") List<Integer> ids);
+
 }

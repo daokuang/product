@@ -75,7 +75,6 @@ public class ProductionProcedureService {
     }
 
     public List<ProductionProcedure> isContainZj(String procedureName, String productionNo, Integer multipleProductionId) {
-        Boolean flage = false;
         return productionProcedureMapper.isContainZj(procedureName, productionNo, multipleProductionId);
 
     }
